@@ -95,4 +95,42 @@ TanyaLe/
 
 ---
 
-**Collaborator Note:** *TanyaLe is in its C4-Experiment phase. When proposing code changes, prioritize stability in the AR pipeline and the precision of geofencing logic. Always ensure the architecture remains backend-agnostic.*
+## 6. Implementation Backlog (For Now :P)
+
+This backlog organizes tasks by their operational domain: **Logic** (Services/ViewModels), **UI** (Views), and **Process** (Permissions/Architecture).
+
+### Mini-Backlog Summary
+
+| Feature | Logic | UI | Process |
+| --- | --- | --- | --- |
+| **Proximity Discovery** | Implement `LocationService` distance math | Create `MapView.swift` with dynamic pins | Request `WhenInUse` location permissions |
+| **AR Evidence** | `SurveyViewModel` snapshot pipeline | `ARViewContainer` integration | Configure `Privacy - Camera Usage` |
+| **Survey Engine** | `SurveyType` enum switch case logic | `SurveyInputView` (dynamic inputs) | Define `SurveyRecord` data mapping |
+| **Admin Controls** | Coordinate capture service | "Place Checkpoint" button workflow | Setup role-based access flag |
+| **Cloud Sync** | Async `SurveyStorageService` implementation | Sync status spinner/progress view | Define `Codable` JSON structure |
+
+---
+
+### Task Breakdown
+
+#### Logic (Services & ViewModels)
+
+* [ ] **Proximity Engine**: Refine `LocationService` to toggle `isAtCheckpoint` boolean based on a 20-meter geofence.
+* [ ] **Data Mapping**: Finalize `SurveyRecord` to handle multi-type responses (Emoji string, MCQ index, or photo path).
+* **State Machine**: Formalize `RespondentViewModel` states (Ready -> Capturing -> Saving -> Finished) to prevent invalid user inputs.
+
+#### UI (Views)
+
+* **Discovery Map**: Implement `MapView` to render checkpoint locations relative to the user's current GPS position.
+* **Adaptive Survey UI**: Build `SurveyInputView` to render specific components (Slider/Picker/Image) based on the current `SurveyType`.
+* **HUD Layer**: Ensure UI elements in `ContentView` do not obstruct the AR camera feed while maintaining high visibility.
+
+#### Process (Permissions & Architecture)
+
+* **App Clip Optimization**: Audit current imports to ensure only necessary frameworks are included to keep the binary small.
+* **Permission Flow**: Map out the graceful handling of denied permissions (Camera/Location) to prevent the "white screen" issue.
+* **Role Routing**: Implement a high-level switch in `TanyaLeApp` to toggle between the Maker (Admin) and Contributor (Respondent) UI entry points.
+
+---
+
+**Collaborator Note:** *TanyaLe is currently in its C4-Experiment phase. When proposing code changes, prioritize stability in the AR pipeline and the precision of geofencing logic. Always ensure the architecture remains backend-agnostic.*
