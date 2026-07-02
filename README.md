@@ -1,136 +1,105 @@
-# TanyaLe: Urban Intelligence & Citizen Aspiration Platform
+# 📍 TanyaLe: Urban Intelligence & Citizen Aspiration Platform
 
-## 1. Project Overview
+![Swift](https://img.shields.io/badge/Swift-5.9-F05138?style=flat&logo=swift)
+![Platform](https://img.shields.io/badge/Platform-iOS%20%7C%20App%20Clip-lightgrey)
+![Architecture](https://img.shields.io/badge/Architecture-MVVM-blue)
+![Phase](https://img.shields.io/badge/Phase-C4%20Experiment-success)
 
-**TanyaLe** (derived from the Indonesian *tanya*, "to ask") is a dual-sided, location-aware mobile platform designed to bridge the gap between urban planning/NGO data collection and active citizen participation.
+## 📖 Overview
+**TanyaLe** (from *tanya*, "to ask") is a dual-sided, location-aware AR platform bridging the gap between neighborhood leadership and citizen participation. Built on the **C4 Framework (Capture, Collect, Coordinate, Collaborate)**, it allows neighborhood heads (Pak RT) to validate their *program kerja* by placing interactive AR checkpoints in the real world, while citizens (*warga*) can effortlessly provide context-aware feedback.
 
-The platform facilitates a "Ground Truth" data loop where:
-
-* **Architects (NGOs/Planners)** define localized, purpose-driven inquiries at specific geographic checkpoints.
-* **Contributors (Citizens)** provide real-time insights via location-anchored AR snapshots, sentiment sliders, structured MCQ surveys, and open-ended "aspirational" feedback.
-
-The project is currently in its **C4-Experiment** phase, focusing on the core mechanics of **Capture, Collect, Coordinate, and Collaborate** using lightweight, high-performance Apple native frameworks.
-
----
-
-## 2. Implementation Plan (Phased Roadmap)
-
-### Phase 1: Core Mechanics (Current)
-
-* **Geofencing Logic**: Implementation of `LocationService` for mini-checkpoint proximity verification.
-* **AR Pipeline**: Basic camera integration via `RealityKit` to capture evidence anchored to physical space.
-* **Data Backbone**: Establishment of the `SurveyRecord` model and the `SurveyStorageService` protocol to allow future backend migration.
-
-### Phase 2: Engagement Layers
-
-* **Interaction Modules**: Development of `SurveyInputView` supporting Emoji sliders, MCQ sets, and Aspiration text fields.
-* **Visualization**: Implementation of the `MapView` (Mini-Map) to help users discover active checkpoints in their vicinity.
-
-### Phase 3: Platform Ecosystem
-
-* **Architect Portal**: Implementation of the `MakerViewModel` allowing users to "drop" new checkpoints at their current location.
-* **Sync & Sync Strategy**: Transition from `MockSurveyService` to a production-grade cloud solution (e.g., CloudKit or Firebase).
+The core UX mandate for the citizen experience is **"Gue ga harus mikir"** (Frictionless entry & interaction). 
 
 ---
 
-## 3. Current & Planned Features
+## ✨ Core Features & Personas
 
-### Core Features
+### 🏗️ The Architect (Pak RT / Survey Maker)
+* **AR Checkpoint Creation:** Pinpoint specific geographic locations to drop AR anchors.
+* **Survey Configuration:** Assign distinct interaction types to checkpoints:
+    * **AR MCQ & Emoji:** Quick sentiment and structured data gathering.
+    * **AR Photobooth:** Visual evidence collection.
+    * **3D Asset Likability:** Drop 3D models (e.g., trash cans, *lele*, chicken coops) in AR to gauge citizen approval before physical implementation.
+* **Data Aggregation:** View real-time, location-based insights.
 
-* **Mini-Checkpoint Discovery**: A real-time mini-map showing available interaction points based on GPS proximity.
-* **Proof-of-Presence Verification**: Hardware-level location gating ensures survey responses originate from the required site.
-* **Dynamic Survey Engine**: A single `SurveyInputView` that adapts its UI component based on the survey type (Emoji vs. MCQ vs. Photo).
-
-### Future Planned Features
-
-* **Aspiration Cloud**: A global input field enabling citizens to voice urban concerns anywhere, creating a "heat map" of citizen sentiment beyond predefined checkpoints.
-* **Role-Based Access**: Toggle logic between "Maker" (setup/admin) and "Contributor" (response/participation).
-* **Offline Cache**: Robust local storage to queue survey responses in low-connectivity areas and sync upon network recovery.
+### 🚶 The Contributor (Warga / Citizen)
+* **App Clip / Instant App Integration:** Zero-install entry. Users simply scan a QR code at the physical location to immediately launch the AR experience.
+* **Proximity Gating:** System verifies physical presence via `CoreLocation` before allowing survey submission, ensuring high-quality, on-site data.
+* **Walkable Aspirations:** A free-form feature allowing citizens to drop geo-anchored feedback (text/audio/photo) anywhere in the neighborhood.
 
 ---
 
-## 4. MVVM Architecture & Directory Structure
+## 🛠️ App Clip & Technical Architecture
 
-TanyaLe strictly adheres to the Model-View-ViewModel (MVVM) design pattern to ensure scalability and testability.
+TanyaLe strictly adheres to a **Backend-Agnostic MVVM Architecture**. Because we are deploying an App Clip, the Xcode project is divided into distinct targets. The App Clip **must remain under 15MB**, so code reuse and strict target management are critical.
 
-### MVVM Responsibility Mapping
+* **UI/UX:** SwiftUI
+* **AR/Spacial:** RealityKit & ARKit
+* **Location:** CoreLocation
+* **Database/Sync:** CloudKit (Public Database) to allow seamless sync between the App Clip (Warga) and the Main App (Pak RT) without requiring user authentication for citizens.
 
-* **Models**: Pure data structures (e.g., `SurveyRecord`, `Checkpoint`) representing the core business entities.
-* **ViewModels**: The "Brains" of the application. They coordinate business logic, interact with services, and expose `@Published` states to the Views.
-* **Services**: Modular, protocol-based interfaces handling cross-cutting concerns like hardware interaction (`LocationService`), data persistence (`SurveyStorageService`), and network calls.
-* **Views**: Declarative UI components that react automatically to ViewModel state changes.
-
-### Directory Layout
-
+### Directory & Target Layout
 ```text
-TanyaLe/
-├── App/
-│   ├── TanyaLeApp.swift         // Entry point & Dependency injection
-│   └── Info.plist               // Camera/Location permissions
-├── Models/
-│   ├── SurveyRecord.swift       // Codable blueprint
-│   └── Checkpoint.swift         // Location + Interaction type
-├── Services/
-│   ├── LocationService.swift    // Proximity logic
-│   └── SurveyStorageService.swift // Storage contract
-├── ViewModels/
-│   ├── MakerViewModel.swift     // Admin logic for checkpoint creation
-│   └── RespondentViewModel.swift // Map, proximity, & survey interaction logic
-└── Views/
-    ├── MapView.swift            // Mini-map preview for discovery
-    ├── SurveyInputView.swift    // Dynamic UI based on SurveyType
-    └── ARViewContainer.swift    // RealityKit/ARKit implementation
+TanyaLe_Workspace/
+├── 📁 Shared/                   // ⚠️ Code compiled for BOTH targets (Keep it light!)
+│   ├── Models/                // SurveyRecord, Checkpoint (Codable schemas)
+│   ├── Services/              // LocationService, SurveyStorageService (CloudKit)
+│   └── Views/                 // Reusable UI (Buttons, Theme, Cards)
+│
+├── 📱 TanyaLe/                  // MAIN APP TARGET (Pak RT / Architect)
+│   ├── TanyaLeApp.swift       // Main entry point
+│   ├── ViewModels/            // MakerViewModel (Admin logic)
+│   └── Views/                 // Dashboard, Data Aggregation, Checkpoint Creator
+│
+└── ⚡️ TanyaLeClip/              // APP CLIP TARGET (Warga / Respondent) - MAX 15MB
+    ├── TanyaLeClipApp.swift   // Clip entry point (Handles QR Code Payload)
+    ├── ViewModels/            // RespondentViewModel (Map & AR flow)
+    └── Views/                 // MapView, SurveyInputView, ARViewContainer
 
 ```
 
----
+### App Clip Specifics
 
-## 5. Development Guidelines for LLM Collaborators
-
-1. **Prioritize App Clip Constraints**: Maintain a minimal binary footprint. Favor native frameworks (RealityKit, CoreLocation, Combine) over third-party dependencies.
-2. **Modular Logic**: **Strictly forbidden** to write business logic directly into `ContentView.swift`. Always offload logic to `Services` or `ViewModels`.
-3. **Permission-First Design**: Any hardware interaction (Camera/GPS) must be gated by proper authorization checks implemented within the `LocationService` or `ARKit` delegate.
-4. **State Integrity**: Utilize state machines (via `enum` states in ViewModels) to manage lifecycle flows (Ready -> Capturing -> Saving -> Finished). Never allow UI interactions to occur out of sequence.
-5. **Conversational Tone**: TanyaLe is a platform for human dialogue. Maintain a human-centered, clear, and professional tone in all UI copy and error handling.
+* **Payload Handling:** The `TanyaLeClipApp.swift` listens for `onContinueUserActivity` to extract the Checkpoint ID encoded in the scanned QR code.
+* **Local Testing:** We use **Local Experiences** in iOS Developer Settings to simulate scanning a QR code during development.
+* **CloudKit Rules:** Since App Clip users are typically unauthenticated (not signed in to iCloud in the clip), all read/write operations for survey responses must hit the **CloudKit Public Database**.
 
 ---
 
-## 6. Implementation Backlog (For Now :P)
+## 🤝 Team Workflow (How We Build)
 
-This backlog organizes tasks by their operational domain: **Logic** (Services/ViewModels), **UI** (Views), and **Process** (Permissions/Architecture).
+We operate as a parallel, agile team of 4. To maintain velocity and prevent merge conflicts, we follow a strict **Feature-Branch Git Workflow**.
 
-### Mini-Backlog Summary
+### 1. Branching Strategy
 
-| Feature | Logic | UI | Process |
-| --- | --- | --- | --- |
-| **Proximity Discovery** | Implement `LocationService` distance math | Create `MapView.swift` with dynamic pins | Request `WhenInUse` location permissions |
-| **AR Evidence** | `SurveyViewModel` snapshot pipeline | `ARViewContainer` integration | Configure `Privacy - Camera Usage` |
-| **Survey Engine** | `SurveyType` enum switch case logic | `SurveyInputView` (dynamic inputs) | Define `SurveyRecord` data mapping |
-| **Admin Controls** | Coordinate capture service | "Place Checkpoint" button workflow | Setup role-based access flag |
-| **Cloud Sync** | Async `SurveyStorageService` implementation | Sync status spinner/progress view | Define `Codable` JSON structure |
+* `main` — Production-ready code.
+* `staging` — Integration branch for testing features together.
+* `feature/feature-name` — Active development branches.
 
----
+### 2. Development Process
 
-### Task Breakdown
+1. **Sync:** Always `git pull origin main` before starting new work.
+2. **Branch:** Create your feature branch (`git checkout -b feature/your-task`).
+3. **Target Verification:** *Crucial step.* If you add a file to `Shared/`, ensure both `TanyaLe` and `TanyaLeClip` are checked in the File Inspector's Target Membership.
+4. **Pull Request (PR):** Push your branch and open a PR targeting `staging`.
+5. **Review:** **At least one other team member must approve the PR**. No direct pushes to `main` or `staging`.
 
-#### Logic (Services & ViewModels)
+### 3. Responsibility Matrix
 
-* [ ] **Proximity Engine**: Refine `LocationService` to toggle `isAtCheckpoint` boolean based on a 20-meter geofence.
-* [ ] **Data Mapping**: Finalize `SurveyRecord` to handle multi-type responses (Emoji string, MCQ index, or photo path).
-* **State Machine**: Formalize `RespondentViewModel` states (Ready -> Capturing -> Saving -> Finished) to prevent invalid user inputs.
+To avoid stepping on each other's toes, stick to your assigned domains:
 
-#### UI (Views)
-
-* **Discovery Map**: Implement `MapView` to render checkpoint locations relative to the user's current GPS position.
-* **Adaptive Survey UI**: Build `SurveyInputView` to render specific components (Slider/Picker/Image) based on the current `SurveyType`.
-* **HUD Layer**: Ensure UI elements in `ContentView` do not obstruct the AR camera feed while maintaining high visibility.
-
-#### Process (Permissions & Architecture)
-
-* **App Clip Optimization**: Audit current imports to ensure only necessary frameworks are included to keep the binary small.
-* **Permission Flow**: Map out the graceful handling of denied permissions (Camera/Location) to prevent the "white screen" issue.
-* **Role Routing**: Implement a high-level switch in `TanyaLeApp` to toggle between the Maker (Admin) and Contributor (Respondent) UI entry points.
+* **Architect A (Alisha/Angel):** Design UI Kits, Figma flows, and 3D Asset integration.
+* **Architect B (Ian):** AR logic (MCQ, Emoji, Walkable Aspirations).
+* **Frontend C (Caca):** Spacial databases, Checkpoint logic, and Photobooth integration.
+* **Frontend D (Kikii):** Real-time aggregation logic, Like/Dislike tech, and Result previews.
 
 ---
 
-**Collaborator Note:** *TanyaLe is currently in its C4-Experiment phase. When proposing code changes, prioritize stability in the AR pipeline and the precision of geofencing logic. Always ensure the architecture remains backend-agnostic.*
+## 🚀 Getting Started (Local Setup)
+
+1. Clone the repository: `git clone [repository-url]`
+2. Open `TanyaLe.xcodeproj` in Xcode 15+.
+3. Select your target scheme at the top (Choose **TanyaLe** for Maker features, or **TanyaLeClip** for Warga features).
+4. Run on a physical iOS device (ARKit features will not compile/run on the simulator).
+
+**Note:** Ensure `Privacy - Camera Usage` and `Privacy - Location When In Use` are correctly configured in the `Info.plist` for **both** targets.
