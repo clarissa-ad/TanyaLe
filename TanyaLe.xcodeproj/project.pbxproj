@@ -6,30 +6,18 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		987379AD2FF629BA00739D44 /* ARPlacementPrototypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987379A72FF629BA00739D44 /* ARPlacementPrototypeView.swift */; };
+		987379AE2FF629BA00739D44 /* SandboxDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987379AA2FF629BA00739D44 /* SandboxDashboardView.swift */; };
+		987379AF2FF629BA00739D44 /* TanyaLeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987379A32FF629BA00739D44 /* TanyaLeApp.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		987379372FF61D8900739D44 /* TanyaLe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TanyaLe.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		987379A32FF629BA00739D44 /* TanyaLeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TanyaLeApp.swift; sourceTree = "<group>"; };
+		987379A72FF629BA00739D44 /* ARPlacementPrototypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPlacementPrototypeView.swift; sourceTree = "<group>"; };
+		987379AA2FF629BA00739D44 /* SandboxDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxDashboardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		987379432FF61D8A00739D44 /* Exceptions for "TanyaLe" folder in "TanyaLe" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 987379362FF61D8900739D44 /* TanyaLe */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		987379392FF61D8900739D44 /* TanyaLe */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				987379432FF61D8A00739D44 /* Exceptions for "TanyaLe" folder in "TanyaLe" target */,
-			);
-			path = TanyaLe;
-			sourceTree = "<group>";
-		};
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		987379342FF61D8900739D44 /* Frameworks */ = {
@@ -45,8 +33,10 @@
 		9873792E2FF61D8900739D44 = {
 			isa = PBXGroup;
 			children = (
-				987379392FF61D8900739D44 /* TanyaLe */,
+				987379902FF6260B00739D44 /* Shared */,
 				987379382FF61D8900739D44 /* Products */,
+				987379AC2FF629BA00739D44 /* TanyaLeApp */,
+				987379B42FF629CC00739D44 /* TanyaLeClip */,
 			);
 			sourceTree = "<group>";
 		};
@@ -56,6 +46,158 @@
 				987379372FF61D8900739D44 /* TanyaLe.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		9873798A2FF6260B00739D44 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Manager;
+			sourceTree = "<group>";
+		};
+		9873798B2FF6260B00739D44 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		9873798C2FF6260B00739D44 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		9873798D2FF6260B00739D44 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		9873798E2FF6260B00739D44 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		9873798F2FF6260B00739D44 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				9873798E2FF6260B00739D44 /* Components */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		987379902FF6260B00739D44 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				9873798A2FF6260B00739D44 /* Manager */,
+				9873798B2FF6260B00739D44 /* Models */,
+				9873798C2FF6260B00739D44 /* Resources */,
+				9873798D2FF6260B00739D44 /* Services */,
+				9873798F2FF6260B00739D44 /* Views */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		987379A42FF629BA00739D44 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				987379A32FF629BA00739D44 /* TanyaLeApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		987379A52FF629BA00739D44 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		987379A62FF629BA00739D44 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		987379A82FF629BA00739D44 /* Prototypes */ = {
+			isa = PBXGroup;
+			children = (
+				987379A72FF629BA00739D44 /* ARPlacementPrototypeView.swift */,
+			);
+			path = Prototypes;
+			sourceTree = "<group>";
+		};
+		987379A92FF629BA00739D44 /* Prototypes 2 */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Prototypes 2";
+			sourceTree = "<group>";
+		};
+		987379AB2FF629BA00739D44 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				987379A82FF629BA00739D44 /* Prototypes */,
+				987379A92FF629BA00739D44 /* Prototypes 2 */,
+				987379AA2FF629BA00739D44 /* SandboxDashboardView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		987379AC2FF629BA00739D44 /* TanyaLeApp */ = {
+			isa = PBXGroup;
+			children = (
+				987379A42FF629BA00739D44 /* App */,
+				987379A52FF629BA00739D44 /* Resources */,
+				987379A62FF629BA00739D44 /* ViewModels */,
+				987379AB2FF629BA00739D44 /* Views */,
+			);
+			path = TanyaLeApp;
+			sourceTree = "<group>";
+		};
+		987379B02FF629CC00739D44 /* App */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		987379B12FF629CC00739D44 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		987379B22FF629CC00739D44 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		987379B32FF629CC00739D44 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		987379B42FF629CC00739D44 /* TanyaLeClip */ = {
+			isa = PBXGroup;
+			children = (
+				987379B02FF629CC00739D44 /* App */,
+				987379B12FF629CC00739D44 /* Resources */,
+				987379B22FF629CC00739D44 /* ViewModels */,
+				987379B32FF629CC00739D44 /* Views */,
+			);
+			path = TanyaLeClip;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -72,9 +214,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				987379392FF61D8900739D44 /* TanyaLe */,
 			);
 			name = TanyaLe;
 			packageProductDependencies = (
@@ -132,6 +271,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				987379AD2FF629BA00739D44 /* ARPlacementPrototypeView.swift in Sources */,
+				987379AE2FF629BA00739D44 /* SandboxDashboardView.swift in Sources */,
+				987379AF2FF629BA00739D44 /* TanyaLeApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,9 +287,9 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MABNSMHA8L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TanyaLe/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = CAMERA_USAGE_DESCRIPTION;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -179,9 +321,9 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MABNSMHA8L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = TanyaLe/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = CAMERA_USAGE_DESCRIPTION;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
