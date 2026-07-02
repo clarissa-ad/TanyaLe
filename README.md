@@ -88,10 +88,10 @@ We operate as a parallel, agile team of 4. To maintain velocity and prevent merg
 
 To avoid stepping on each other's toes, stick to your assigned domains:
 
-* **Architect A (Alisha/Angel):** Design UI Kits, Figma flows, and 3D Asset integration.
-* **Architect B (Ian):** AR logic (MCQ, Emoji, Walkable Aspirations).
-* **Frontend C (Caca):** Spacial databases, Checkpoint logic, and Photobooth integration.
-* **Frontend D (Kikii):** Real-time aggregation logic, Like/Dislike tech, and Result previews.
+* **Architect A** Design UI Kits, Figma flows, and 3D Asset integration.
+* **Architect B** AR logic (MCQ, Emoji, Walkable Aspirations).
+* **Frontend C** Spacial databases, Checkpoint logic, and Photobooth integration.
+* **Frontend D** Real-time aggregation logic, Like/Dislike tech, and Result previews.
 
 ---
 
