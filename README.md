@@ -33,6 +33,9 @@ The core UX mandate for the citizen experience is **"Gue ga harus mikir"** (Fric
 
 TanyaLe strictly adheres to a **Backend-Agnostic MVVM Architecture**. Because we are deploying an App Clip, the Xcode project is divided into distinct targets. The App Clip **must remain under 15MB**, so code reuse and strict target management are critical.
 
+**⚠️ STRICT RULE: No Logic in Views.**
+Do not write business logic, database calls, or `CoreLocation` math inside `ContentView` or any SwiftUI View. Always route logic through Services (Protocols) and ViewModels.
+
 * **UI/UX:** SwiftUI
 * **AR/Spacial:** RealityKit & ARKit
 * **Location:** CoreLocation
@@ -42,17 +45,22 @@ TanyaLe strictly adheres to a **Backend-Agnostic MVVM Architecture**. Because we
 ```text
 TanyaLe_Workspace/
 ├── 📁 Shared/                   // ⚠️ Code compiled for BOTH targets (Keep it light!)
-│   ├── Models/                // SurveyRecord, Checkpoint (Codable schemas)
-│   ├── Services/              // LocationService, SurveyStorageService (CloudKit)
-│   └── Views/                 // Reusable UI (Buttons, Theme, Cards)
+│   ├── Manager/               // Hardware managers (LocationManager, ARManager)
+│   ├── Models/                // Codable schemas (SurveyRecord, Checkpoint)
+│   ├── Resources/             // Lightweight .usdz assets, Configs
+│   ├── Services/              // CloudKit, Network services
+│   └── Views/                 // Reusable UI pieces
+│       └── Components/        // Buttons, Theme, Cards
 │
-├── 📱 TanyaLe/                  // MAIN APP TARGET (Pak RT / Architect)
-│   ├── TanyaLeApp.swift       // Main entry point
+├── 📱 TanyaLeApp/               // MAIN APP TARGET (Pak RT / Architect)
+│   ├── App/                   // TanyaLeApp.swift (Main entry point)
+│   ├── Resources/             // Heavy 3D assets only for Pak RT
 │   ├── ViewModels/            // MakerViewModel (Admin logic)
 │   └── Views/                 // Dashboard, Data Aggregation, Checkpoint Creator
 │
 └── ⚡️ TanyaLeClip/              // APP CLIP TARGET (Warga / Respondent) - MAX 15MB
-    ├── TanyaLeClipApp.swift   // Clip entry point (Handles QR Code Payload)
+    ├── App/                   // TanyaLeClipApp.swift (Handles QR Code Payload)
+    ├── Resources/             // Lightweight QR/Scanner assets
     ├── ViewModels/            // RespondentViewModel (Map & AR flow)
     └── Views/                 // MapView, SurveyInputView, ARViewContainer
 
@@ -63,6 +71,7 @@ TanyaLe_Workspace/
 * **Payload Handling:** The `TanyaLeClipApp.swift` listens for `onContinueUserActivity` to extract the Checkpoint ID encoded in the scanned QR code.
 * **Local Testing:** We use **Local Experiences** in iOS Developer Settings to simulate scanning a QR code during development.
 * **CloudKit Rules:** Since App Clip users are typically unauthenticated (not signed in to iCloud in the clip), all read/write operations for survey responses must hit the **CloudKit Public Database**.
+* **Size Enforcement (Strict <15MB):** We must periodically check the App Thinning Size Report. Do NOT import large image assets into the `Shared/` folder. Heavy third-party packages (CocoaPods, large SPM dependencies) are strictly prohibited. Stick to native Apple frameworks.
 
 ---
 
@@ -88,10 +97,10 @@ We operate as a parallel, agile team of 4. To maintain velocity and prevent merg
 
 To avoid stepping on each other's toes, stick to your assigned domains:
 
-* **Architect A** Design UI Kits, Figma flows, and 3D Asset integration.
-* **Architect B** AR logic (MCQ, Emoji, Walkable Aspirations).
-* **Frontend C** Spacial databases, Checkpoint logic, and Photobooth integration.
-* **Frontend D** Real-time aggregation logic, Like/Dislike tech, and Result previews.
+* **Architect A (Alisha/Angel):** Design UI Kits, Figma flows, and 3D Asset integration.
+* **Architect B (Ian):** AR logic (MCQ, Emoji, Walkable Aspirations).
+* **Frontend C (Caca):** Spacial databases, Checkpoint logic, and Photobooth integration.
+* **Frontend D (Kikii):** Real-time aggregation logic, Like/Dislike tech, and Result previews.
 
 ---
 
@@ -102,4 +111,4 @@ To avoid stepping on each other's toes, stick to your assigned domains:
 3. Select your target scheme at the top (Choose **TanyaLe** for Maker features, or **TanyaLeClip** for Warga features).
 4. Run on a physical iOS device (ARKit features will not compile/run on the simulator).
 
-**Note:** Ensure `Privacy - Camera Usage` and `Privacy - Location When In Use` are correctly configured in the `Info.plist` for **both** targets.
+**Note (Permissions First):** Ensure `Privacy - Camera Usage` and `Privacy - Location When In Use` are correctly configured in the `Info.plist` for **both** targets. Additionally, any feature touching the camera or GPS **must handle authorization states gracefully**. Do not crash or show a blank screen if a user denies access—always provide clear UI fallback instructions.
