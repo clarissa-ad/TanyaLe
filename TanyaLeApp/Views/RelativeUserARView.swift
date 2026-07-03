@@ -18,6 +18,26 @@ struct RelativeUserARView: View {
                 .edgesIgnoringSafeArea(.all)
             
             VStack {
+                // HUD for Proximity Tracking
+                if isOriginSet, let dist = nearestDistance, let cp = nearestCheckpoint {
+                    Text("Nearest Task: \(cp.title) - \(String(format: "%.1f", dist))m away")
+                        .font(.headline)
+                        .padding()
+                        .background(dist < 2.0 ? Color.green.opacity(0.8) : Color.black.opacity(0.7))
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .padding(.top, 40)
+                        .animation(.easeInOut, value: dist)
+                } else if isOriginSet {
+                    Text("Scanning for checkpoints...")
+                        .font(.caption)
+                        .padding()
+                        .background(Color.black.opacity(0.7))
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .padding(.top, 40)
+                }
+                
                 Spacer()
                 
                 if !isOriginSet {
@@ -51,16 +71,39 @@ struct RelativeUserARView: View {
                     }
                     .padding(20)
                     .padding(.bottom, 20)
-                } else {
-                    // HUD
-                    Text("All checkpoints loaded! Look around.")
-                        .padding()
-                        .background(Color.black.opacity(0.7))
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                        .padding(.bottom, 30)
+                } else if let dist = nearestDistance, dist < 2.0, let cp = nearestCheckpoint {
+                    // PROXIMITY POPUP CARD
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("📍 Checkpoint Reached!")
+                            .font(.title2)
+                            .bold()
+                        Text(cp.taskDescription)
+                            .font(.body)
+                        
+                        Button(action: {
+                            // Logic to complete the task
+                            print("Task Completed: \(cp.title)")
+                        }) {
+                            Text("Complete Task")
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.purple)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                    }
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(15)
+                    .shadow(radius: 20)
+                    .padding(20)
+                    .transition(.move(edge: .bottom))
+                    .animation(.spring(), value: nearestDistance)
                 }
             }
+        }
+        .onReceive(Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()) { _ in
+            calculateProximity()
         }
         .navigationTitle("Citizen (Relative AR)")
         .navigationBarTitleDisplayMode(.inline)
@@ -70,7 +113,6 @@ struct RelativeUserARView: View {
         guard let arView = arContainer.view else { return }
         
         for cp in db.checkpoints {
-            // Reconstruct the physical position relative to the origin (App Clip)
             let position = SIMD3<Float>(cp.relativeX, cp.relativeY, cp.relativeZ)
             let anchor = AnchorEntity(world: position)
             
@@ -78,7 +120,6 @@ struct RelativeUserARView: View {
             let material = SimpleMaterial(color: .green, isMetallic: true)
             let boxEntity = ModelEntity(mesh: boxMesh, materials: [material])
             
-            // Add a floating text label above the box
             let textMesh = MeshResource.generateText(
                 cp.title,
                 extrusionDepth: 0.01,
@@ -93,6 +134,33 @@ struct RelativeUserARView: View {
             boxEntity.addChild(textEntity)
             anchor.addChild(boxEntity)
             arView.scene.addAnchor(anchor)
+        }
+    }
+    
+    private func calculateProximity() {
+        guard isOriginSet, let arView = arContainer.view, let camTransform = arView.session.currentFrame?.camera.transform else { return }
+        
+        // Extract camera position (relative to origin)
+        let camPos = SIMD3<Float>(camTransform.columns.3.x, camTransform.columns.3.y, camTransform.columns.3.z)
+        
+        var minDistance: Float = .infinity
+        var closestCP: Checkpoint? = nil
+        
+        for cp in db.checkpoints {
+            let cpPos = SIMD3<Float>(cp.relativeX, cp.relativeY, cp.relativeZ)
+            let distance = simd_distance(camPos, cpPos)
+            if distance < minDistance {
+                minDistance = distance
+                closestCP = cp
+            }
+        }
+        
+        if minDistance < 100 { // Only care if within 100 meters
+            nearestDistance = minDistance
+            nearestCheckpoint = closestCP
+        } else {
+            nearestDistance = nil
+            nearestCheckpoint = nil
         }
     }
 }

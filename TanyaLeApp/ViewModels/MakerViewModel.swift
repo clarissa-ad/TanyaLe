@@ -14,10 +14,10 @@ class MakerViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func addCheckpointAt(transform: SIMD3<Float>) {
+    func addCheckpointAt(transform: SIMD3<Float>, title: String, description: String) {
         let newCheckpoint = Checkpoint(
-            title: "New Checkpoint \(checkpoints.count + 1)",
-            taskDescription: "Please complete this task.",
+            title: title,
+            taskDescription: description,
             relativeX: transform.x,
             relativeY: transform.y,
             relativeZ: transform.z

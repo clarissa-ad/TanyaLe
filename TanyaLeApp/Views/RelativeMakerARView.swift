@@ -6,6 +6,10 @@ struct RelativeMakerARView: View {
     @StateObject private var viewModel = MakerViewModel()
     
     @State private var isOriginSet = false
+    @State private var showingAddSheet = false
+    @State private var tempTitle = ""
+    @State private var tempDesc = ""
+    @State private var pendingTransform: SIMD3<Float>?
     
     class ARContainer {
         var view: ARView?
@@ -31,8 +35,6 @@ struct RelativeMakerARView: View {
                             .cornerRadius(10)
                         
                         Button(action: {
-                            // In a real app, this happens automatically when the App Clip is scanned.
-                            // For this prototype, we just reset the world origin to exactly where the camera is right now.
                             if let arView = arContainer.view, let currentTransform = arView.session.currentFrame?.camera.transform {
                                 arView.session.setWorldOrigin(relativeTransform: currentTransform)
                                 isOriginSet = true
@@ -52,7 +54,15 @@ struct RelativeMakerARView: View {
                 } else {
                     // Step 2: Walk around and drop checkpoints
                     Button(action: {
-                        dropCheckpoint()
+                        if let arView = arContainer.view, let cameraTransform = arView.session.currentFrame?.camera.transform {
+                            // Calculate a position 1.5m in front of the current camera position
+                            var translation = matrix_identity_float4x4
+                            translation.columns.3.z = -1.5
+                            let newTransform = matrix_multiply(cameraTransform, translation)
+                            
+                            pendingTransform = SIMD3<Float>(newTransform.columns.3.x, newTransform.columns.3.y, newTransform.columns.3.z)
+                            showingAddSheet = true
+                        }
                     }) {
                         HStack {
                             Image(systemName: "cube.transparent")
@@ -72,24 +82,46 @@ struct RelativeMakerARView: View {
         }
         .navigationTitle("Maker (Relative AR)")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showingAddSheet) {
+            NavigationView {
+                Form {
+                    TextField("Checkpoint Title", text: $tempTitle)
+                    TextField("Description", text: $tempDesc)
+                }
+                .navigationTitle("New Checkpoint")
+                .navigationBarItems(
+                    leading: Button("Cancel") {
+                        showingAddSheet = false
+                    },
+                    trailing: Button("Save") {
+                        if let transform = pendingTransform {
+                            saveCheckpoint(at: transform)
+                        }
+                    }
+                    .disabled(tempTitle.isEmpty)
+                )
+            }
+        }
     }
     
-    private func dropCheckpoint() {
+    private func saveCheckpoint(at position: SIMD3<Float>) {
         guard let arView = arContainer.view else { return }
         
-        // Spawn it 1.5 meters in front of the camera
-        let anchor = AnchorEntity(world: SIMD3<Float>(0, 0, -1.5))
-        
+        // Spawn the box visually
+        let anchor = AnchorEntity(world: position)
         let boxMesh = MeshResource.generateBox(size: 0.15)
         let material = SimpleMaterial(color: .purple, isMetallic: true)
         let boxEntity = ModelEntity(mesh: boxMesh, materials: [material])
-        
         anchor.addChild(boxEntity)
         arView.scene.addAnchor(anchor)
         
-        // Save the physical offset relative to the App Clip!
-        let position = anchor.position
-        viewModel.addCheckpointAt(transform: position)
+        // Save to DB
+        viewModel.addCheckpointAt(transform: position, title: tempTitle, description: tempDesc)
+        
+        // Reset sheet state
+        tempTitle = ""
+        tempDesc = ""
+        showingAddSheet = false
     }
 }
 
