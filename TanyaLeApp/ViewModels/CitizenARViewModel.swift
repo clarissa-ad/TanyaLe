@@ -2,11 +2,13 @@ import Foundation
 import Combine
 import RealityKit
 import ARKit
+import CoreLocation
 
 class CitizenARViewModel: ObservableObject {
     @Published var isOriginSet = false
     @Published var nearestDistance: Float?
     @Published var nearestCheckpoint: Checkpoint?
+    @Published var arUserLocation: CLLocationCoordinate2D?
     
     private var trackingTimer: AnyCancellable?
     
@@ -26,11 +28,11 @@ class CitizenARViewModel: ObservableObject {
     }
     
     func startTracking(arContainer: RelativeUserARView.ARContainer) {
-        // Run tracking at 5 FPS to save battery and prevent UI lag
+        // Run a lightweight timer loop (5 FPS)
         trackingTimer = Timer.publish(every: 0.2, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
-                self?.calculateProximity(arContainer: arContainer)
+                self?.updateTracking(arContainer: arContainer)
             }
     }
     
@@ -39,10 +41,22 @@ class CitizenARViewModel: ObservableObject {
         trackingTimer = nil
     }
     
-    private func calculateProximity(arContainer: RelativeUserARView.ARContainer) {
-        guard isOriginSet, let arView = arContainer.view, let camTransform = arView.session.currentFrame?.camera.transform else { return }
+    private func updateTracking(arContainer: RelativeUserARView.ARContainer) {
+        guard let arView = arContainer.view,
+              let currentFrame = arView.session.currentFrame else { return }
         
+        let camTransform = currentFrame.camera.transform
         let camPos = SIMD3<Float>(camTransform.columns.3.x, camTransform.columns.3.y, camTransform.columns.3.z)
+        
+        // --- 1. Calculate AR Map Coordinates (Indoor Tracking) ---
+        if let origin = MockDatabaseService.shared.surveyOrigin {
+            let latOffset = Double(camPos.z) / 111111.0
+            let lonOffset = Double(camPos.x) / 111111.0
+            arUserLocation = CLLocationCoordinate2D(latitude: origin.latitude + latOffset, longitude: origin.longitude + lonOffset)
+        }
+        
+        // --- 2. Calculate Nearest Checkpoint Proximity ---
+        guard isOriginSet else { return }
         
         var minDistance: Float = .infinity
         var closestCP: Checkpoint? = nil
