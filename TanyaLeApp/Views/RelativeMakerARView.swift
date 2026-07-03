@@ -24,13 +24,11 @@ struct RelativeMakerARView: View {
             RelativeMakerARViewContainer(arContainer: arContainer)
                 .edgesIgnoringSafeArea(.all)
             
-            // Aiming Crosshair
-            if isOriginSet {
-                Image(systemName: "plus")
-                    .font(.system(size: 30, weight: .light))
-                    .foregroundColor(.white)
-                    .shadow(color: .black, radius: 2)
-            }
+            // Aiming Crosshair (Always visible so you can aim the origin too!)
+            Image(systemName: "plus")
+                .font(.system(size: 30, weight: .light))
+                .foregroundColor(.white)
+                .shadow(color: .black, radius: 2)
             
             VStack {
                 Spacer()
@@ -46,13 +44,27 @@ struct RelativeMakerARView: View {
                             .cornerRadius(10)
                         
                         Button(action: {
-                            if let arView = arContainer.view, let currentTransform = arView.session.currentFrame?.camera.transform {
-                                arView.session.setWorldOrigin(relativeTransform: currentTransform)
-                                isOriginSet = true
+                            if let arView = arContainer.view {
+                                let screenCenter = CGPoint(x: arView.bounds.midX, y: arView.bounds.midY)
                                 
-                                // Lock the Origin GPS!
-                                let loc = locationManager.userLocation?.coordinate ?? CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666)
-                                MockDatabaseService.shared.surveyOrigin = loc
+                                // 1. Try to shoot a raycast to find a physical origin anchor (e.g. on the wall/floor)
+                                if let query = arView.makeRaycastQuery(from: screenCenter, allowing: .estimatedPlane, alignment: .any),
+                                   let result = arView.session.raycast(query).first {
+                                    
+                                    arView.session.setWorldOrigin(relativeTransform: result.worldTransform)
+                                    isOriginSet = true
+                                    
+                                } else if let currentTransform = arView.session.currentFrame?.camera.transform {
+                                    // 2. Fallback to Camera if pointing at empty sky
+                                    arView.session.setWorldOrigin(relativeTransform: currentTransform)
+                                    isOriginSet = true
+                                }
+                                
+                                if isOriginSet {
+                                    // Lock the Origin GPS!
+                                    let loc = locationManager.userLocation?.coordinate ?? CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666)
+                                    MockDatabaseService.shared.surveyOrigin = loc
+                                }
                             }
                         }) {
                             Text("Scan App Clip (Set Origin)")
@@ -164,6 +176,7 @@ struct RelativeMakerARViewContainer: UIViewRepresentable {
         
         let config = ARWorldTrackingConfiguration()
         config.planeDetection = [.horizontal, .vertical]
+        config.worldAlignment = .gravityAndHeading // Locks Z-axis to True North
         arView.session.run(config, options: [.resetTracking, .removeExistingAnchors])
         
         arContainer.view = arView

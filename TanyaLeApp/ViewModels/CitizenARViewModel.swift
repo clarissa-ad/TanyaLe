@@ -11,7 +11,15 @@ class CitizenARViewModel: ObservableObject {
     private var trackingTimer: AnyCancellable?
     
     func setOrigin(arView: ARView) {
-        if let currentTransform = arView.session.currentFrame?.camera.transform {
+        let screenCenter = CGPoint(x: arView.bounds.midX, y: arView.bounds.midY)
+        
+        // Try to shoot a laser to find the physical spot on the floor/wall
+        if let query = arView.makeRaycastQuery(from: screenCenter, allowing: .estimatedPlane, alignment: .any),
+           let result = arView.session.raycast(query).first {
+            arView.session.setWorldOrigin(relativeTransform: result.worldTransform)
+            isOriginSet = true
+        } else if let currentTransform = arView.session.currentFrame?.camera.transform {
+            // Fallback to camera if pointing at the sky
             arView.session.setWorldOrigin(relativeTransform: currentTransform)
             isOriginSet = true
         }

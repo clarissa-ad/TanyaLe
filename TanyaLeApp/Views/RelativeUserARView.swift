@@ -13,10 +13,16 @@ struct RelativeUserARView: View {
     private let arContainer = ARContainer()
     
     var body: some View {
-        ZStack(alignment: .bottom) {
+        ZStack {
             // The AR Camera is safely insulated from SwiftUI re-renders!
             RelativeUserARViewContainer(arContainer: arContainer)
                 .edgesIgnoringSafeArea(.all)
+            
+            // Aiming Crosshair
+            Image(systemName: "plus")
+                .font(.system(size: 30, weight: .light))
+                .foregroundColor(.white)
+                .shadow(color: .black, radius: 2)
             
             VStack {
                 // HUD for Proximity Tracking
@@ -165,7 +171,8 @@ struct RelativeUserARViewContainer: UIViewRepresentable {
         let arView = ARView(frame: .zero)
         
         let config = ARWorldTrackingConfiguration()
-        config.planeDetection = [.horizontal]
+        config.planeDetection = [.horizontal, .vertical]
+        config.worldAlignment = .gravityAndHeading // Locks Z-axis to True North
         arView.session.run(config, options: [.resetTracking, .removeExistingAnchors])
         
         arContainer.view = arView
