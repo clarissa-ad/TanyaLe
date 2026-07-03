@@ -20,9 +20,17 @@ struct RelativeMakerARView: View {
     private let arContainer = ARContainer()
     
     var body: some View {
-        ZStack(alignment: .bottom) {
+        ZStack {
             RelativeMakerARViewContainer(arContainer: arContainer)
                 .edgesIgnoringSafeArea(.all)
+            
+            // Aiming Crosshair
+            if isOriginSet {
+                Image(systemName: "plus")
+                    .font(.system(size: 30, weight: .light))
+                    .foregroundColor(.white)
+                    .shadow(color: .black, radius: 2)
+            }
             
             VStack {
                 Spacer()
@@ -59,16 +67,29 @@ struct RelativeMakerARView: View {
                     .padding(20)
                     .padding(.bottom, 20)
                 } else {
-                    // Step 2: Walk around and drop checkpoints
+                    // Step 2: Walk around and aim with crosshair to drop checkpoints
                     Button(action: {
-                        if let arView = arContainer.view, let cameraTransform = arView.session.currentFrame?.camera.transform {
-                            // Calculate a position 1.5m in front of the current camera position
-                            var translation = matrix_identity_float4x4
-                            translation.columns.3.z = -1.5
-                            let newTransform = matrix_multiply(cameraTransform, translation)
+                        if let arView = arContainer.view {
+                            let screenCenter = CGPoint(x: arView.bounds.midX, y: arView.bounds.midY)
                             
-                            pendingTransform = SIMD3<Float>(newTransform.columns.3.x, newTransform.columns.3.y, newTransform.columns.3.z)
-                            showingAddSheet = true
+                            // 1. Try to shoot a raycast at the physical world
+                            if let query = arView.makeRaycastQuery(from: screenCenter, allowing: .estimatedPlane, alignment: .any),
+                               let result = arView.session.raycast(query).first {
+                                
+                                // Successful Raycast! Snap exactly to the physical object
+                                let transform = result.worldTransform
+                                pendingTransform = SIMD3<Float>(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
+                                showingAddSheet = true
+                                
+                            } else if let cameraTransform = arView.session.currentFrame?.camera.transform {
+                                // 2. Fallback: If aiming at empty space, drop 1.5m floating in front
+                                var translation = matrix_identity_float4x4
+                                translation.columns.3.z = -1.5
+                                let newTransform = matrix_multiply(cameraTransform, translation)
+                                
+                                pendingTransform = SIMD3<Float>(newTransform.columns.3.x, newTransform.columns.3.y, newTransform.columns.3.z)
+                                showingAddSheet = true
+                            }
                         }
                     }) {
                         HStack {
@@ -142,7 +163,7 @@ struct RelativeMakerARViewContainer: UIViewRepresentable {
         let arView = ARView(frame: .zero)
         
         let config = ARWorldTrackingConfiguration()
-        config.planeDetection = [.horizontal]
+        config.planeDetection = [.horizontal, .vertical]
         arView.session.run(config, options: [.resetTracking, .removeExistingAnchors])
         
         arContainer.view = arView
