@@ -7,13 +7,11 @@ struct Checkpoint: Identifiable, Codable, Equatable {
     var title: String
     var taskDescription: String
     
-    // GPS Coordinates
-    var latitude: Double
-    var longitude: Double
-    
-    var coordinate: CLLocationCoordinate2D {
-        CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-    }
+    // Relative physical offsets from the AR World Origin (App Clip scan location)
+    // All values are in meters.
+    var relativeX: Float
+    var relativeY: Float
+    var relativeZ: Float
     
     // Equatable conformance
     static func == (lhs: Checkpoint, rhs: Checkpoint) -> Bool {

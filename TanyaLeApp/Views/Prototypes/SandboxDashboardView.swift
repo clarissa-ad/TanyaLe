@@ -4,15 +4,16 @@ struct SandboxDashboardView: View {
     var body: some View {
         NavigationStack {
             List {
-                Section(header: Text("AR Prototypes")) {
-                    NavigationLink(destination: ARPlacementPrototypeView()) {
-                        Label("Test AR Checkpoint Placement", systemImage: "arkit")
+                Section(header: Text("Maker Prototypes")) {
+                    NavigationLink(destination: RelativeMakerARView()) {
+                        Label("Test Relative Maker AR", systemImage: "arkit")
                     }
                 }
                 
-                Section(header: Text("Data Prototypes")) {
-                    Text("Test CloudKit Auth (Coming Soon)")
-                        .foregroundColor(.secondary)
+                Section(header: Text("Citizen Prototypes")) {
+                    NavigationLink(destination: RelativeUserARView()) {
+                        Label("Test Relative Citizen AR", systemImage: "arkit")
+                    }
                 }
                 
                 Section(header: Text("UI Prototypes")) {
