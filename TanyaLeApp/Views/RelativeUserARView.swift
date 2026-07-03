@@ -2,6 +2,7 @@ import SwiftUI
 import RealityKit
 import ARKit
 import MapKit
+import Combine
 
 struct RelativeUserARView: View {
     @ObservedObject private var db = MockDatabaseService.shared
@@ -19,6 +20,9 @@ struct RelativeUserARView: View {
     class ARContainer {
         var view: ARView?
         var arrowEntity: Entity?
+        // Entities that should keep facing the camera (question boards, labels).
+        var faceCameraEntities: [Entity] = []
+        var updateSubscription: Cancellable?
     }
     private let arContainer = ARContainer()
     
@@ -219,10 +223,42 @@ struct RelativeUserARView: View {
                         Text("📍 Checkpoint Reached!")
                             .font(.title2)
                             .bold()
-                        Text(cp.taskDescription)
-                            .font(.body)
-                        
-                        if cp.surveyOptions.isEmpty {
+
+                        if cp.hasMCQ {
+                            // MCQ SURVEY: answer the question shown on the AR board
+                            Text(cp.question)
+                                .font(.headline)
+
+                            if let answer = db.responses[cp.id] {
+                                Label("Answered: \(answer)", systemImage: "checkmark.circle.fill")
+                                    .font(.body.bold())
+                                    .foregroundColor(.green)
+                            } else {
+                                VStack(spacing: 8) {
+                                    ForEach(cp.surveyOptions, id: \.self) { option in
+                                        Button(action: {
+                                            db.saveResponse(checkpointID: cp.id, answer: option)
+                                        }) {
+                                            Text(option)
+                                                .frame(maxWidth: .infinity)
+                                                .padding(10)
+                                                .background(Color.blue.opacity(0.1))
+                                                .foregroundColor(.blue)
+                                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.blue, lineWidth: 1))
+                                        }
+                                    }
+                                }
+                            }
+                        } else if cp.interactionType == .photobooth {
+                            Label("Photobooth interaction coming soon", systemImage: "camera")
+                                .foregroundColor(.secondary)
+                        } else if cp.interactionType == .emojiSlider {
+                            Label("Emoji slider interaction coming soon", systemImage: "face.smiling")
+                                .foregroundColor(.secondary)
+                        } else {
+                            Text(cp.taskDescription)
+                                .font(.body)
+
                             Button(action: {
                                 print("Task Completed: \(cp.title)")
                             }) {
@@ -232,21 +268,6 @@ struct RelativeUserARView: View {
                                     .background(Color.purple)
                                     .foregroundColor(.white)
                                     .cornerRadius(10)
-                            }
-                        } else {
-                            VStack(spacing: 8) {
-                                ForEach(cp.surveyOptions, id: \.self) { option in
-                                    Button(action: {
-                                        print("Selected option: \(option) for \(cp.title)")
-                                    }) {
-                                        Text(option)
-                                            .frame(maxWidth: .infinity)
-                                            .padding(10)
-                                            .background(Color.blue.opacity(0.1))
-                                            .foregroundColor(.blue)
-                                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.blue, lineWidth: 1))
-                                    }
-                                }
                             }
                         }
                     }
@@ -277,20 +298,36 @@ struct RelativeUserARView: View {
             let boxMesh = MeshResource.generateBox(size: 0.2)
             let material = SimpleMaterial(color: .green, isMetallic: true)
             let boxEntity = ModelEntity(mesh: boxMesh, materials: [material])
-            
-            let textMesh = MeshResource.generateText(
-                cp.title,
-                extrusionDepth: 0.01,
-                font: .systemFont(ofSize: 0.1),
-                containerFrame: .zero,
-                alignment: .center,
-                lineBreakMode: .byWordWrapping
-            )
-            let textEntity = ModelEntity(mesh: textMesh, materials: [SimpleMaterial(color: .white, isMetallic: false)])
-            textEntity.position = [0, 0.2, 0]
-            
-            boxEntity.addChild(textEntity)
             anchor.addChild(boxEntity)
+
+            if let board = MCQBoardEntity.make(for: cp) {
+                // Question board floats above the marker box. It gets yawed
+                // toward the camera every frame, staying upright like a beacon.
+                board.position = [0, 0.55, 0]
+                anchor.addChild(board)
+                arContainer.faceCameraEntities.append(board)
+            } else {
+                // No MCQ configured yet: show a floating title label instead.
+                let textMesh = MeshResource.generateText(
+                    cp.title,
+                    extrusionDepth: 0.01,
+                    font: .systemFont(ofSize: 0.1),
+                    containerFrame: .zero,
+                    alignment: .center,
+                    lineBreakMode: .byWordWrapping
+                )
+                let textEntity = ModelEntity(mesh: textMesh, materials: [SimpleMaterial(color: .white, isMetallic: false)])
+                // Center the text on its holder so the camera-facing rotation
+                // pivots around the middle instead of the glyphs' corner.
+                textEntity.position = [-textMesh.bounds.center.x, 0, 0]
+
+                let titleHolder = Entity()
+                titleHolder.position = [0, 0.25, 0]
+                titleHolder.addChild(textEntity)
+                boxEntity.addChild(titleHolder)
+                arContainer.faceCameraEntities.append(titleHolder)
+            }
+
             arView.scene.addAnchor(anchor)
         }
     }
@@ -306,11 +343,22 @@ struct RelativeUserARViewContainer: UIViewRepresentable {
         config.planeDetection = [.horizontal, .vertical]
         config.worldAlignment = .gravityAndHeading // Locks Z-axis to True North
         arView.session.run(config, options: [.resetTracking, .removeExistingAnchors])
-        
+
         arContainer.view = arView
+
+        // Rotate the question boards toward the camera every frame, yaw-only,
+        // so they stand upright like beacons and stay readable from any side.
+        arContainer.updateSubscription = arView.scene.subscribe(to: SceneEvents.Update.self) { [weak arContainer] _ in
+            guard let arContainer, let arView = arContainer.view else { return }
+            let cameraPosition = arView.cameraTransform.translation
+            for entity in arContainer.faceCameraEntities {
+                entity.yawToFace(cameraPosition: cameraPosition)
+            }
+        }
+
         return arView
     }
-    
+
     func updateUIView(_ uiView: ARView, context: Context) {}
 }
 

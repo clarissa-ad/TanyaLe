@@ -19,8 +19,8 @@ struct CheckpointListView: View {
                                 .foregroundColor(.gray)
                                 .lineLimit(1)
                             
-                            if !checkpoint.surveyOptions.isEmpty {
-                                Text("\(checkpoint.surveyOptions.count) Options")
+                            if checkpoint.interactionType != .none {
+                                Text(checkpoint.interactionType.rawValue)
                                     .font(.caption)
                                     .padding(.horizontal, 6)
                                     .padding(.vertical, 2)
