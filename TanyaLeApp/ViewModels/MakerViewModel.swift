@@ -15,7 +15,7 @@ class MakerViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func addCheckpointAt(transform: SIMD3<Float>, title: String, description: String, overrideLocation: CLLocationCoordinate2D? = nil) {
+    func addCheckpointAt(transform: SIMD3<Float>, title: String, description: String, interactionType: InteractionType, surveyOptions: [String], overrideLocation: CLLocationCoordinate2D? = nil) {
         
         let origin = overrideLocation ?? MockDatabaseService.shared.surveyOrigin ?? CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666)
         
@@ -30,6 +30,8 @@ class MakerViewModel: ObservableObject {
         let newCheckpoint = Checkpoint(
             title: title,
             taskDescription: description,
+            interactionType: interactionType,
+            surveyOptions: surveyOptions,
             latitude: finalLat,
             longitude: finalLon,
             relativeX: transform.x,

@@ -20,6 +20,7 @@ class MockDatabaseService: ObservableObject {
             Checkpoint(
                 title: "Trash Can Checkpoint",
                 taskDescription: "Does this look good?",
+                interactionType: .multipleChoice,
                 surveyOptions: ["Yes, looks good", "Needs replacement", "Overflowing"],
                 latitude: -6.200000,
                 longitude: 106.816666,

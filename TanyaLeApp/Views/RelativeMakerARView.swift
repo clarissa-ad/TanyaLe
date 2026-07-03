@@ -12,6 +12,8 @@ struct RelativeMakerARView: View {
     @State private var showingAddSheet = false
     @State private var tempTitle = ""
     @State private var tempDesc = ""
+    @State private var tempInteractionType: InteractionType = .info
+    @State private var tempSurveyOptions: [String] = []
     @State private var pendingTransform: SIMD3<Float>?
     
     class ARContainer {
@@ -133,8 +135,12 @@ struct RelativeMakerARView: View {
         .sheet(isPresented: $showingAddSheet) {
             NavigationView {
                 Form {
-                    TextField("Checkpoint Title", text: $tempTitle)
-                    TextField("Description", text: $tempDesc)
+                    CheckpointFormContent(
+                        title: $tempTitle,
+                        taskDescription: $tempDesc,
+                        interactionType: $tempInteractionType,
+                        surveyOptions: $tempSurveyOptions
+                    )
                 }
                 .navigationTitle("New Checkpoint")
                 .navigationBarItems(
@@ -164,11 +170,19 @@ struct RelativeMakerARView: View {
         arView.scene.addAnchor(anchor)
         
         // Save to DB
-        viewModel.addCheckpointAt(transform: position, title: tempTitle, description: tempDesc)
+        viewModel.addCheckpointAt(
+            transform: position,
+            title: tempTitle,
+            description: tempDesc,
+            interactionType: tempInteractionType,
+            surveyOptions: tempSurveyOptions.filter { !$0.isEmpty }
+        )
         
         // Reset sheet state
         tempTitle = ""
         tempDesc = ""
+        tempInteractionType = .info
+        tempSurveyOptions = []
         showingAddSheet = false
     }
 }

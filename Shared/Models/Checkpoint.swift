@@ -1,11 +1,20 @@
 import Foundation
 import CoreLocation
 
+enum InteractionType: String, Codable, CaseIterable, Identifiable {
+    case info = "Information Only"
+    case multipleChoice = "Multiple Choice Question"
+    case photo = "Photo Capture"
+    
+    var id: String { self.rawValue }
+}
+
 /// Represents a single task/checkpoint placed by Pak RT in the real world.
 struct Checkpoint: Identifiable, Codable, Equatable {
     var id: UUID = UUID()
     var title: String
     var taskDescription: String
+    var interactionType: InteractionType = .info
     var surveyOptions: [String] = []
     
     // GPS Coordinates (for 2D Map)
