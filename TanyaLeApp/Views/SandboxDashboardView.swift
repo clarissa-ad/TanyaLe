@@ -14,6 +14,11 @@ struct SandboxDashboardView: View {
                     Text("Test CloudKit Auth (Coming Soon)")
                         .foregroundColor(.secondary)
                 }
+                Section(header: Text("Citizen Prototypes")) {
+                    NavigationLink(destination: UserMinimapView()) {
+                        Label("Test User Minimap", systemImage: "map.circle")
+                    }
+                }
                 
                 Section(header: Text("UI Prototypes")) {
                     Text("Test 3D Asset Likability UI (Coming Soon)")
