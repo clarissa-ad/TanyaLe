@@ -49,9 +49,9 @@ struct MakerMapView: View {
                     if let location = locationManager.userLocation {
                         viewModel.addCheckpointAt(
                             transform: SIMD3<Float>(0, 0, 0),
-                            location: location,
                             title: "2D Map Point",
-                            description: "Dropped from map"
+                            description: "Dropped from map",
+                            overrideLocation: location.coordinate
                         )
                     }
                 }) {

@@ -41,6 +41,10 @@ struct RelativeMakerARView: View {
                             if let arView = arContainer.view, let currentTransform = arView.session.currentFrame?.camera.transform {
                                 arView.session.setWorldOrigin(relativeTransform: currentTransform)
                                 isOriginSet = true
+                                
+                                // Lock the Origin GPS!
+                                let loc = locationManager.userLocation?.coordinate ?? CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666)
+                                MockDatabaseService.shared.surveyOrigin = loc
                             }
                         }) {
                             Text("Scan App Clip (Set Origin)")
@@ -122,8 +126,7 @@ struct RelativeMakerARView: View {
         arView.scene.addAnchor(anchor)
         
         // Save to DB
-        let loc = locationManager.userLocation ?? CLLocation(latitude: 0, longitude: 0)
-        viewModel.addCheckpointAt(transform: position, location: loc, title: tempTitle, description: tempDesc)
+        viewModel.addCheckpointAt(transform: position, title: tempTitle, description: tempDesc)
         
         // Reset sheet state
         tempTitle = ""

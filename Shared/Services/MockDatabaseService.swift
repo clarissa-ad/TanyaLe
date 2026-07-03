@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import CoreLocation
 
 /// ⚠️ TEMPORARY DEV FILE ⚠️
 /// This is a mock database service for local development and testing only.
@@ -10,6 +11,9 @@ class MockDatabaseService: ObservableObject {
     static let shared = MockDatabaseService()
     
     @Published var checkpoints: [Checkpoint] = []
+    
+    // The locked GPS coordinate c where the AR Origin was set
+    @Published var surveyOrigin: CLLocationCoordinate2D?
     
     private init() {
         checkpoints = [
