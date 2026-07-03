@@ -222,15 +222,32 @@ struct RelativeUserARView: View {
                         Text(cp.taskDescription)
                             .font(.body)
                         
-                        Button(action: {
-                            print("Task Completed: \(cp.title)")
-                        }) {
-                            Text("Complete Task")
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(Color.purple)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
+                        if cp.surveyOptions.isEmpty {
+                            Button(action: {
+                                print("Task Completed: \(cp.title)")
+                            }) {
+                                Text("Complete Task")
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.purple)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(10)
+                            }
+                        } else {
+                            VStack(spacing: 8) {
+                                ForEach(cp.surveyOptions, id: \.self) { option in
+                                    Button(action: {
+                                        print("Selected option: \(option) for \(cp.title)")
+                                    }) {
+                                        Text(option)
+                                            .frame(maxWidth: .infinity)
+                                            .padding(10)
+                                            .background(Color.blue.opacity(0.1))
+                                            .foregroundColor(.blue)
+                                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.blue, lineWidth: 1))
+                                    }
+                                }
+                            }
                         }
                     }
                     .padding()

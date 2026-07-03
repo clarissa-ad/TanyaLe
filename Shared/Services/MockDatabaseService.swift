@@ -20,6 +20,7 @@ class MockDatabaseService: ObservableObject {
             Checkpoint(
                 title: "Trash Can Checkpoint",
                 taskDescription: "Does this look good?",
+                surveyOptions: ["Yes, looks good", "Needs replacement", "Overflowing"],
                 latitude: -6.200000,
                 longitude: 106.816666,
                 relativeX: 0,
@@ -37,5 +38,11 @@ class MockDatabaseService: ObservableObject {
     func deleteCheckpoint(_ id: UUID) {
         checkpoints.removeAll { $0.id == id }
         print("Mock DB: Deleted checkpoint \(id)")
+    }
+    
+    func updateCheckpoint(_ checkpoint: Checkpoint) {
+        if let index = checkpoints.firstIndex(where: { $0.id == checkpoint.id }) {
+            checkpoints[index] = checkpoint
+        }
     }
 }

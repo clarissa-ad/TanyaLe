@@ -6,6 +6,7 @@ struct Checkpoint: Identifiable, Codable, Equatable {
     var id: UUID = UUID()
     var title: String
     var taskDescription: String
+    var surveyOptions: [String] = []
     
     // GPS Coordinates (for 2D Map)
     var latitude: Double

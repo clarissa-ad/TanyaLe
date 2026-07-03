@@ -125,6 +125,11 @@ struct RelativeMakerARView: View {
         }
         .navigationTitle("Maker (Relative AR)")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarItems(trailing: NavigationLink(destination: CheckpointListView()) {
+            Image(systemName: "list.bullet")
+                .font(.title2)
+                .foregroundColor(.blue)
+        })
         .sheet(isPresented: $showingAddSheet) {
             NavigationView {
                 Form {

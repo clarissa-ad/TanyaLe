@@ -3,7 +3,6 @@
 ![Swift](https://img.shields.io/badge/Swift-5.9-F05138?style=flat&logo=swift)
 ![Platform](https://img.shields.io/badge/Platform-iOS%20%7C%20App%20Clip-lightgrey)
 ![Architecture](https://img.shields.io/badge/Architecture-MVVM-blue)
-![Phase](https://img.shields.io/badge/Phase-C4%20Experiment-success)
 
 ## 📖 Overview
 **TanyaLe** (from *tanya*, "to ask") is a dual-sided, location-aware AR platform bridging the gap between neighborhood leadership and citizen participation. Built on the **C4 Framework (Capture, Collect, Coordinate, Collaborate)**, it allows neighborhood heads (Pak RT) to validate their *program kerja* by placing interactive AR checkpoints in the real world, while citizens (*warga*) can effortlessly provide context-aware feedback.
@@ -85,13 +84,23 @@ We operate as a parallel, agile team of 4. To maintain velocity and prevent merg
 * `staging` — Integration branch for testing features together.
 * `feature/feature-name` — Active development branches.
 
-### 2. Development Process
+### 2. Development Process & Panduan Commit
 
-1. **Sync:** Always `git pull origin main` before starting new work.
-2. **Branch:** Create your feature branch (`git checkout -b feature/your-task`).
-3. **Target Verification:** *Crucial step.* If you add a file to `Shared/`, ensure both `TanyaLe` and `TanyaLeClip` are checked in the File Inspector's Target Membership.
-4. **Pull Request (PR):** Push your branch and open a PR targeting `staging`.
-5. **Review:** **At least one other team member must approve the PR**. No direct pushes to `main` or `staging`.
+1. **Sync:** Selalu pastikan branch lokal kamu up-to-date dengan origin sebelum mulai kerja (`git pull origin main`).
+2. **Branch:** Buat feature branch baru untuk setiap task (`git checkout -b feature/nama-task-kamu`).
+3. **Commit Messages:** Gunakan format **Conventional Commits** agar history rapi dan gampang dibaca:
+   * `feat:` — Untuk fitur baru (contoh: `feat: add AR checkpoint raycasting`)
+   * `fix:` — Untuk bug fixes (contoh: `fix: map coordinate drift indoors`)
+   * `chore:` — Untuk hal kecil/maintenance (contoh: `chore: update .gitignore`)
+   * `refactor:` — Untuk perombakan code (contoh: `refactor: move AR logic to viewmodel`)
+4. **Target Verification:** *Crucial step.* Jika kamu menambahkan file ke folder `Shared/`, pastikan di Xcode Inspector bahwa file tersebut dicentang untuk KEDUA target: `TanyaLe` dan `TanyaLeClip`.
+5. **Pull Request (PR) Flow:**
+   * Push branch kamu ke GitHub.
+   * Buka PR dari branch kamu menuju `staging` (JANGAN langsung ke `main`).
+   * Berikan deskripsi yang jelas tentang apa yang kamu ubah.
+   * **Wajib Review:** Minimal satu anggota tim lain harus meng-approve PR kamu sebelum di-merge.
+6. **Git Errors & Resolving Conflicts:**
+   * Jika GitHub Desktop menolak merge karena ada "changes present" di file `.DS_Store` (file sampah macOS), buka Terminal kamu dan ketik: `git restore .DS_Store`. Ini akan mereset file tersebut dan kamu bisa melanjutkan merge.
 
 ### 3. Responsibility Matrix
 
