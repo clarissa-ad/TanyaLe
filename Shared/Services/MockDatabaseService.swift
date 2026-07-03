@@ -14,8 +14,10 @@ class MockDatabaseService: ObservableObject {
     private init() {
         checkpoints = [
             Checkpoint(
-                title: "Trash Cans Survey",
+                title: "Trash Can Checkpoint",
                 taskDescription: "Does this look good?",
+                latitude: -6.200000,
+                longitude: 106.816666,
                 relativeX: 0,
                 relativeY: 0,
                 relativeZ: -3.0

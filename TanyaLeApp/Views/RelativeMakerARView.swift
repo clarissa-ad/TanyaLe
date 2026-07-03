@@ -2,8 +2,11 @@ import SwiftUI
 import RealityKit
 import ARKit
 
+import CoreLocation
+
 struct RelativeMakerARView: View {
     @StateObject private var viewModel = MakerViewModel()
+    @StateObject private var locationManager = LocationManager()
     
     @State private var isOriginSet = false
     @State private var showingAddSheet = false
@@ -80,6 +83,9 @@ struct RelativeMakerARView: View {
                 }
             }
         }
+        .onAppear {
+            locationManager.requestPermission()
+        }
         .navigationTitle("Maker (Relative AR)")
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showingAddSheet) {
@@ -116,7 +122,8 @@ struct RelativeMakerARView: View {
         arView.scene.addAnchor(anchor)
         
         // Save to DB
-        viewModel.addCheckpointAt(transform: position, title: tempTitle, description: tempDesc)
+        let loc = locationManager.userLocation ?? CLLocation(latitude: 0, longitude: 0)
+        viewModel.addCheckpointAt(transform: position, location: loc, title: tempTitle, description: tempDesc)
         
         // Reset sheet state
         tempTitle = ""

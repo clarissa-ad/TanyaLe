@@ -7,26 +7,36 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		98374BAB2FF74E4F005D18E1 /* Checkpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374BAA2FF74E4F005D18E1 /* Checkpoint.swift */; };
-		98374BAF2FF74E66005D18E1 /* MockDatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374BAE2FF74E66005D18E1 /* MockDatabaseService.swift */; };
-		98374BB42FF75221005D18E1 /* RelativeUserARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374BB32FF75221005D18E1 /* RelativeUserARView.swift */; };
-		98374BB52FF75221005D18E1 /* RelativeMakerARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374BB22FF75221005D18E1 /* RelativeMakerARView.swift */; };
-		98374BB72FF75234005D18E1 /* MakerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374BB62FF75234005D18E1 /* MakerViewModel.swift */; };
-		98374BB92FF7540E005D18E1 /* TanyaLeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374BB82FF7540E005D18E1 /* TanyaLeApp.swift */; };
-		987379AD2FF629BA00739D44 /* ARPlacementPrototypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987379A72FF629BA00739D44 /* ARPlacementPrototypeView.swift */; };
-		987379AE2FF629BA00739D44 /* SandboxDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 987379AA2FF629BA00739D44 /* SandboxDashboardView.swift */; };
+		98374BE52FF759EB005D18E1 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 98374BC12FF759EB005D18E1 /* README.md */; };
+		98374C062FF75B89005D18E1 /* MockDatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374BF22FF75B89005D18E1 /* MockDatabaseService.swift */; };
+		98374C072FF75B89005D18E1 /* MakerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374BFB2FF75B89005D18E1 /* MakerViewModel.swift */; };
+		98374C082FF75B89005D18E1 /* RelativeMakerARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C012FF75B89005D18E1 /* RelativeMakerARView.swift */; };
+		98374C092FF75B89005D18E1 /* MakerMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C002FF75B89005D18E1 /* MakerMapView.swift */; };
+		98374C0A2FF75B89005D18E1 /* RelativeUserARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C022FF75B89005D18E1 /* RelativeUserARView.swift */; };
+		98374C0B2FF75B89005D18E1 /* UserMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C032FF75B89005D18E1 /* UserMinimapView.swift */; };
+		98374C0C2FF75B89005D18E1 /* TanyaLeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374BF72FF75B89005D18E1 /* TanyaLeApp.swift */; };
+		98374C0D2FF75B89005D18E1 /* ARPlacementPrototypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374BFD2FF75B89005D18E1 /* ARPlacementPrototypeView.swift */; };
+		98374C0E2FF75B89005D18E1 /* SandboxDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374BFE2FF75B89005D18E1 /* SandboxDashboardView.swift */; };
+		98374C0F2FF75B89005D18E1 /* CitizenARViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374BFA2FF75B89005D18E1 /* CitizenARViewModel.swift */; };
+		98374C102FF75B89005D18E1 /* Checkpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374BEF2FF75B89005D18E1 /* Checkpoint.swift */; };
+		98374C112FF75B89005D18E1 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374BED2FF75B89005D18E1 /* LocationManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		98374BAA2FF74E4F005D18E1 /* Checkpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkpoint.swift; sourceTree = "<group>"; };
-		98374BAE2FF74E66005D18E1 /* MockDatabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDatabaseService.swift; sourceTree = "<group>"; };
-		98374BB22FF75221005D18E1 /* RelativeMakerARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeMakerARView.swift; sourceTree = "<group>"; };
-		98374BB32FF75221005D18E1 /* RelativeUserARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeUserARView.swift; sourceTree = "<group>"; };
-		98374BB62FF75234005D18E1 /* MakerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakerViewModel.swift; sourceTree = "<group>"; };
-		98374BB82FF7540E005D18E1 /* TanyaLeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TanyaLeApp.swift; sourceTree = "<group>"; };
+		98374BC12FF759EB005D18E1 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		98374BED2FF75B89005D18E1 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		98374BEF2FF75B89005D18E1 /* Checkpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkpoint.swift; sourceTree = "<group>"; };
+		98374BF22FF75B89005D18E1 /* MockDatabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDatabaseService.swift; sourceTree = "<group>"; };
+		98374BF72FF75B89005D18E1 /* TanyaLeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TanyaLeApp.swift; sourceTree = "<group>"; };
+		98374BFA2FF75B89005D18E1 /* CitizenARViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitizenARViewModel.swift; sourceTree = "<group>"; };
+		98374BFB2FF75B89005D18E1 /* MakerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakerViewModel.swift; sourceTree = "<group>"; };
+		98374BFD2FF75B89005D18E1 /* ARPlacementPrototypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPlacementPrototypeView.swift; sourceTree = "<group>"; };
+		98374BFE2FF75B89005D18E1 /* SandboxDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxDashboardView.swift; sourceTree = "<group>"; };
+		98374C002FF75B89005D18E1 /* MakerMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakerMapView.swift; sourceTree = "<group>"; };
+		98374C012FF75B89005D18E1 /* RelativeMakerARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeMakerARView.swift; sourceTree = "<group>"; };
+		98374C022FF75B89005D18E1 /* RelativeUserARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeUserARView.swift; sourceTree = "<group>"; };
+		98374C032FF75B89005D18E1 /* UserMinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMinimapView.swift; sourceTree = "<group>"; };
 		987379372FF61D8900739D44 /* TanyaLe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TanyaLe.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		987379A72FF629BA00739D44 /* ARPlacementPrototypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPlacementPrototypeView.swift; sourceTree = "<group>"; };
-		987379AA2FF629BA00739D44 /* SandboxDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxDashboardView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,13 +50,127 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		98374BEE2FF75B89005D18E1 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				98374BED2FF75B89005D18E1 /* LocationManager.swift */,
+			);
+			path = Manager;
+			sourceTree = "<group>";
+		};
+		98374BF02FF75B89005D18E1 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				98374BEF2FF75B89005D18E1 /* Checkpoint.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		98374BF12FF75B89005D18E1 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		98374BF32FF75B89005D18E1 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				98374BF22FF75B89005D18E1 /* MockDatabaseService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		98374BF42FF75B89005D18E1 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		98374BF52FF75B89005D18E1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				98374BF42FF75B89005D18E1 /* Components */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		98374BF62FF75B89005D18E1 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				98374BEE2FF75B89005D18E1 /* Manager */,
+				98374BF02FF75B89005D18E1 /* Models */,
+				98374BF12FF75B89005D18E1 /* Resources */,
+				98374BF32FF75B89005D18E1 /* Services */,
+				98374BF52FF75B89005D18E1 /* Views */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		98374BF82FF75B89005D18E1 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				98374BF72FF75B89005D18E1 /* TanyaLeApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		98374BF92FF75B89005D18E1 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		98374BFC2FF75B89005D18E1 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				98374BFA2FF75B89005D18E1 /* CitizenARViewModel.swift */,
+				98374BFB2FF75B89005D18E1 /* MakerViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		98374BFF2FF75B89005D18E1 /* Prototypes */ = {
+			isa = PBXGroup;
+			children = (
+				98374BFD2FF75B89005D18E1 /* ARPlacementPrototypeView.swift */,
+				98374BFE2FF75B89005D18E1 /* SandboxDashboardView.swift */,
+			);
+			path = Prototypes;
+			sourceTree = "<group>";
+		};
+		98374C042FF75B89005D18E1 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				98374BFF2FF75B89005D18E1 /* Prototypes */,
+				98374C002FF75B89005D18E1 /* MakerMapView.swift */,
+				98374C012FF75B89005D18E1 /* RelativeMakerARView.swift */,
+				98374C022FF75B89005D18E1 /* RelativeUserARView.swift */,
+				98374C032FF75B89005D18E1 /* UserMinimapView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		98374C052FF75B89005D18E1 /* TanyaLeApp */ = {
+			isa = PBXGroup;
+			children = (
+				98374BF82FF75B89005D18E1 /* App */,
+				98374BF92FF75B89005D18E1 /* Resources */,
+				98374BFC2FF75B89005D18E1 /* ViewModels */,
+				98374C042FF75B89005D18E1 /* Views */,
+			);
+			path = TanyaLeApp;
+			sourceTree = "<group>";
+		};
 		9873792E2FF61D8900739D44 = {
 			isa = PBXGroup;
 			children = (
-				987379902FF6260B00739D44 /* Shared */,
+				98374BC12FF759EB005D18E1 /* README.md */,
 				987379382FF61D8900739D44 /* Products */,
-				987379AC2FF629BA00739D44 /* TanyaLeApp */,
-				987379B42FF629CC00739D44 /* TanyaLeClip */,
+				98374BF62FF75B89005D18E1 /* Shared */,
+				98374C052FF75B89005D18E1 /* TanyaLeApp */,
 			);
 			sourceTree = "<group>";
 		};
@@ -56,155 +180,6 @@
 				987379372FF61D8900739D44 /* TanyaLe.app */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		9873798A2FF6260B00739D44 /* Manager */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Manager;
-			sourceTree = "<group>";
-		};
-		9873798B2FF6260B00739D44 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				98374BAA2FF74E4F005D18E1 /* Checkpoint.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		9873798C2FF6260B00739D44 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		9873798D2FF6260B00739D44 /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				98374BAE2FF74E66005D18E1 /* MockDatabaseService.swift */,
-			);
-			path = Services;
-			sourceTree = "<group>";
-		};
-		9873798E2FF6260B00739D44 /* Components */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Components;
-			sourceTree = "<group>";
-		};
-		9873798F2FF6260B00739D44 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				9873798E2FF6260B00739D44 /* Components */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		987379902FF6260B00739D44 /* Shared */ = {
-			isa = PBXGroup;
-			children = (
-				9873798A2FF6260B00739D44 /* Manager */,
-				9873798B2FF6260B00739D44 /* Models */,
-				9873798C2FF6260B00739D44 /* Resources */,
-				9873798D2FF6260B00739D44 /* Services */,
-				9873798F2FF6260B00739D44 /* Views */,
-			);
-			path = Shared;
-			sourceTree = "<group>";
-		};
-		987379A42FF629BA00739D44 /* App */ = {
-			isa = PBXGroup;
-			children = (
-				98374BB82FF7540E005D18E1 /* TanyaLeApp.swift */,
-			);
-			path = App;
-			sourceTree = "<group>";
-		};
-		987379A52FF629BA00739D44 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		987379A62FF629BA00739D44 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				98374BB62FF75234005D18E1 /* MakerViewModel.swift */,
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		987379A82FF629BA00739D44 /* Prototypes */ = {
-			isa = PBXGroup;
-			children = (
-				987379A72FF629BA00739D44 /* ARPlacementPrototypeView.swift */,
-				987379AA2FF629BA00739D44 /* SandboxDashboardView.swift */,
-			);
-			path = Prototypes;
-			sourceTree = "<group>";
-		};
-		987379AB2FF629BA00739D44 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				98374BB22FF75221005D18E1 /* RelativeMakerARView.swift */,
-				98374BB32FF75221005D18E1 /* RelativeUserARView.swift */,
-				987379A82FF629BA00739D44 /* Prototypes */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		987379AC2FF629BA00739D44 /* TanyaLeApp */ = {
-			isa = PBXGroup;
-			children = (
-				987379A42FF629BA00739D44 /* App */,
-				987379A52FF629BA00739D44 /* Resources */,
-				987379A62FF629BA00739D44 /* ViewModels */,
-				987379AB2FF629BA00739D44 /* Views */,
-			);
-			path = TanyaLeApp;
-			sourceTree = "<group>";
-		};
-		987379B02FF629CC00739D44 /* App */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = App;
-			sourceTree = "<group>";
-		};
-		987379B12FF629CC00739D44 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		987379B22FF629CC00739D44 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		987379B32FF629CC00739D44 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		987379B42FF629CC00739D44 /* TanyaLeClip */ = {
-			isa = PBXGroup;
-			children = (
-				987379B02FF629CC00739D44 /* App */,
-				987379B12FF629CC00739D44 /* Resources */,
-				987379B22FF629CC00739D44 /* ViewModels */,
-				987379B32FF629CC00739D44 /* Views */,
-			);
-			path = TanyaLeClip;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -268,6 +243,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98374BE52FF759EB005D18E1 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,14 +254,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				98374BB42FF75221005D18E1 /* RelativeUserARView.swift in Sources */,
-				98374BB52FF75221005D18E1 /* RelativeMakerARView.swift in Sources */,
-				98374BB92FF7540E005D18E1 /* TanyaLeApp.swift in Sources */,
-				98374BAB2FF74E4F005D18E1 /* Checkpoint.swift in Sources */,
-				98374BB72FF75234005D18E1 /* MakerViewModel.swift in Sources */,
-				987379AD2FF629BA00739D44 /* ARPlacementPrototypeView.swift in Sources */,
-				987379AE2FF629BA00739D44 /* SandboxDashboardView.swift in Sources */,
-				98374BAF2FF74E66005D18E1 /* MockDatabaseService.swift in Sources */,
+				98374C062FF75B89005D18E1 /* MockDatabaseService.swift in Sources */,
+				98374C072FF75B89005D18E1 /* MakerViewModel.swift in Sources */,
+				98374C082FF75B89005D18E1 /* RelativeMakerARView.swift in Sources */,
+				98374C092FF75B89005D18E1 /* MakerMapView.swift in Sources */,
+				98374C0A2FF75B89005D18E1 /* RelativeUserARView.swift in Sources */,
+				98374C0B2FF75B89005D18E1 /* UserMinimapView.swift in Sources */,
+				98374C0C2FF75B89005D18E1 /* TanyaLeApp.swift in Sources */,
+				98374C0D2FF75B89005D18E1 /* ARPlacementPrototypeView.swift in Sources */,
+				98374C0E2FF75B89005D18E1 /* SandboxDashboardView.swift in Sources */,
+				98374C0F2FF75B89005D18E1 /* CitizenARViewModel.swift in Sources */,
+				98374C102FF75B89005D18E1 /* Checkpoint.swift in Sources */,
+				98374C112FF75B89005D18E1 /* LocationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
