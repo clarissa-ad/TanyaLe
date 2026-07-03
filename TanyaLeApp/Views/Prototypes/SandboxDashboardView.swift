@@ -18,6 +18,9 @@ struct SandboxDashboardView: View {
                     NavigationLink(destination: UserMinimapView()) {
                         Label("Test User Minimap", systemImage: "map.circle")
                     }
+                    NavigationLink(destination: UserARView()) {
+                        Label("Test User AR Proximity", systemImage: "arkit")
+                    }
                 }
                 
                 Section(header: Text("UI Prototypes")) {
