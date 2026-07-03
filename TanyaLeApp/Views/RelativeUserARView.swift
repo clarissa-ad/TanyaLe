@@ -1,10 +1,20 @@
 import SwiftUI
 import RealityKit
 import ARKit
+import MapKit
 
 struct RelativeUserARView: View {
     @ObservedObject private var db = MockDatabaseService.shared
     @StateObject private var viewModel = CitizenARViewModel()
+    
+    enum MapState {
+        case hidden, preview, expanded
+    }
+    @State private var mapState: MapState = .preview
+    @State private var mapRegion = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666),
+        span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001) // Max zoom
+    )
     
     class ARContainer {
         var view: ARView?
@@ -23,6 +33,111 @@ struct RelativeUserARView: View {
                 .font(.system(size: 30, weight: .light))
                 .foregroundColor(.white)
                 .shadow(color: .black, radius: 2)
+            
+            // Top Right Minimap Preview
+            VStack {
+                HStack {
+                    Spacer()
+                    
+                    if viewModel.isOriginSet {
+                        VStack(alignment: .trailing) {
+                            if mapState != .hidden {
+                                Map(coordinateRegion: $mapRegion, annotationItems: db.checkpoints) { cp in
+                                    MapAnnotation(coordinate: cp.coordinate) {
+                                        Circle()
+                                            .fill(Color.green)
+                                            .frame(width: 15, height: 15)
+                                            .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                    }
+                                }
+                                .frame(width: mapState == .expanded ? 300 : 120, 
+                                       height: mapState == .expanded ? 400 : 120)
+                                .cornerRadius(15)
+                                .shadow(radius: 5)
+                                .overlay(
+                                    // Custom AR Blue Dot for Indoor Tracking
+                                    Group {
+                                        if let userLoc = viewModel.arUserLocation {
+                                            GeometryReader { proxy in
+                                                let mapCenter = mapRegion.center
+                                                let span = mapRegion.span
+                                                
+                                                // Convert coordinates to screen points based on region
+                                                // This is a rough estimation for the minimap preview
+                                                let xOffset = (userLoc.longitude - mapCenter.longitude) / span.longitudeDelta * Double(proxy.size.width)
+                                                let yOffset = (mapCenter.latitude - userLoc.latitude) / span.latitudeDelta * Double(proxy.size.height)
+                                                
+                                                Circle()
+                                                    .fill(Color.blue)
+                                                    .frame(width: 15, height: 15)
+                                                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                                    .shadow(radius: 2)
+                                                    .position(x: proxy.size.width / 2 + CGFloat(xOffset),
+                                                              y: proxy.size.height / 2 + CGFloat(yOffset))
+                                                    .animation(.linear(duration: 0.2), value: userLoc.latitude)
+                                            }
+                                        }
+                                    }
+                                )
+                                .onAppear {
+                                    // Snap to origin when map appears
+                                    if let origin = db.surveyOrigin {
+                                        mapRegion.center = origin
+                                    }
+                                }
+                            }
+                            
+                            // Floating Toggle Buttons
+                            HStack(spacing: 15) {
+                                if mapState != .hidden {
+                                    Button(action: {
+                                        withAnimation(.spring()) {
+                                            mapState = (mapState == .preview) ? .expanded : .preview
+                                        }
+                                    }) {
+                                        Image(systemName: mapState == .expanded ? "arrow.down.right.and.arrow.up.left" : "arrow.up.left.and.arrow.down.right")
+                                            .padding(10)
+                                            .background(Color.white.opacity(0.9))
+                                            .clipShape(Circle())
+                                            .shadow(radius: 3)
+                                    }
+                                    
+                                    Button(action: {
+                                        if let userLoc = viewModel.arUserLocation {
+                                            withAnimation {
+                                                mapRegion.center = userLoc
+                                            }
+                                        }
+                                    }) {
+                                        Image(systemName: "location.fill")
+                                            .padding(10)
+                                            .background(Color.white.opacity(0.9))
+                                            .clipShape(Circle())
+                                            .shadow(radius: 3)
+                                            .foregroundColor(.blue)
+                                    }
+                                }
+                                
+                                Button(action: {
+                                    withAnimation(.spring()) {
+                                        mapState = (mapState == .hidden) ? .preview : .hidden
+                                    }
+                                }) {
+                                    Image(systemName: mapState == .hidden ? "map.fill" : "eye.slash.fill")
+                                        .padding(10)
+                                        .background(Color.white.opacity(0.9))
+                                        .clipShape(Circle())
+                                        .shadow(radius: 3)
+                                }
+                            }
+                            .padding(.top, 5)
+                        }
+                        .padding()
+                    }
+                }
+                Spacer()
+            }
+            .zIndex(10)
             
             VStack {
                 // HUD for Proximity Tracking
