@@ -1,11 +1,14 @@
 import SwiftUI
 import RealityKit
 import ARKit
+import Combine
 
 struct RelativeUserARView: View {
     @ObservedObject private var db = MockDatabaseService.shared
     
     @State private var isOriginSet = false
+    @State private var nearestDistance: Float?
+    @State private var nearestCheckpoint: Checkpoint?
     
     class ARContainer {
         var view: ARView?
