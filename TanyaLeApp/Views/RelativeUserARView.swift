@@ -1,28 +1,32 @@
 import SwiftUI
 import RealityKit
 import ARKit
-import Combine
 
 struct RelativeUserARView: View {
     @ObservedObject private var db = MockDatabaseService.shared
-    
-    @State private var isOriginSet = false
-    @State private var nearestDistance: Float?
-    @State private var nearestCheckpoint: Checkpoint?
+    @StateObject private var viewModel = CitizenARViewModel()
     
     class ARContainer {
         var view: ARView?
+        var arrowEntity: Entity?
     }
     private let arContainer = ARContainer()
     
     var body: some View {
-        ZStack(alignment: .bottom) {
+        ZStack {
+            // The AR Camera is safely insulated from SwiftUI re-renders!
             RelativeUserARViewContainer(arContainer: arContainer)
                 .edgesIgnoringSafeArea(.all)
             
+            // Aiming Crosshair
+            Image(systemName: "plus")
+                .font(.system(size: 30, weight: .light))
+                .foregroundColor(.white)
+                .shadow(color: .black, radius: 2)
+            
             VStack {
                 // HUD for Proximity Tracking
-                if isOriginSet, let dist = nearestDistance, let cp = nearestCheckpoint {
+                if viewModel.isOriginSet, let dist = viewModel.nearestDistance, let cp = viewModel.nearestCheckpoint {
                     Text("Nearest Task: \(cp.title) - \(String(format: "%.1f", dist))m away")
                         .font(.headline)
                         .padding()
@@ -31,7 +35,7 @@ struct RelativeUserARView: View {
                         .cornerRadius(10)
                         .padding(.top, 40)
                         .animation(.easeInOut, value: dist)
-                } else if isOriginSet {
+                } else if viewModel.isOriginSet {
                     Text("Scanning for checkpoints...")
                         .font(.caption)
                         .padding()
@@ -43,7 +47,7 @@ struct RelativeUserARView: View {
                 
                 Spacer()
                 
-                if !isOriginSet {
+                if !viewModel.isOriginSet {
                     // Step 1: Simulate scanning the App Clip
                     VStack(spacing: 15) {
                         Text("Citizen: Stand at the exact same physical App Clip and tap below to calibrate.")
@@ -54,13 +58,33 @@ struct RelativeUserARView: View {
                             .cornerRadius(10)
                         
                         Button(action: {
-                            // Reset the world origin
-                            if let arView = arContainer.view, let currentTransform = arView.session.currentFrame?.camera.transform {
-                                arView.session.setWorldOrigin(relativeTransform: currentTransform)
-                                isOriginSet = true
+                            if let arView = arContainer.view {
+                                // 1. Set the Origin via ViewModel
+                                viewModel.setOrigin(arView: arView)
                                 
-                                // Automatically load all checkpoints!
+                                // 2. Create the 3D Directional Arrow
+                                let cameraAnchor = AnchorEntity(.camera)
+                                let wrapper = Entity()
+                                wrapper.position = [0, -0.1, -0.2]
+                                
+                                let mat = SimpleMaterial(color: .yellow, isMetallic: true)
+                                let cone = ModelEntity(mesh: MeshResource.generateCone(height: 0.05, radius: 0.02), materials: [mat])
+                                cone.transform.rotation = simd_quatf(angle: -.pi / 2, axis: [1, 0, 0])
+                                cone.position = [0, 0, -0.025]
+                                
+                                let cylinder = ModelEntity(mesh: MeshResource.generateCylinder(height: 0.05, radius: 0.005), materials: [mat])
+                                cylinder.transform.rotation = simd_quatf(angle: -.pi / 2, axis: [1, 0, 0])
+                                cylinder.position = [0, 0, 0.025]
+                                
+                                wrapper.addChild(cone)
+                                wrapper.addChild(cylinder)
+                                cameraAnchor.addChild(wrapper)
+                                arView.scene.addAnchor(cameraAnchor)
+                                arContainer.arrowEntity = wrapper
+                                
+                                // 3. Load Checkpoints and start Tracking!
                                 loadCheckpoints()
+                                viewModel.startTracking(arContainer: arContainer)
                             }
                         }) {
                             Text("Scan App Clip (Sync Origin)")
@@ -74,7 +98,7 @@ struct RelativeUserARView: View {
                     }
                     .padding(20)
                     .padding(.bottom, 20)
-                } else if let dist = nearestDistance, dist < 2.0, let cp = nearestCheckpoint {
+                } else if let dist = viewModel.nearestDistance, dist < 2.0, let cp = viewModel.nearestCheckpoint {
                     // PROXIMITY POPUP CARD
                     VStack(alignment: .leading, spacing: 10) {
                         Text("📍 Checkpoint Reached!")
@@ -84,7 +108,6 @@ struct RelativeUserARView: View {
                             .font(.body)
                         
                         Button(action: {
-                            // Logic to complete the task
                             print("Task Completed: \(cp.title)")
                         }) {
                             Text("Complete Task")
@@ -101,12 +124,12 @@ struct RelativeUserARView: View {
                     .shadow(radius: 20)
                     .padding(20)
                     .transition(.move(edge: .bottom))
-                    .animation(.spring(), value: nearestDistance)
+                    .animation(.spring(), value: viewModel.nearestDistance)
                 }
             }
         }
-        .onReceive(Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()) { _ in
-            calculateProximity()
+        .onDisappear {
+            viewModel.stopTracking()
         }
         .navigationTitle("Citizen (Relative AR)")
         .navigationBarTitleDisplayMode(.inline)
@@ -119,7 +142,7 @@ struct RelativeUserARView: View {
             let position = SIMD3<Float>(cp.relativeX, cp.relativeY, cp.relativeZ)
             let anchor = AnchorEntity(world: position)
             
-            let boxMesh = MeshResource.generateBox(size: 0.2) // 20cm box
+            let boxMesh = MeshResource.generateBox(size: 0.2)
             let material = SimpleMaterial(color: .green, isMetallic: true)
             let boxEntity = ModelEntity(mesh: boxMesh, materials: [material])
             
@@ -132,38 +155,11 @@ struct RelativeUserARView: View {
                 lineBreakMode: .byWordWrapping
             )
             let textEntity = ModelEntity(mesh: textMesh, materials: [SimpleMaterial(color: .white, isMetallic: false)])
-            textEntity.position = [0, 0.2, 0] // slightly above the box
+            textEntity.position = [0, 0.2, 0]
             
             boxEntity.addChild(textEntity)
             anchor.addChild(boxEntity)
             arView.scene.addAnchor(anchor)
-        }
-    }
-    
-    private func calculateProximity() {
-        guard isOriginSet, let arView = arContainer.view, let camTransform = arView.session.currentFrame?.camera.transform else { return }
-        
-        // Extract camera position (relative to origin)
-        let camPos = SIMD3<Float>(camTransform.columns.3.x, camTransform.columns.3.y, camTransform.columns.3.z)
-        
-        var minDistance: Float = .infinity
-        var closestCP: Checkpoint? = nil
-        
-        for cp in db.checkpoints {
-            let cpPos = SIMD3<Float>(cp.relativeX, cp.relativeY, cp.relativeZ)
-            let distance = simd_distance(camPos, cpPos)
-            if distance < minDistance {
-                minDistance = distance
-                closestCP = cp
-            }
-        }
-        
-        if minDistance < 100 { // Only care if within 100 meters
-            nearestDistance = minDistance
-            nearestCheckpoint = closestCP
-        } else {
-            nearestDistance = nil
-            nearestCheckpoint = nil
         }
     }
 }
@@ -175,7 +171,8 @@ struct RelativeUserARViewContainer: UIViewRepresentable {
         let arView = ARView(frame: .zero)
         
         let config = ARWorldTrackingConfiguration()
-        config.planeDetection = [.horizontal]
+        config.planeDetection = [.horizontal, .vertical]
+        config.worldAlignment = .gravityAndHeading // Locks Z-axis to True North
         arView.session.run(config, options: [.resetTracking, .removeExistingAnchors])
         
         arContainer.view = arView

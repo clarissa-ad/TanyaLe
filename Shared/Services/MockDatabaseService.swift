@@ -1,5 +1,6 @@
 import Foundation
 import Combine
+import CoreLocation
 
 /// ⚠️ TEMPORARY DEV FILE ⚠️
 /// This is a mock database service for local development and testing only.
@@ -11,11 +12,16 @@ class MockDatabaseService: ObservableObject {
     
     @Published var checkpoints: [Checkpoint] = []
     
+    // The locked GPS coordinate c where the AR Origin was set
+    @Published var surveyOrigin: CLLocationCoordinate2D?
+    
     private init() {
         checkpoints = [
             Checkpoint(
-                title: "Trash Cans Survey",
+                title: "Trash Can Checkpoint",
                 taskDescription: "Does this look good?",
+                latitude: -6.200000,
+                longitude: 106.816666,
                 relativeX: 0,
                 relativeY: 0,
                 relativeZ: -3.0

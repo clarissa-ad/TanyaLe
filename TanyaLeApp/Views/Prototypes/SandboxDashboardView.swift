@@ -5,12 +5,18 @@ struct SandboxDashboardView: View {
         NavigationStack {
             List {
                 Section(header: Text("Maker Prototypes")) {
+                    NavigationLink(destination: MakerMapView()) {
+                        Label("Test Checkpoint Map (2D)", systemImage: "map")
+                    }
                     NavigationLink(destination: RelativeMakerARView()) {
                         Label("Test Relative Maker AR", systemImage: "arkit")
                     }
                 }
                 
                 Section(header: Text("Citizen Prototypes")) {
+                    NavigationLink(destination: UserMinimapView()) {
+                        Label("Test User Minimap (2D)", systemImage: "map.circle")
+                    }
                     NavigationLink(destination: RelativeUserARView()) {
                         Label("Test Relative Citizen AR", systemImage: "arkit")
                     }
