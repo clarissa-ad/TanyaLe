@@ -14,17 +14,28 @@ class CitizenARViewModel: ObservableObject {
     
     func setOrigin(arView: ARView) {
         let screenCenter = CGPoint(x: arView.bounds.midX, y: arView.bounds.midY)
-        
+
         // Try to shoot a laser to find the physical spot on the floor/wall
         if let query = arView.makeRaycastQuery(from: screenCenter, allowing: .estimatedPlane, alignment: .any),
            let result = arView.session.raycast(query).first {
-            arView.session.setWorldOrigin(relativeTransform: result.worldTransform)
+            arView.session.setWorldOrigin(relativeTransform: translationOnly(result.worldTransform))
             isOriginSet = true
         } else if let currentTransform = arView.session.currentFrame?.camera.transform {
             // Fallback to camera if pointing at the sky
-            arView.session.setWorldOrigin(relativeTransform: currentTransform)
+            arView.session.setWorldOrigin(relativeTransform: translationOnly(currentTransform))
             isOriginSet = true
         }
+    }
+
+    /// Strips the rotation from a transform, keeping only its position.
+    /// Applying a rotated transform to `setWorldOrigin` would tilt the whole
+    /// world's axes (e.g. when the raycast hits a wall or the camera is
+    /// tilted), making anchored content lean or lie flat and breaking the
+    /// gravity + heading alignment shared with the Maker session.
+    private func translationOnly(_ transform: simd_float4x4) -> simd_float4x4 {
+        var result = matrix_identity_float4x4
+        result.columns.3 = transform.columns.3
+        return result
     }
     
     func startTracking(arContainer: RelativeUserARView.ARContainer) {

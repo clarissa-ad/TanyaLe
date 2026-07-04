@@ -47,16 +47,23 @@ struct RelativeMakerARView: View {
                             if let arView = arContainer.view {
                                 let screenCenter = CGPoint(x: arView.bounds.midX, y: arView.bounds.midY)
                                 
+                                // Only the position is used for the origin — keeping the
+                                // rotation would tilt the world's axes (wall hits, tilted
+                                // camera) and break the shared gravity/heading alignment.
                                 // 1. Try to shoot a raycast to find a physical origin anchor (e.g. on the wall/floor)
                                 if let query = arView.makeRaycastQuery(from: screenCenter, allowing: .estimatedPlane, alignment: .any),
                                    let result = arView.session.raycast(query).first {
-                                    
-                                    arView.session.setWorldOrigin(relativeTransform: result.worldTransform)
+
+                                    var originTransform = matrix_identity_float4x4
+                                    originTransform.columns.3 = result.worldTransform.columns.3
+                                    arView.session.setWorldOrigin(relativeTransform: originTransform)
                                     isOriginSet = true
-                                    
+
                                 } else if let currentTransform = arView.session.currentFrame?.camera.transform {
                                     // 2. Fallback to Camera if pointing at empty sky
-                                    arView.session.setWorldOrigin(relativeTransform: currentTransform)
+                                    var originTransform = matrix_identity_float4x4
+                                    originTransform.columns.3 = currentTransform.columns.3
+                                    arView.session.setWorldOrigin(relativeTransform: originTransform)
                                     isOriginSet = true
                                 }
                                 

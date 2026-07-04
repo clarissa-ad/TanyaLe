@@ -23,6 +23,8 @@ struct RelativeUserARView: View {
         // Entities that should keep facing the camera (question boards, labels).
         var faceCameraEntities: [Entity] = []
         var updateSubscription: Cancellable?
+        // Interactive survey cards, so taps can be routed to them.
+        var boardControllers: [MCQBoardController] = []
     }
     private let arContainer = ARContainer()
     
@@ -234,20 +236,10 @@ struct RelativeUserARView: View {
                                     .font(.body.bold())
                                     .foregroundColor(.green)
                             } else {
-                                VStack(spacing: 8) {
-                                    ForEach(cp.surveyOptions, id: \.self) { option in
-                                        Button(action: {
-                                            db.saveResponse(checkpointID: cp.id, answer: option)
-                                        }) {
-                                            Text(option)
-                                                .frame(maxWidth: .infinity)
-                                                .padding(10)
-                                                .background(Color.blue.opacity(0.1))
-                                                .foregroundColor(.blue)
-                                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.blue, lineWidth: 1))
-                                        }
-                                    }
-                                }
+                                // Answering happens on the floating AR card itself.
+                                Label("Tap an option on the floating card, then hit Submit", systemImage: "hand.tap")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
                             }
                         } else if cp.interactionType == .photobooth {
                             Label("Photobooth interaction coming soon", systemImage: "camera")
@@ -300,12 +292,20 @@ struct RelativeUserARView: View {
             let boxEntity = ModelEntity(mesh: boxMesh, materials: [material])
             anchor.addChild(boxEntity)
 
-            if let board = MCQBoardEntity.make(for: cp) {
-                // Question board floats above the marker box. It gets yawed
-                // toward the camera every frame, staying upright like a beacon.
-                board.position = [0, 0.55, 0]
-                anchor.addChild(board)
-                arContainer.faceCameraEntities.append(board)
+            if cp.hasMCQ {
+                // Interactive survey card floats above the marker box. It gets
+                // yawed toward the camera every frame, staying upright like a
+                // beacon, and answers are chosen by tapping the card itself.
+                Task { @MainActor in
+                    if let controller = await MCQBoardController.make(for: cp, onSubmit: { answer in
+                        MockDatabaseService.shared.saveResponse(checkpointID: cp.id, answer: answer)
+                    }) {
+                        controller.rootEntity.position = [0, 1.0, 0]
+                        anchor.addChild(controller.rootEntity)
+                        arContainer.faceCameraEntities.append(controller.rootEntity)
+                        arContainer.boardControllers.append(controller)
+                    }
+                }
             } else {
                 // No MCQ configured yet: show a floating title label instead.
                 let textMesh = MeshResource.generateText(
@@ -335,9 +335,39 @@ struct RelativeUserARView: View {
 
 struct RelativeUserARViewContainer: UIViewRepresentable {
     let arContainer: RelativeUserARView.ARContainer
-    
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(arContainer: arContainer)
+    }
+
+    /// Routes taps on the AR view to the interactive survey cards.
+    @MainActor
+    class Coordinator: NSObject {
+        let arContainer: RelativeUserARView.ARContainer
+
+        init(arContainer: RelativeUserARView.ARContainer) {
+            self.arContainer = arContainer
+        }
+
+        @objc func handleTap(_ recognizer: UITapGestureRecognizer) {
+            guard let arView = arContainer.view else { return }
+            let point = recognizer.location(in: arView)
+            guard let entity = arView.entity(at: point) else { return }
+
+            let cameraPosition = arView.cameraTransform.translation
+            for controller in arContainer.boardControllers {
+                if controller.handleTap(on: entity, cameraPosition: cameraPosition) {
+                    return
+                }
+            }
+        }
+    }
+
     func makeUIView(context: Context) -> ARView {
         let arView = ARView(frame: .zero)
+
+        let tapRecognizer = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleTap(_:)))
+        arView.addGestureRecognizer(tapRecognizer)
         
         let config = ARWorldTrackingConfiguration()
         config.planeDetection = [.horizontal, .vertical]
