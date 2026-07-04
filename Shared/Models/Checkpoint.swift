@@ -24,9 +24,19 @@ struct Checkpoint: Identifiable, Codable, Equatable {
     var question: String = ""
     var surveyOptions: [String] = []
 
+    // Emoji slider configuration (used when interactionType == .emojiSlider).
+    // The citizen slides between the two emoji to answer the question.
+    var emojiLeft: String = "😡"
+    var emojiRight: String = "😍"
+
     /// Whether this checkpoint has a complete multiple choice question to display.
     var hasMCQ: Bool {
         interactionType == .mcq && !question.isEmpty && surveyOptions.count >= 2
+    }
+
+    /// Whether this checkpoint has a complete emoji slider to display.
+    var hasEmojiSlider: Bool {
+        interactionType == .emojiSlider && !question.isEmpty && !emojiLeft.isEmpty && !emojiRight.isEmpty
     }
     
     // GPS Coordinates (for 2D Map)

@@ -24,7 +24,7 @@ struct RelativeUserARView: View {
         var faceCameraEntities: [Entity] = []
         var updateSubscription: Cancellable?
         // Interactive survey cards, so taps can be routed to them.
-        var boardControllers: [MCQBoardController] = []
+        var boardControllers: [any ARSurveyBoard] = []
     }
     private let arContainer = ARContainer()
     
@@ -226,8 +226,8 @@ struct RelativeUserARView: View {
                             .font(.title2)
                             .bold()
 
-                        if cp.hasMCQ {
-                            // MCQ SURVEY: answer the question shown on the AR board
+                        if cp.hasMCQ || cp.hasEmojiSlider {
+                            // SURVEY: answered on the floating AR card itself
                             Text(cp.question)
                                 .font(.headline)
 
@@ -235,9 +235,12 @@ struct RelativeUserARView: View {
                                 Label("Answered: \(answer)", systemImage: "checkmark.circle.fill")
                                     .font(.body.bold())
                                     .foregroundColor(.green)
-                            } else {
-                                // Answering happens on the floating AR card itself.
+                            } else if cp.hasMCQ {
                                 Label("Tap an option on the floating card, then hit Submit", systemImage: "hand.tap")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            } else {
+                                Label("Tap along the slider on the floating card, then hit Submit", systemImage: "hand.tap")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             }
@@ -245,7 +248,7 @@ struct RelativeUserARView: View {
                             Label("Photobooth interaction coming soon", systemImage: "camera")
                                 .foregroundColor(.secondary)
                         } else if cp.interactionType == .emojiSlider {
-                            Label("Emoji slider interaction coming soon", systemImage: "face.smiling")
+                            Label("Emoji slider needs a question configured", systemImage: "face.smiling")
                                 .foregroundColor(.secondary)
                         } else {
                             Text(cp.taskDescription)
@@ -292,14 +295,19 @@ struct RelativeUserARView: View {
             let boxEntity = ModelEntity(mesh: boxMesh, materials: [material])
             anchor.addChild(boxEntity)
 
-            if cp.hasMCQ {
+            if cp.hasMCQ || cp.hasEmojiSlider {
                 // Interactive survey card floats above the marker box. It gets
                 // yawed toward the camera every frame, staying upright like a
-                // beacon, and answers are chosen by tapping the card itself.
+                // beacon, and answers are given by tapping the card itself.
                 Task { @MainActor in
-                    if let controller = await MCQBoardController.make(for: cp, onSubmit: { answer in
+                    let onSubmit: (String) -> Void = { answer in
                         MockDatabaseService.shared.saveResponse(checkpointID: cp.id, answer: answer)
-                    }) {
+                    }
+                    let controller: (any ARSurveyBoard)? = cp.hasMCQ
+                        ? await MCQBoardController.make(for: cp, onSubmit: onSubmit)
+                        : await EmojiSliderBoardController.make(for: cp, onSubmit: onSubmit)
+
+                    if let controller {
                         controller.rootEntity.position = [0, 1.0, 0]
                         anchor.addChild(controller.rootEntity)
                         arContainer.faceCameraEntities.append(controller.rootEntity)
@@ -352,11 +360,13 @@ struct RelativeUserARViewContainer: UIViewRepresentable {
         @objc func handleTap(_ recognizer: UITapGestureRecognizer) {
             guard let arView = arContainer.view else { return }
             let point = recognizer.location(in: arView)
-            guard let entity = arView.entity(at: point) else { return }
+            // Collision-cast so we know both the entity and where on it the
+            // tap landed (the slider track needs the position).
+            guard let hit = arView.hitTest(point).first else { return }
 
             let cameraPosition = arView.cameraTransform.translation
             for controller in arContainer.boardControllers {
-                if controller.handleTap(on: entity, cameraPosition: cameraPosition) {
+                if controller.handleTap(on: hit.entity, at: hit.position, cameraPosition: cameraPosition) {
                     return
                 }
             }

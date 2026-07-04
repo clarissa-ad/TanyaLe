@@ -2,18 +2,10 @@ import SwiftUI
 import RealityKit
 import UIKit
 
-/// The TanyaLe accent color used on the AR survey card.
+/// The TanyaLe accent color used on the AR survey cards.
 private let tanyaPurple = Color(red: 0.55, green: 0.27, blue: 0.96)
 
-/// Builds and drives the interactive floating AR survey card at an MCQ
-/// checkpoint: white rounded card, radio-style options, and a submit pill,
-/// matching the design mockup.
-///
-/// Every piece (question, each option row, submit button) is a SwiftUI view
-/// rendered to a texture on its own plane with a collision shape, so taps on
-/// the ARView can be routed to the exact option via `handleTap`. Selecting
-/// swaps the row texture to its purple-checked state; submitting reports the
-/// answer and replaces the card with a thank-you confirmation.
+/// An interactive floating AR survey card that can receive taps.
 ///
 /// The root entity is meant to be rotated toward the camera every frame with
 /// `yawToFace(cameraPosition:)`. Yaw-only rotation (around the world Y axis)
@@ -21,27 +13,116 @@ private let tanyaPurple = Color(red: 0.55, green: 0.27, blue: 0.96)
 /// pitches and rolls with the camera, making the card lie flat on the ground
 /// when viewed from above. Yaw-only keeps it floating upright.
 @MainActor
-final class MCQBoardController {
-    
-    // Layout constants in points, mirroring the SwiftUI card design.
-    private static let cardWidthPoints: CGFloat = 340
-    private static let innerWidthPoints: CGFloat = 292
-    private static let paddingPoints: CGFloat = 24
-    private static let sectionSpacingPoints: CGFloat = 20
-    private static let optionSpacingPoints: CGFloat = 12
-    private static let cornerRadiusPoints: CGFloat = 24
-    
+protocol ARSurveyBoard: AnyObject {
+    /// The entity to place in the scene (and yaw toward the camera).
+    var rootEntity: Entity { get }
+
+    /// Routes a tapped entity (and the tap's world-space position) to the
+    /// board. Returns true when the tap belonged to this board.
+    func handleTap(on entity: Entity, at worldPosition: SIMD3<Float>?, cameraPosition: SIMD3<Float>) -> Bool
+}
+
+// MARK: - Shared card rendering
+
+/// Shared layout constants and texture-rendering helpers for the AR survey
+/// cards. Every card piece is a SwiftUI view rendered to a texture on its own
+/// plane, so the cards look exactly like the design while staying lightweight
+/// for the App Clip (no bundled assets).
+@MainActor
+private enum SurveyCard {
+
+    // Layout constants in points, mirroring the SwiftUI card designs.
+    static let cardWidthPoints: CGFloat = 340
+    static let innerWidthPoints: CGFloat = 292
+    static let paddingPoints: CGFloat = 24
+    static let sectionSpacingPoints: CGFloat = 20
+    static let optionSpacingPoints: CGFloat = 12
+    static let cornerRadiusPoints: CGFloat = 24
+
     /// Card width in the AR world, in meters.
-    private static let boardWidthMeters: Float = 0.5
-    private static var metersPerPoint: Float { boardWidthMeters / Float(cardWidthPoints) }
-    
+    static let boardWidthMeters: Float = 0.5
+    static var metersPerPoint: Float { boardWidthMeters / Float(cardWidthPoints) }
+
     /// Citizens must be roughly this close (meters) for taps to register,
     /// keeping responses on-site (proximity gating).
-    private static let maxInteractionDistance: Float = 3.0
-    
-    /// The entity to place in the scene (and yaw toward the camera).
+    static let maxInteractionDistance: Float = 3.0
+
+    /// A SwiftUI view rendered to a texture, with its layout size in points.
+    struct RenderedPiece {
+        let texture: TextureResource
+        let sizePoints: CGSize
+
+        var material: UnlitMaterial {
+            var material = UnlitMaterial()
+            material.color = .init(texture: .init(texture))
+            return material
+        }
+    }
+
+    static func renderPiece<Content: View>(_ content: Content) async -> RenderedPiece? {
+        let renderer = ImageRenderer(content: content)
+        renderer.scale = 3
+        guard let cgImage = renderer.cgImage else { return nil }
+        guard let texture = try? await TextureResource(image: cgImage, options: .init(semantic: .color)) else { return nil }
+        let size = CGSize(width: CGFloat(cgImage.width) / renderer.scale,
+                          height: CGFloat(cgImage.height) / renderer.scale)
+        return RenderedPiece(texture: texture, sizePoints: size)
+    }
+
+    static func pieceEntity(_ piece: RenderedPiece, tappable: Bool = false) -> ModelEntity {
+        let widthMeters = Float(piece.sizePoints.width) * metersPerPoint
+        let heightMeters = Float(piece.sizePoints.height) * metersPerPoint
+        let entity = ModelEntity(
+            mesh: .generatePlane(width: widthMeters, height: heightMeters),
+            materials: [piece.material]
+        )
+        if tappable {
+            // Collision shape so ARView taps can be hit-tested.
+            entity.collision = CollisionComponent(shapes: [
+                .generateBox(width: widthMeters, height: heightMeters, depth: 0.01)
+            ])
+        }
+        return entity
+    }
+
+    /// The white rounded card background sized to the given content height.
+    static func backgroundEntity(cardHeightPoints: CGFloat) -> ModelEntity {
+        let mesh = MeshResource.generatePlane(
+            width: boardWidthMeters,
+            height: Float(cardHeightPoints) * metersPerPoint,
+            cornerRadius: Float(cornerRadiusPoints) * metersPerPoint
+        )
+        return ModelEntity(mesh: mesh, materials: [UnlitMaterial(color: .white)])
+    }
+
+    /// Replaces the card's content with the thank-you confirmation card.
+    static func swapToThankYouCard(on rootEntity: Entity) async {
+        guard let piece = await renderPiece(ThankYouCardView()) else { return }
+
+        for child in Array(rootEntity.children) {
+            child.removeFromParent()
+        }
+
+        let mesh = MeshResource.generatePlane(
+            width: Float(piece.sizePoints.width) * metersPerPoint,
+            height: Float(piece.sizePoints.height) * metersPerPoint,
+            cornerRadius: Float(cornerRadiusPoints) * metersPerPoint
+        )
+        rootEntity.addChild(ModelEntity(mesh: mesh, materials: [piece.material]))
+    }
+}
+
+// MARK: - MCQ card
+
+/// Builds and drives the interactive floating MCQ card: white rounded card,
+/// radio-style options, and a submit pill. Selecting swaps the row texture to
+/// its purple-checked state; submitting reports the answer and replaces the
+/// card with the thank-you confirmation.
+@MainActor
+final class MCQBoardController: ARSurveyBoard {
+
     let rootEntity = Entity()
-    
+
     private let checkpoint: Checkpoint
     private let onSubmit: (String) -> Void
     private var optionEntities: [ModelEntity] = []
@@ -49,12 +130,12 @@ final class MCQBoardController {
     private var submitEntity: ModelEntity?
     private var selectedIndex: Int?
     private var isSubmitted = false
-    
+
     private init(checkpoint: Checkpoint, onSubmit: @escaping (String) -> Void) {
         self.checkpoint = checkpoint
         self.onSubmit = onSubmit
     }
-    
+
     /// Creates the interactive card for a checkpoint, or nil when it has no
     /// MCQ data. Async because texture uploads to the GPU are async.
     static func make(for checkpoint: Checkpoint, onSubmit: @escaping (String) -> Void) async -> MCQBoardController? {
@@ -63,16 +144,14 @@ final class MCQBoardController {
         guard await controller.buildQuestionCard() else { return nil }
         return controller
     }
-    
-    /// Routes a tapped entity to the matching option or the submit button.
-    /// Returns true when the tap belonged to this board.
-    func handleTap(on tappedEntity: Entity, cameraPosition: SIMD3<Float>) -> Bool {
+
+    func handleTap(on tappedEntity: Entity, at worldPosition: SIMD3<Float>?, cameraPosition: SIMD3<Float>) -> Bool {
         guard !isSubmitted else { return false }
-        
+
         // Proximity gate: ignore taps from too far away.
         let boardPosition = rootEntity.position(relativeTo: nil)
-        guard simd_distance(boardPosition, cameraPosition) <= Self.maxInteractionDistance else { return false }
-        
+        guard simd_distance(boardPosition, cameraPosition) <= SurveyCard.maxInteractionDistance else { return false }
+
         if let index = optionEntities.firstIndex(where: { $0 === tappedEntity }) {
             select(index)
             return true
@@ -83,142 +162,234 @@ final class MCQBoardController {
         }
         return false
     }
-    
-    // MARK: - Interaction
-    
+
     private func select(_ index: Int) {
         selectedIndex = index
         for (i, entity) in optionEntities.enumerated() {
             entity.model?.materials = [i == index ? optionMaterials[i].selected : optionMaterials[i].normal]
         }
     }
-    
+
     private func submit() {
         guard let selectedIndex, !isSubmitted else { return }
         isSubmitted = true
         onSubmit(checkpoint.surveyOptions[selectedIndex])
         Task { @MainActor in
-            await self.showThankYouCard()
+            await SurveyCard.swapToThankYouCard(on: self.rootEntity)
         }
     }
-    
-    // MARK: - Card construction
-    
+
     private func buildQuestionCard() async -> Bool {
-        let s = Self.metersPerPoint
-        
-        guard let question = await Self.renderPiece(QuestionTextView(text: checkpoint.question)) else { return false }
-        
-        var optionPieces: [(normal: RenderedPiece, selected: RenderedPiece)] = []
+        let s = SurveyCard.metersPerPoint
+
+        guard let question = await SurveyCard.renderPiece(QuestionTextView(text: checkpoint.question)) else { return false }
+
+        var optionPieces: [(normal: SurveyCard.RenderedPiece, selected: SurveyCard.RenderedPiece)] = []
         for option in checkpoint.surveyOptions {
-            guard let normal = await Self.renderPiece(OptionRowView(text: option, isSelected: false)),
-                  let selected = await Self.renderPiece(OptionRowView(text: option, isSelected: true)) else { return false }
+            guard let normal = await SurveyCard.renderPiece(OptionRowView(text: option, isSelected: false)),
+                  let selected = await SurveyCard.renderPiece(OptionRowView(text: option, isSelected: true)) else { return false }
             optionPieces.append((normal, selected))
         }
-        
-        guard let submit = await Self.renderPiece(SubmitButtonView()) else { return false }
-        
+
+        guard let submit = await SurveyCard.renderPiece(SubmitButtonView()) else { return false }
+
         // Total card height in points.
-        var contentHeight = question.sizePoints.height + Self.sectionSpacingPoints
+        var contentHeight = question.sizePoints.height + SurveyCard.sectionSpacingPoints
         contentHeight += optionPieces.reduce(0) { $0 + $1.normal.sizePoints.height }
-        contentHeight += CGFloat(max(0, optionPieces.count - 1)) * Self.optionSpacingPoints
-        contentHeight += Self.sectionSpacingPoints + submit.sizePoints.height
-        let cardHeight = contentHeight + Self.paddingPoints * 2
-        
-        // White rounded card background.
-        let backgroundMesh = MeshResource.generatePlane(
-            width: Self.boardWidthMeters,
-            height: Float(cardHeight) * s,
-            cornerRadius: Float(Self.cornerRadiusPoints) * s
-        )
-        let background = ModelEntity(mesh: backgroundMesh, materials: [UnlitMaterial(color: .white)])
-        rootEntity.addChild(background)
-        
+        contentHeight += CGFloat(max(0, optionPieces.count - 1)) * SurveyCard.optionSpacingPoints
+        contentHeight += SurveyCard.sectionSpacingPoints + submit.sizePoints.height
+        let cardHeight = contentHeight + SurveyCard.paddingPoints * 2
+
+        rootEntity.addChild(SurveyCard.backgroundEntity(cardHeightPoints: cardHeight))
+
         // Stack the pieces downward from the top of the card, slightly in
         // front of the background so they render on top.
-        var cursor = Float(cardHeight) * s / 2 - Float(Self.paddingPoints) * s
-        
-        let questionEntity = Self.pieceEntity(question)
+        var cursor = Float(cardHeight) * s / 2 - Float(SurveyCard.paddingPoints) * s
+
+        let questionEntity = SurveyCard.pieceEntity(question)
         questionEntity.position = [0, cursor - Float(question.sizePoints.height) * s / 2, 0.002]
         rootEntity.addChild(questionEntity)
-        cursor -= Float(question.sizePoints.height + Self.sectionSpacingPoints) * s
-        
+        cursor -= Float(question.sizePoints.height + SurveyCard.sectionSpacingPoints) * s
+
         for pieces in optionPieces {
             let heightMeters = Float(pieces.normal.sizePoints.height) * s
-            let rowEntity = Self.pieceEntity(pieces.normal, tappable: true)
+            let rowEntity = SurveyCard.pieceEntity(pieces.normal, tappable: true)
             rowEntity.position = [0, cursor - heightMeters / 2, 0.002]
             rootEntity.addChild(rowEntity)
             optionEntities.append(rowEntity)
             optionMaterials.append((pieces.normal.material, pieces.selected.material))
-            cursor -= heightMeters + Float(Self.optionSpacingPoints) * s
+            cursor -= heightMeters + Float(SurveyCard.optionSpacingPoints) * s
         }
-        cursor -= Float(Self.sectionSpacingPoints - Self.optionSpacingPoints) * s
-        
-        let submitButton = Self.pieceEntity(submit, tappable: true)
+        cursor -= Float(SurveyCard.sectionSpacingPoints - SurveyCard.optionSpacingPoints) * s
+
+        let submitButton = SurveyCard.pieceEntity(submit, tappable: true)
         submitButton.position = [0, cursor - Float(submit.sizePoints.height) * s / 2, 0.002]
         rootEntity.addChild(submitButton)
         submitEntity = submitButton
-        
+
         return true
     }
-    
-    private func showThankYouCard() async {
-        guard let piece = await Self.renderPiece(ThankYouCardView()) else { return }
-        
-        // Replace the question card with the confirmation card.
-        for child in Array(rootEntity.children) {
-            child.removeFromParent()
+}
+
+// MARK: - Emoji slider card
+
+/// Builds and drives the interactive floating emoji slider card: a question
+/// with a horizontal track between two emoji (configured by the maker) and a
+/// purple knob. Tapping along the track positions the knob; submitting
+/// reports the value as a percentage toward the right emoji and replaces the
+/// card with the thank-you confirmation.
+@MainActor
+final class EmojiSliderBoardController: ARSurveyBoard {
+
+    private static let trackHeightPoints: CGFloat = 6
+    private static let sliderSpacingPoints: CGFloat = 10
+
+    let rootEntity = Entity()
+
+    private let checkpoint: Checkpoint
+    private let onSubmit: (String) -> Void
+    private var trackEntity: ModelEntity?
+    private var knobEntity: ModelEntity?
+    private var submitEntity: ModelEntity?
+    private var trackCenterXMeters: Float = 0
+    private var trackWidthMeters: Float = 0
+    private var value: Float?
+    private var isSubmitted = false
+
+    private init(checkpoint: Checkpoint, onSubmit: @escaping (String) -> Void) {
+        self.checkpoint = checkpoint
+        self.onSubmit = onSubmit
+    }
+
+    /// Creates the interactive card for a checkpoint, or nil when it has no
+    /// emoji slider data. Async because texture uploads to the GPU are async.
+    static func make(for checkpoint: Checkpoint, onSubmit: @escaping (String) -> Void) async -> EmojiSliderBoardController? {
+        guard checkpoint.hasEmojiSlider else { return nil }
+        let controller = EmojiSliderBoardController(checkpoint: checkpoint, onSubmit: onSubmit)
+        guard await controller.buildCard() else { return nil }
+        return controller
+    }
+
+    func handleTap(on tappedEntity: Entity, at worldPosition: SIMD3<Float>?, cameraPosition: SIMD3<Float>) -> Bool {
+        guard !isSubmitted else { return false }
+
+        // Proximity gate: ignore taps from too far away.
+        let boardPosition = rootEntity.position(relativeTo: nil)
+        guard simd_distance(boardPosition, cameraPosition) <= SurveyCard.maxInteractionDistance else { return false }
+
+        if tappedEntity === trackEntity, let worldPosition {
+            moveKnob(toWorldPosition: worldPosition)
+            return true
         }
-        optionEntities = []
-        optionMaterials = []
-        submitEntity = nil
-        
-        let mesh = MeshResource.generatePlane(
-            width: Float(piece.sizePoints.width) * Self.metersPerPoint,
-            height: Float(piece.sizePoints.height) * Self.metersPerPoint,
-            cornerRadius: Float(Self.cornerRadiusPoints) * Self.metersPerPoint
+        if tappedEntity === submitEntity {
+            submit()
+            return true
+        }
+        return false
+    }
+
+    /// Positions the knob at the tapped point along the track and derives the
+    /// 0...1 slider value from it (0 = left emoji, 1 = right emoji).
+    private func moveKnob(toWorldPosition worldPosition: SIMD3<Float>) {
+        guard let trackEntity, trackWidthMeters > 0 else { return }
+        let local = trackEntity.convert(position: worldPosition, from: nil)
+        let normalized = min(max(local.x / trackWidthMeters + 0.5, 0), 1)
+        value = normalized
+        knobEntity?.position.x = trackCenterXMeters + (normalized - 0.5) * trackWidthMeters
+    }
+
+    private func submit() {
+        guard let value, !isSubmitted else { return }
+        isSubmitted = true
+        // e.g. "82% (😡 → 😍)" — the percentage leans toward the right emoji.
+        onSubmit("\(Int((value * 100).rounded()))% (\(checkpoint.emojiLeft) → \(checkpoint.emojiRight))")
+        Task { @MainActor in
+            await SurveyCard.swapToThankYouCard(on: self.rootEntity)
+        }
+    }
+
+    private func buildCard() async -> Bool {
+        let s = SurveyCard.metersPerPoint
+
+        guard let question = await SurveyCard.renderPiece(QuestionTextView(text: checkpoint.question)),
+              let leftEmoji = await SurveyCard.renderPiece(EmojiLabelView(emoji: checkpoint.emojiLeft)),
+              let rightEmoji = await SurveyCard.renderPiece(EmojiLabelView(emoji: checkpoint.emojiRight)),
+              let knob = await SurveyCard.renderPiece(SliderKnobView()),
+              let submit = await SurveyCard.renderPiece(SubmitButtonView()) else { return false }
+
+        let rowHeightPoints = max(knob.sizePoints.height, max(leftEmoji.sizePoints.height, rightEmoji.sizePoints.height))
+
+        // Total card height in points.
+        var contentHeight = question.sizePoints.height + SurveyCard.sectionSpacingPoints
+        contentHeight += rowHeightPoints
+        contentHeight += SurveyCard.sectionSpacingPoints + submit.sizePoints.height
+        let cardHeight = contentHeight + SurveyCard.paddingPoints * 2
+
+        rootEntity.addChild(SurveyCard.backgroundEntity(cardHeightPoints: cardHeight))
+
+        // Stack downward from the top of the card.
+        var cursor = Float(cardHeight) * s / 2 - Float(SurveyCard.paddingPoints) * s
+
+        let questionEntity = SurveyCard.pieceEntity(question)
+        questionEntity.position = [0, cursor - Float(question.sizePoints.height) * s / 2, 0.002]
+        rootEntity.addChild(questionEntity)
+        cursor -= Float(question.sizePoints.height + SurveyCard.sectionSpacingPoints) * s
+
+        // Slider row: left emoji, track, right emoji, with the knob on top.
+        let rowCenterY = cursor - Float(rowHeightPoints) * s / 2
+        let inner = SurveyCard.innerWidthPoints
+        let leftWidth = leftEmoji.sizePoints.width
+        let rightWidth = rightEmoji.sizePoints.width
+        let trackWidthPoints = inner - leftWidth - rightWidth - Self.sliderSpacingPoints * 2
+        trackWidthMeters = Float(trackWidthPoints) * s
+
+        let leftEntity = SurveyCard.pieceEntity(leftEmoji)
+        leftEntity.position = [Float(-inner / 2 + leftWidth / 2) * s, rowCenterY, 0.002]
+        rootEntity.addChild(leftEntity)
+
+        let rightEntity = SurveyCard.pieceEntity(rightEmoji)
+        rightEntity.position = [Float(inner / 2 - rightWidth / 2) * s, rowCenterY, 0.002]
+        rootEntity.addChild(rightEntity)
+
+        let trackCenterXPoints = -inner / 2 + leftWidth + Self.sliderSpacingPoints + trackWidthPoints / 2
+        trackCenterXMeters = Float(trackCenterXPoints) * s
+
+        let trackMesh = MeshResource.generatePlane(
+            width: trackWidthMeters,
+            height: Float(Self.trackHeightPoints) * s,
+            cornerRadius: Float(Self.trackHeightPoints / 2) * s
         )
-        rootEntity.addChild(ModelEntity(mesh: mesh, materials: [piece.material]))
-    }
-    
-    // MARK: - Rendering helpers
-    
-    /// A SwiftUI view rendered to a texture, with its layout size in points.
-    private struct RenderedPiece {
-        let texture: TextureResource
-        let sizePoints: CGSize
-        
-        var material: UnlitMaterial {
-            var material = UnlitMaterial()
-            material.color = .init(texture: .init(texture))
-            return material
-        }
-    }
-    
-    private static func renderPiece<Content: View>(_ content: Content) async -> RenderedPiece? {
-        let renderer = ImageRenderer(content: content)
-        renderer.scale = 3
-        guard let cgImage = renderer.cgImage else { return nil }
-        guard let texture = try? await TextureResource(image: cgImage, options: .init(semantic: .color)) else { return nil }
-        let size = CGSize(width: CGFloat(cgImage.width) / renderer.scale,
-                          height: CGFloat(cgImage.height) / renderer.scale)
-        return RenderedPiece(texture: texture, sizePoints: size)
-    }
-    
-    private static func pieceEntity(_ piece: RenderedPiece, tappable: Bool = false) -> ModelEntity {
-        let widthMeters = Float(piece.sizePoints.width) * metersPerPoint
-        let heightMeters = Float(piece.sizePoints.height) * metersPerPoint
-        let entity = ModelEntity(
-            mesh: .generatePlane(width: widthMeters, height: heightMeters),
-            materials: [piece.material]
+        let track = ModelEntity(mesh: trackMesh, materials: [UnlitMaterial(color: UIColor(white: 0.9, alpha: 1))])
+        track.position = [trackCenterXMeters, rowCenterY, 0.002]
+        // The collision box is much taller than the visual track line, so the
+        // whole slider row is an easy tap target.
+        track.collision = CollisionComponent(shapes: [
+            .generateBox(width: trackWidthMeters, height: Float(rowHeightPoints) * s, depth: 0.01)
+        ])
+        rootEntity.addChild(track)
+        trackEntity = track
+
+        // Knob starts at the center. It has no collision, so taps around it
+        // fall through to the track behind it.
+        let knobDiameterMeters = Float(knob.sizePoints.width) * s
+        let knobMesh = MeshResource.generatePlane(
+            width: knobDiameterMeters,
+            height: knobDiameterMeters,
+            cornerRadius: knobDiameterMeters / 2
         )
-        if tappable {
-            // Collision shape so ARView.entity(at:) can hit-test taps.
-            entity.collision = CollisionComponent(shapes: [
-                .generateBox(width: widthMeters, height: heightMeters, depth: 0.01)
-            ])
-        }
-        return entity
+        let knobModel = ModelEntity(mesh: knobMesh, materials: [knob.material])
+        knobModel.position = [trackCenterXMeters, rowCenterY, 0.003]
+        rootEntity.addChild(knobModel)
+        knobEntity = knobModel
+
+        cursor -= Float(rowHeightPoints + SurveyCard.sectionSpacingPoints) * s
+
+        let submitButton = SurveyCard.pieceEntity(submit, tappable: true)
+        submitButton.position = [0, cursor - Float(submit.sizePoints.height) * s / 2, 0.002]
+        rootEntity.addChild(submitButton)
+        submitEntity = submitButton
+
+        return true
     }
 }
 
@@ -226,7 +397,7 @@ final class MCQBoardController {
 
 private struct QuestionTextView: View {
     let text: String
-    
+
     var body: some View {
         Text(text)
             .font(.system(size: 22, weight: .bold))
@@ -240,7 +411,7 @@ private struct QuestionTextView: View {
 private struct OptionRowView: View {
     let text: String
     let isSelected: Bool
-    
+
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
@@ -267,6 +438,27 @@ private struct SubmitButtonView: View {
             .padding(.vertical, 12)
             .background(Capsule().fill(tanyaPurple))
             .padding(4)
+            .background(Color.white)
+    }
+}
+
+private struct EmojiLabelView: View {
+    let emoji: String
+
+    var body: some View {
+        Text(emoji)
+            .font(.system(size: 24))
+            .padding(2)
+            .background(Color.white)
+    }
+}
+
+private struct SliderKnobView: View {
+    var body: some View {
+        Circle()
+            .fill(Color.white)
+            .overlay(Circle().strokeBorder(tanyaPurple, lineWidth: 5))
+            .frame(width: 30, height: 30)
             .background(Color.white)
     }
 }
