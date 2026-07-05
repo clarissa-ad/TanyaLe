@@ -20,6 +20,23 @@ protocol ARSurveyBoard: AnyObject {
     /// Routes a tapped entity (and the tap's world-space position) to the
     /// board. Returns true when the tap belonged to this board.
     func handleTap(on entity: Entity, at worldPosition: SIMD3<Float>?, cameraPosition: SIMD3<Float>) -> Bool
+
+    /// Offers the start of a drag gesture that landed on the given entity.
+    /// Returns true when this board claims the drag (e.g. a slider grab).
+    func beginDrag(on entity: Entity, cameraPosition: SIMD3<Float>) -> Bool
+
+    /// Continues a claimed drag with the current finger ray from the camera.
+    func updateDrag(rayOrigin: SIMD3<Float>, rayDirection: SIMD3<Float>)
+
+    /// Finishes a claimed drag.
+    func endDrag()
+}
+
+// Boards without draggable content ignore drags by default.
+extension ARSurveyBoard {
+    func beginDrag(on entity: Entity, cameraPosition: SIMD3<Float>) -> Bool { false }
+    func updateDrag(rayOrigin: SIMD3<Float>, rayDirection: SIMD3<Float>) {}
+    func endDrag() {}
 }
 
 // MARK: - Shared card rendering
@@ -255,6 +272,7 @@ final class EmojiSliderBoardController: ARSurveyBoard {
     private var trackWidthMeters: Float = 0
     private var value: Float?
     private var isSubmitted = false
+    private var isDragging = false
 
     private init(checkpoint: Checkpoint, onSubmit: @escaping (String) -> Void) {
         self.checkpoint = checkpoint
@@ -286,6 +304,38 @@ final class EmojiSliderBoardController: ARSurveyBoard {
             return true
         }
         return false
+    }
+
+    func beginDrag(on entity: Entity, cameraPosition: SIMD3<Float>) -> Bool {
+        guard !isSubmitted, entity === trackEntity else { return false }
+
+        // Proximity gate: ignore drags from too far away.
+        let boardPosition = rootEntity.position(relativeTo: nil)
+        guard simd_distance(boardPosition, cameraPosition) <= SurveyCard.maxInteractionDistance else { return false }
+
+        isDragging = true
+        return true
+    }
+
+    /// Follows the finger while dragging: intersects the finger's ray with
+    /// the card's plane, so the knob tracks smoothly even when the finger
+    /// drifts off the thin track line.
+    func updateDrag(rayOrigin: SIMD3<Float>, rayDirection: SIMD3<Float>) {
+        guard isDragging, !isSubmitted, let trackEntity else { return }
+
+        let planePoint = trackEntity.position(relativeTo: nil)
+        let normal = rootEntity.orientation(relativeTo: nil).act(SIMD3<Float>(0, 0, 1))
+        let denominator = simd_dot(rayDirection, normal)
+        guard abs(denominator) > 0.0001 else { return }
+
+        let t = simd_dot(planePoint - rayOrigin, normal) / denominator
+        guard t > 0 else { return }
+
+        moveKnob(toWorldPosition: rayOrigin + rayDirection * t)
+    }
+
+    func endDrag() {
+        isDragging = false
     }
 
     /// Positions the knob at the tapped point along the track and derives the
