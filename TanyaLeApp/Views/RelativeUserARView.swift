@@ -12,6 +12,8 @@ struct RelativeUserARView: View {
         case hidden, preview, expanded
     }
     @State private var mapState: MapState = .preview
+    /// When set, the bottom half of the screen fills with this emoji.
+    @State private var celebrationEmoji: String?
     @State private var mapRegion = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666),
         span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001) // Max zoom
@@ -39,6 +41,14 @@ struct RelativeUserARView: View {
                 .font(.system(size: 30, weight: .light))
                 .foregroundColor(.white)
                 .shadow(color: .black, radius: 2)
+
+            // Emoji celebration after submitting an emoji slider
+            if let celebrationEmoji {
+                EmojiCelebrationView(emoji: celebrationEmoji)
+                    .ignoresSafeArea()
+                    .transition(.opacity)
+                    .zIndex(15)
+            }
             
             // Top Right Minimap Preview
             VStack {
@@ -283,6 +293,20 @@ struct RelativeUserARView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
     
+    /// Fills the bottom half of the screen with the chosen emoji for a few
+    /// seconds after an emoji slider submission.
+    private func showEmojiCelebration(_ emoji: String) {
+        withAnimation {
+            celebrationEmoji = emoji
+        }
+        Task {
+            try? await Task.sleep(for: .seconds(3.5))
+            withAnimation {
+                celebrationEmoji = nil
+            }
+        }
+    }
+
     private func loadCheckpoints() {
         guard let arView = arContainer.view else { return }
         
@@ -300,12 +324,18 @@ struct RelativeUserARView: View {
                 // yawed toward the camera every frame, staying upright like a
                 // beacon, and answers are given by tapping the card itself.
                 Task { @MainActor in
-                    let onSubmit: (String) -> Void = { answer in
+                    let saveAnswer: (String) -> Void = { answer in
                         MockDatabaseService.shared.saveResponse(checkpointID: cp.id, answer: answer)
                     }
-                    let controller: (any ARSurveyBoard)? = cp.hasMCQ
-                        ? await MCQBoardController.make(for: cp, onSubmit: onSubmit)
-                        : await EmojiSliderBoardController.make(for: cp, onSubmit: onSubmit)
+                    let controller: (any ARSurveyBoard)?
+                    if cp.hasMCQ {
+                        controller = await MCQBoardController.make(for: cp, onSubmit: saveAnswer)
+                    } else {
+                        controller = await EmojiSliderBoardController.make(for: cp) { answer, chosenEmoji in
+                            saveAnswer(answer)
+                            showEmojiCelebration(chosenEmoji)
+                        }
+                    }
 
                     if let controller {
                         controller.rootEntity.position = [0, 1.0, 0]

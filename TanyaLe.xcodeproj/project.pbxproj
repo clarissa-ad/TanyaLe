@@ -23,6 +23,7 @@
 		98374C392FF76A8F005D18E1 /* UserMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C2A2FF76A8F005D18E1 /* UserMinimapView.swift */; };
 		98374C3A2FF76A8F005D18E1 /* CheckpointListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C262FF76A8F005D18E1 /* CheckpointListView.swift */; };
 		DB9768932FF795DA008660F8 /* MCQBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */; };
+		DBB0D2892FFA9E4200252738 /* EmojiCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +44,7 @@
 		98374C2A2FF76A8F005D18E1 /* UserMinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMinimapView.swift; sourceTree = "<group>"; };
 		987379372FF61D8900739D44 /* TanyaLe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TanyaLe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCQBoardEntity.swift; sourceTree = "<group>"; };
+		DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCelebrationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +93,7 @@
 			isa = PBXGroup;
 			children = (
 				DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */,
+				DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -275,6 +278,7 @@
 				98374C352FF76A8F005D18E1 /* CitizenARViewModel.swift in Sources */,
 				98374C362FF76A8F005D18E1 /* TanyaLeApp.swift in Sources */,
 				98374C372FF76A8F005D18E1 /* CheckpointEditView.swift in Sources */,
+				DBB0D2892FFA9E4200252738 /* EmojiCelebrationView.swift in Sources */,
 				98374C382FF76A8F005D18E1 /* ARPlacementPrototypeView.swift in Sources */,
 				98374C392FF76A8F005D18E1 /* UserMinimapView.swift in Sources */,
 				98374C3A2FF76A8F005D18E1 /* CheckpointListView.swift in Sources */,

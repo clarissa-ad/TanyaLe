@@ -264,7 +264,7 @@ final class EmojiSliderBoardController: ARSurveyBoard {
     let rootEntity = Entity()
 
     private let checkpoint: Checkpoint
-    private let onSubmit: (String) -> Void
+    private let onSubmit: (_ answer: String, _ chosenEmoji: String) -> Void
     private var trackEntity: ModelEntity?
     private var knobEntity: ModelEntity?
     private var submitEntity: ModelEntity?
@@ -274,14 +274,16 @@ final class EmojiSliderBoardController: ARSurveyBoard {
     private var isSubmitted = false
     private var isDragging = false
 
-    private init(checkpoint: Checkpoint, onSubmit: @escaping (String) -> Void) {
+    private init(checkpoint: Checkpoint, onSubmit: @escaping (_ answer: String, _ chosenEmoji: String) -> Void) {
         self.checkpoint = checkpoint
         self.onSubmit = onSubmit
     }
 
     /// Creates the interactive card for a checkpoint, or nil when it has no
     /// emoji slider data. Async because texture uploads to the GPU are async.
-    static func make(for checkpoint: Checkpoint, onSubmit: @escaping (String) -> Void) async -> EmojiSliderBoardController? {
+    /// On submit, the callback receives the recorded answer plus the emoji
+    /// the knob ended closest to (under 50% = left, otherwise right).
+    static func make(for checkpoint: Checkpoint, onSubmit: @escaping (_ answer: String, _ chosenEmoji: String) -> Void) async -> EmojiSliderBoardController? {
         guard checkpoint.hasEmojiSlider else { return nil }
         let controller = EmojiSliderBoardController(checkpoint: checkpoint, onSubmit: onSubmit)
         guard await controller.buildCard() else { return nil }
@@ -351,8 +353,10 @@ final class EmojiSliderBoardController: ARSurveyBoard {
     private func submit() {
         guard let value, !isSubmitted else { return }
         isSubmitted = true
+        // The knob's side decides the chosen emoji, benchmarked at 50%.
+        let chosenEmoji = value < 0.5 ? checkpoint.emojiLeft : checkpoint.emojiRight
         // e.g. "82% (😡 → 😍)" — the percentage leans toward the right emoji.
-        onSubmit("\(Int((value * 100).rounded()))% (\(checkpoint.emojiLeft) → \(checkpoint.emojiRight))")
+        onSubmit("\(Int((value * 100).rounded()))% (\(checkpoint.emojiLeft) → \(checkpoint.emojiRight))", chosenEmoji)
         Task { @MainActor in
             await SurveyCard.swapToThankYouCard(on: self.rootEntity)
         }
