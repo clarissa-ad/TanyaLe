@@ -20,6 +20,9 @@ struct SandboxDashboardView: View {
                     NavigationLink(destination: RelativeUserARView()) {
                         Label("Test Relative Citizen AR", systemImage: "arkit")
                     }
+                    NavigationLink(destination: WalkableAspirationView()) {
+                        Label("Walkable Aspiration View", systemImage: "ellipsis.bubble")
+                    }
                 }
                 
                 Section(header: Text("UI Prototypes")) {

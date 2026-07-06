@@ -5,40 +5,6 @@ import UIKit
 /// The TanyaLe accent color used on the AR survey cards.
 private let tanyaPurple = Color(red: 0.55, green: 0.27, blue: 0.96)
 
-/// An interactive floating AR survey card that can receive taps.
-///
-/// The root entity is meant to be rotated toward the camera every frame with
-/// `yawToFace(cameraPosition:)`. Yaw-only rotation (around the world Y axis)
-/// is used instead of `BillboardComponent` on purpose: a full billboard
-/// pitches and rolls with the camera, making the card lie flat on the ground
-/// when viewed from above. Yaw-only keeps it floating upright.
-@MainActor
-protocol ARSurveyBoard: AnyObject {
-    /// The entity to place in the scene (and yaw toward the camera).
-    var rootEntity: Entity { get }
-
-    /// Routes a tapped entity (and the tap's world-space position) to the
-    /// board. Returns true when the tap belonged to this board.
-    func handleTap(on entity: Entity, at worldPosition: SIMD3<Float>?, cameraPosition: SIMD3<Float>) -> Bool
-
-    /// Offers the start of a drag gesture that landed on the given entity.
-    /// Returns true when this board claims the drag (e.g. a slider grab).
-    func beginDrag(on entity: Entity, cameraPosition: SIMD3<Float>) -> Bool
-
-    /// Continues a claimed drag with the current finger ray from the camera.
-    func updateDrag(rayOrigin: SIMD3<Float>, rayDirection: SIMD3<Float>)
-
-    /// Finishes a claimed drag.
-    func endDrag()
-}
-
-// Boards without draggable content ignore drags by default.
-extension ARSurveyBoard {
-    func beginDrag(on entity: Entity, cameraPosition: SIMD3<Float>) -> Bool { false }
-    func updateDrag(rayOrigin: SIMD3<Float>, rayDirection: SIMD3<Float>) {}
-    func endDrag() {}
-}
-
 // MARK: - Shared card rendering
 
 /// Shared layout constants and texture-rendering helpers for the AR survey
@@ -46,7 +12,7 @@ extension ARSurveyBoard {
 /// plane, so the cards look exactly like the design while staying lightweight
 /// for the App Clip (no bundled assets).
 @MainActor
-private enum SurveyCard {
+enum SurveyCard {
 
     // Layout constants in points, mirroring the SwiftUI card designs.
     static let cardWidthPoints: CGFloat = 340
