@@ -22,6 +22,11 @@
 		98374C382FF76A8F005D18E1 /* ARPlacementPrototypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C222FF76A8F005D18E1 /* ARPlacementPrototypeView.swift */; };
 		98374C392FF76A8F005D18E1 /* UserMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C2A2FF76A8F005D18E1 /* UserMinimapView.swift */; };
 		98374C3A2FF76A8F005D18E1 /* CheckpointListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C262FF76A8F005D18E1 /* CheckpointListView.swift */; };
+		AA25085B2FFA60E1001CF21C /* WalkableAspirationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25085A2FFA60D5001CF21C /* WalkableAspirationManager.swift */; };
+		AA25085D2FFA6252001CF21C /* WalkableAspirationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25085C2FFA6242001CF21C /* WalkableAspirationButton.swift */; };
+		AA25085F2FFA647D001CF21C /* WalkableAspirationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25085E2FFA6475001CF21C /* WalkableAspirationView.swift */; };
+		AA2508612FFA68B2001CF21C /* TextFieldBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508602FFA68A4001CF21C /* TextFieldBottomSheet.swift */; };
+		AA2508672FFAC1F7001CF21C /* WalkableAspiration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508662FFAC1F0001CF21C /* WalkableAspiration.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +46,11 @@
 		98374C292FF76A8F005D18E1 /* RelativeUserARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeUserARView.swift; sourceTree = "<group>"; };
 		98374C2A2FF76A8F005D18E1 /* UserMinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMinimapView.swift; sourceTree = "<group>"; };
 		987379372FF61D8900739D44 /* TanyaLe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TanyaLe.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA25085A2FFA60D5001CF21C /* WalkableAspirationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationManager.swift; sourceTree = "<group>"; };
+		AA25085C2FFA6242001CF21C /* WalkableAspirationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationButton.swift; sourceTree = "<group>"; };
+		AA25085E2FFA6475001CF21C /* WalkableAspirationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationView.swift; sourceTree = "<group>"; };
+		AA2508602FFA68A4001CF21C /* TextFieldBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldBottomSheet.swift; sourceTree = "<group>"; };
+		AA2508662FFAC1F0001CF21C /* WalkableAspiration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspiration.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +67,7 @@
 		98374C132FF76A8F005D18E1 /* Manager */ = {
 			isa = PBXGroup;
 			children = (
+				AA25085A2FFA60D5001CF21C /* WalkableAspirationManager.swift */,
 				98374C122FF76A8F005D18E1 /* LocationManager.swift */,
 			);
 			path = Manager;
@@ -65,6 +76,7 @@
 		98374C152FF76A8F005D18E1 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				AA2508662FFAC1F0001CF21C /* WalkableAspiration.swift */,
 				98374C142FF76A8F005D18E1 /* Checkpoint.swift */,
 			);
 			path = Models;
@@ -88,6 +100,8 @@
 		98374C192FF76A8F005D18E1 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				AA2508602FFA68A4001CF21C /* TextFieldBottomSheet.swift */,
+				AA25085C2FFA6242001CF21C /* WalkableAspirationButton.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -95,6 +109,7 @@
 		98374C1A2FF76A8F005D18E1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				AA25085E2FFA6475001CF21C /* WalkableAspirationView.swift */,
 				98374C192FF76A8F005D18E1 /* Components */,
 			);
 			path = Views;
@@ -262,6 +277,8 @@
 			files = (
 				98374C2D2FF76A8F005D18E1 /* MakerViewModel.swift in Sources */,
 				98374C2E2FF76A8F005D18E1 /* RelativeUserARView.swift in Sources */,
+				AA25085F2FFA647D001CF21C /* WalkableAspirationView.swift in Sources */,
+				AA25085D2FFA6252001CF21C /* WalkableAspirationButton.swift in Sources */,
 				98374C2F2FF76A8F005D18E1 /* MakerMapView.swift in Sources */,
 				98374C302FF76A8F005D18E1 /* Checkpoint.swift in Sources */,
 				98374C312FF76A8F005D18E1 /* LocationManager.swift in Sources */,
@@ -270,9 +287,12 @@
 				98374C342FF76A8F005D18E1 /* RelativeMakerARView.swift in Sources */,
 				98374C352FF76A8F005D18E1 /* CitizenARViewModel.swift in Sources */,
 				98374C362FF76A8F005D18E1 /* TanyaLeApp.swift in Sources */,
+				AA2508672FFAC1F7001CF21C /* WalkableAspiration.swift in Sources */,
 				98374C372FF76A8F005D18E1 /* CheckpointEditView.swift in Sources */,
 				98374C382FF76A8F005D18E1 /* ARPlacementPrototypeView.swift in Sources */,
+				AA25085B2FFA60E1001CF21C /* WalkableAspirationManager.swift in Sources */,
 				98374C392FF76A8F005D18E1 /* UserMinimapView.swift in Sources */,
+				AA2508612FFA68B2001CF21C /* TextFieldBottomSheet.swift in Sources */,
 				98374C3A2FF76A8F005D18E1 /* CheckpointListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -287,7 +307,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = MABNSMHA8L;
+				DEVELOPMENT_TEAM = VX33BG7ZDD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = CAMERA_USAGE_DESCRIPTION;
@@ -297,6 +317,7 @@
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -321,7 +342,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = MABNSMHA8L;
+				DEVELOPMENT_TEAM = VX33BG7ZDD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = CAMERA_USAGE_DESCRIPTION;
@@ -331,6 +352,7 @@
 				INFOPLIST_KEY_UIStatusBarHidden = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
