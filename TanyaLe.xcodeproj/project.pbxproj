@@ -22,6 +22,8 @@
 		98374C382FF76A8F005D18E1 /* ARPlacementPrototypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C222FF76A8F005D18E1 /* ARPlacementPrototypeView.swift */; };
 		98374C392FF76A8F005D18E1 /* UserMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C2A2FF76A8F005D18E1 /* UserMinimapView.swift */; };
 		98374C3A2FF76A8F005D18E1 /* CheckpointListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C262FF76A8F005D18E1 /* CheckpointListView.swift */; };
+		DB9768932FF795DA008660F8 /* MCQBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */; };
+		DBB0D2892FFA9E4200252738 /* EmojiCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */; };
 		AA25085B2FFA60E1001CF21C /* WalkableAspirationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25085A2FFA60D5001CF21C /* WalkableAspirationManager.swift */; };
 		AA25085D2FFA6252001CF21C /* WalkableAspirationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25085C2FFA6242001CF21C /* WalkableAspirationButton.swift */; };
 		AA25085F2FFA647D001CF21C /* WalkableAspirationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25085E2FFA6475001CF21C /* WalkableAspirationView.swift */; };
@@ -46,6 +48,8 @@
 		98374C292FF76A8F005D18E1 /* RelativeUserARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeUserARView.swift; sourceTree = "<group>"; };
 		98374C2A2FF76A8F005D18E1 /* UserMinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMinimapView.swift; sourceTree = "<group>"; };
 		987379372FF61D8900739D44 /* TanyaLe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TanyaLe.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCQBoardEntity.swift; sourceTree = "<group>"; };
+		DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCelebrationView.swift; sourceTree = "<group>"; };
 		AA25085A2FFA60D5001CF21C /* WalkableAspirationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationManager.swift; sourceTree = "<group>"; };
 		AA25085C2FFA6242001CF21C /* WalkableAspirationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationButton.swift; sourceTree = "<group>"; };
 		AA25085E2FFA6475001CF21C /* WalkableAspirationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationView.swift; sourceTree = "<group>"; };
@@ -100,6 +104,8 @@
 		98374C192FF76A8F005D18E1 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */,
+				DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */,
 				AA2508602FFA68A4001CF21C /* TextFieldBottomSheet.swift */,
 				AA25085C2FFA6242001CF21C /* WalkableAspirationButton.swift */,
 			);
@@ -281,6 +287,7 @@
 				AA25085D2FFA6252001CF21C /* WalkableAspirationButton.swift in Sources */,
 				98374C2F2FF76A8F005D18E1 /* MakerMapView.swift in Sources */,
 				98374C302FF76A8F005D18E1 /* Checkpoint.swift in Sources */,
+				DB9768932FF795DA008660F8 /* MCQBoardEntity.swift in Sources */,
 				98374C312FF76A8F005D18E1 /* LocationManager.swift in Sources */,
 				98374C322FF76A8F005D18E1 /* SandboxDashboardView.swift in Sources */,
 				98374C332FF76A8F005D18E1 /* MockDatabaseService.swift in Sources */,
@@ -289,6 +296,7 @@
 				98374C362FF76A8F005D18E1 /* TanyaLeApp.swift in Sources */,
 				AA2508672FFAC1F7001CF21C /* WalkableAspiration.swift in Sources */,
 				98374C372FF76A8F005D18E1 /* CheckpointEditView.swift in Sources */,
+				DBB0D2892FFA9E4200252738 /* EmojiCelebrationView.swift in Sources */,
 				98374C382FF76A8F005D18E1 /* ARPlacementPrototypeView.swift in Sources */,
 				AA25085B2FFA60E1001CF21C /* WalkableAspirationManager.swift in Sources */,
 				98374C392FF76A8F005D18E1 /* UserMinimapView.swift in Sources */,
@@ -323,7 +331,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.especiallynew.TanyaLe;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ian.TanyaLe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -358,7 +366,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.especiallynew.TanyaLe;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ian.TanyaLe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;

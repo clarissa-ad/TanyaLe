@@ -11,7 +11,10 @@ class MockDatabaseService: ObservableObject {
     static let shared = MockDatabaseService()
     
     @Published var checkpoints: [Checkpoint] = []
-    
+
+    /// Selected MCQ answer per checkpoint ID (in-memory only).
+    @Published var responses: [UUID: String] = [:]
+
     // The locked GPS coordinate c where the AR Origin was set
     @Published var surveyOrigin: CLLocationCoordinate2D?
     
@@ -20,6 +23,8 @@ class MockDatabaseService: ObservableObject {
             Checkpoint(
                 title: "Trash Can Checkpoint",
                 taskDescription: "Does this look good?",
+                interactionType: .mcq,
+                question: "How is the trash can situation here?",
                 surveyOptions: ["Yes, looks good", "Needs replacement", "Overflowing"],
                 latitude: -6.200000,
                 longitude: 106.816666,
@@ -40,6 +45,11 @@ class MockDatabaseService: ObservableObject {
         print("Mock DB: Deleted checkpoint \(id)")
     }
     
+    func saveResponse(checkpointID: UUID, answer: String) {
+        responses[checkpointID] = answer
+        print("Mock DB: Saved MCQ answer '\(answer)' for checkpoint \(checkpointID)")
+    }
+
     func updateCheckpoint(_ checkpoint: Checkpoint) {
         if let index = checkpoints.firstIndex(where: { $0.id == checkpoint.id }) {
             checkpoints[index] = checkpoint
