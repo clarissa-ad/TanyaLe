@@ -35,7 +35,25 @@ struct CheckpointListView: View {
             }
         }
         .navigationTitle("Manage Checkpoints")
-        .navigationBarItems(trailing: EditButton())
+        .navigationBarItems(trailing: HStack {
+            EditButton()
+            Button(action: addCheckpoint) {
+                Image(systemName: "plus")
+            }
+        })
+    }
+    
+    private func addCheckpoint() {
+        let newCheckpoint = Checkpoint(
+            title: "New Checkpoint",
+            taskDescription: "",
+            latitude: 0,
+            longitude: 0,
+            relativeX: 0,
+            relativeY: 0,
+            relativeZ: 0
+        )
+        db.saveCheckpoint(newCheckpoint)
     }
     
     private func deleteCheckpoint(at offsets: IndexSet) {
