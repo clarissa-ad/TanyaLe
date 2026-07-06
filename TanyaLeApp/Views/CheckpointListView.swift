@@ -35,6 +35,7 @@ struct CheckpointListView: View {
             }
         }
         .navigationTitle("Manage Checkpoints")
+        .navigationBarItems(trailing: EditButton())
     }
     
     private func deleteCheckpoint(at offsets: IndexSet) {
