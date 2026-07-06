@@ -28,24 +28,24 @@ struct CheckpointEditView: View {
     }
     
     var body: some View {
-        Form {
-            CheckpointFormContent(
-                title: $title,
-                taskDescription: $taskDescription,
-                interactionType: $interactionType,
-                question: $question,
-                surveyOptions: $surveyOptions,
-                emojiLeft: $emojiLeft,
-                emojiRight: $emojiRight
-            )
-        }
-        .navigationTitle("Edit Checkpoint")
-        .navigationBarItems(trailing: HStack {
-            EditButton()
-            Button("Save") {
-                saveChanges()
-            }
-        })
+//        Form {
+//            CheckpointFormContent(
+//                title: $title,
+//                taskDescription: $taskDescription,
+//                interactionType: $interactionType,
+//                question: $question,
+//                surveyOptions: $surveyOptions,
+//                emojiLeft: $emojiLeft,
+//                emojiRight: $emojiRight
+//            )
+//        }
+//        .navigationTitle("Edit Checkpoint")
+//        .navigationBarItems(trailing: HStack {
+//            EditButton()
+//            Button("Save") {
+//                saveChanges()
+//            }
+//        })
     }
     
     private func saveChanges() {

@@ -46,14 +46,14 @@ struct MakerMapView: View {
                 
                 Button(action: {
                     // For the 2D map, if they tap this, we simulate an AR transform of (0,0,0) just for data completeness.
-                    if let location = locationManager.userLocation {
-                        viewModel.addCheckpointAt(
-                            transform: SIMD3<Float>(0, 0, 0),
-                            title: "2D Map Point",
-                            description: "Dropped from map",
-                            overrideLocation: location.coordinate
-                        )
-                    }
+//                    if let location = locationManager.userLocation {
+//                        viewModel.addCheckpointAt(
+//                            transform: SIMD3<Float>(0, 0, 0),
+//                            title: "2D Map Point",
+//                            description: "Dropped from map",
+//                            overrideLocation: location.coordinate
+//                        )
+//                    }
                 }) {
                     Text("Drop Checkpoint Here")
                         .fontWeight(.bold)
