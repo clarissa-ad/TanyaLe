@@ -18,10 +18,10 @@ import Combine
 /// manual "Scan App Clip" button — it auto-calibrates the world origin as soon
 /// as the AR session produces a frame.
 struct ARWalkView: View {
-    @ObservedObject private var db = MockDatabaseService.shared
-    @StateObject private var viewModel = CitizenARViewModel()
-    @StateObject private var aspirationManager = WalkableAspirationManager()
-    @StateObject private var locationManager = LocationManager()
+    private var db = MockDatabaseService.shared
+    @State private var viewModel = CitizenARViewModel()
+    @State private var aspirationManager = WalkableAspirationManager()
+    @State private var locationManager = LocationManager()
 
     // One AR scene shared by the tracking view model, the survey boards, and the
     // dropped aspiration messages.

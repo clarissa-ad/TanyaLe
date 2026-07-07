@@ -11,6 +11,9 @@ class CitizenARViewModel {
     var nearestDistance: Float?
     var nearestCheckpoint: Checkpoint?
     var arUserLocation: CLLocationCoordinate2D?
+    /// Clockwise screen-space rotation (radians) for a 2D navigator arrow so it
+    /// points at the nearest checkpoint. `nil` when there's nothing to point at.
+    var arrowHeading: Double?
 
     // Internal timer handle; views never read it, so keep it out of tracking.
     @ObservationIgnored private var trackingTimer: AnyCancellable?
