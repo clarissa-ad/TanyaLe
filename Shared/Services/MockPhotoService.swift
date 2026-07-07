@@ -1,0 +1,40 @@
+import Foundation
+import SwiftUI
+import Combine
+
+/// A mock service to hold photos in-memory for the AR Photobooth feature.
+@MainActor
+class MockPhotoService: ObservableObject {
+    static let shared = MockPhotoService()
+    
+    // Maps a Checkpoint's UUID to an array of UIImages taken at that checkpoint.
+    @Published var photos: [UUID: [UIImage]] = [:]
+    
+    private init() {}
+    
+    /// Save a photo for a specific checkpoint
+    func savePhoto(image: UIImage, forCheckpoint checkpointId: UUID) {
+        if photos[checkpointId] != nil {
+            photos[checkpointId]?.append(image)
+        } else {
+            photos[checkpointId] = [image]
+        }
+        print("MockPhotoService: Saved photo for checkpoint \(checkpointId). Total: \(photos[checkpointId]?.count ?? 0)")
+    }
+    
+    /// Fetch all photos for a specific checkpoint
+    func fetchPhotos(forCheckpoint checkpointId: UUID) -> [UIImage] {
+        return photos[checkpointId] ?? []
+    }
+    
+    /// Delete a specific photo for a checkpoint
+    func deletePhoto(image: UIImage, forCheckpoint checkpointId: UUID) {
+        guard var cpPhotos = photos[checkpointId] else { return }
+        
+        // Find by identity since UIImage doesn't easily equate by value in a simple array
+        cpPhotos.removeAll(where: { $0 === image })
+        photos[checkpointId] = cpPhotos
+        
+        print("MockPhotoService: Deleted photo for checkpoint \(checkpointId). Remaining: \(cpPhotos.count)")
+    }
+}

@@ -10,6 +10,13 @@ struct RelativeUserARView: View {
     
     /// When set, the bottom half of the screen fills with this emoji.
     @State private var celebrationEmoji: String?
+    
+    // Photobooth state
+    @State private var showingImagePicker = false
+    @State private var showingGallery = false
+    @State private var selectedImage: UIImage?
+    @State private var activeCheckpoint: Checkpoint?
+    
     /// Fixed minimap zoom level (max zoom).
     private let minimapSpan = MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001)
     @State private var mapPosition = MapCameraPosition.region(MKCoordinateRegion(
@@ -165,8 +172,31 @@ struct RelativeUserARView: View {
                                     .foregroundStyle(.secondary)
                             }
                         } else if cp.interactionType == .photobooth {
-                            Label("Photobooth interaction coming soon", systemImage: "camera")
-                                .foregroundStyle(.secondary)
+                            HStack {
+                                Button(action: {
+                                    activeCheckpoint = cp
+                                    showingImagePicker = true
+                                }) {
+                                    Label("Snap Photo", systemImage: "camera")
+                                        .frame(maxWidth: .infinity)
+                                        .padding()
+                                        .background(Color.blue)
+                                        .foregroundStyle(.white)
+                                        .cornerRadius(10)
+                                }
+                                
+                                Button(action: {
+                                    activeCheckpoint = cp
+                                    showingGallery = true
+                                }) {
+                                    Label("Gallery", systemImage: "photo.on.rectangle")
+                                        .frame(maxWidth: .infinity)
+                                        .padding()
+                                        .background(Color.purple)
+                                        .foregroundStyle(.white)
+                                        .cornerRadius(10)
+                                }
+                            }
                         } else if cp.interactionType == .emojiSlider {
                             Label("Emoji slider needs a question configured", systemImage: "face.smiling")
                                 .foregroundStyle(.secondary)
@@ -194,6 +224,18 @@ struct RelativeUserARView: View {
                     .transition(.move(edge: .bottom))
                     .animation(.spring(), value: viewModel.nearestDistance)
                 }
+            }
+        }
+        .sheet(isPresented: $showingImagePicker) {
+            ImagePicker(selectedImage: $selectedImage) {
+                if let image = selectedImage, let cp = activeCheckpoint {
+                    MockPhotoService.shared.savePhoto(image: image, forCheckpoint: cp.id)
+                }
+            }
+        }
+        .sheet(isPresented: $showingGallery) {
+            if let cp = activeCheckpoint {
+                PhotoGalleryView(checkpoint: cp)
             }
         }
         .onDisappear {

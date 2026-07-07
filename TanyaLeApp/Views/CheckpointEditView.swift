@@ -38,6 +38,15 @@ struct CheckpointEditView: View {
                 emojiLeft: $emojiLeft,
                 emojiRight: $emojiRight
             )
+            
+            if interactionType == .photobooth, let cp = db.checkpoints.first(where: { $0.id == checkpointId }) {
+                Section {
+                    NavigationLink(destination: MakerResponsesView(checkpoint: cp)) {
+                        Text("View Photos")
+                            .foregroundColor(.blue)
+                    }
+                }
+            }
         }
         .navigationTitle("Edit Checkpoint")
         .navigationBarItems(trailing: HStack {
