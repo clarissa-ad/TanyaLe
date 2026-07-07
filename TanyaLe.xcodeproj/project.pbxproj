@@ -35,6 +35,7 @@
 		AA2508732FFB6589001CF21C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA2508722FFB6589001CF21C /* Assets.xcassets */; };
 		DB9768932FF795DA008660F8 /* MCQBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */; };
 		DBB0D2892FFA9E4200252738 /* EmojiCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */; };
+		DBB0D28D2FFCAFAB00252738 /* CheckpointFormContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB0D28C2FFCAFAB00252738 /* CheckpointFormContent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,6 +68,7 @@
 		AA2508722FFB6589001CF21C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCQBoardEntity.swift; sourceTree = "<group>"; };
 		DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCelebrationView.swift; sourceTree = "<group>"; };
+		DBB0D28C2FFCAFAB00252738 /* CheckpointFormContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointFormContent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,8 +123,9 @@
 			children = (
 				AA25086A2FFB57A8001CF21C /* MessageBoardEntity.swift */,
 				AA2508682FFB5749001CF21C /* ARSurveyBoard.swift */,
-				DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */,
 				DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */,
+				DBB0D28C2FFCAFAB00252738 /* CheckpointFormContent.swift */,
+				DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */,
 				AA2508602FFA68A4001CF21C /* TextFieldBottomSheet.swift */,
 				AA25085C2FFA6242001CF21C /* WalkableAspirationButton.swift */,
 			);
@@ -316,6 +319,7 @@
 				98374C352FF76A8F005D18E1 /* CitizenARViewModel.swift in Sources */,
 				98374C362FF76A8F005D18E1 /* TanyaLeApp.swift in Sources */,
 				AA2508672FFAC1F7001CF21C /* WalkableAspiration.swift in Sources */,
+				DBB0D28D2FFCAFAB00252738 /* CheckpointFormContent.swift in Sources */,
 				98374C372FF76A8F005D18E1 /* CheckpointEditView.swift in Sources */,
 				DBB0D2892FFA9E4200252738 /* EmojiCelebrationView.swift in Sources */,
 				98374C382FF76A8F005D18E1 /* ARPlacementPrototypeView.swift in Sources */,
