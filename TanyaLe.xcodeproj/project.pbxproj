@@ -38,6 +38,7 @@
 		AA2508A12FFA60D5001CF21C /* ARMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508A02FFA60D5001CF21C /* ARMinimapView.swift */; };
 		AA2508B12FFA60D5001CF21C /* CheckpointBoardLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508B02FFA60D5001CF21C /* CheckpointBoardLoader.swift */; };
 		AA25D3732FFC9B0D00B1256B /* RelativeARContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25D3722FFC9B0600B1256B /* RelativeARContainer.swift */; };
+		AA25D3752FFCAFFA00B1256B /* CheckpointFormContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25D3742FFCAFFA00B1256B /* CheckpointFormContent.swift */; };
 		DB9768932FF795DA008660F8 /* MCQBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */; };
 		DBB0D2892FFA9E4200252738 /* EmojiCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */; };
 /* End PBXBuildFile section */
@@ -75,6 +76,7 @@
 		AA2508A02FFA60D5001CF21C /* ARMinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARMinimapView.swift; sourceTree = "<group>"; };
 		AA2508B02FFA60D5001CF21C /* CheckpointBoardLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointBoardLoader.swift; sourceTree = "<group>"; };
 		AA25D3722FFC9B0600B1256B /* RelativeARContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeARContainer.swift; sourceTree = "<group>"; };
+		AA25D3742FFCAFFA00B1256B /* CheckpointFormContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointFormContent.swift; sourceTree = "<group>"; };
 		DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCQBoardEntity.swift; sourceTree = "<group>"; };
 		DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCelebrationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -130,6 +132,7 @@
 		98374C192FF76A8F005D18E1 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				AA25D3742FFCAFFA00B1256B /* CheckpointFormContent.swift */,
 				AA2508A02FFA60D5001CF21C /* ARMinimapView.swift */,
 				AA2508B02FFA60D5001CF21C /* CheckpointBoardLoader.swift */,
 				AA25086A2FFB57A8001CF21C /* MessageBoardEntity.swift */,
@@ -328,6 +331,7 @@
 				98374C302FF76A8F005D18E1 /* Checkpoint.swift in Sources */,
 				DB9768932FF795DA008660F8 /* MCQBoardEntity.swift in Sources */,
 				98374C312FF76A8F005D18E1 /* LocationManager.swift in Sources */,
+				AA25D3752FFCAFFA00B1256B /* CheckpointFormContent.swift in Sources */,
 				98374C322FF76A8F005D18E1 /* SandboxDashboardView.swift in Sources */,
 				98374C332FF76A8F005D18E1 /* MockDatabaseService.swift in Sources */,
 				98374C342FF76A8F005D18E1 /* RelativeMakerARView.swift in Sources */,

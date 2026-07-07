@@ -144,29 +144,29 @@ struct RelativeMakerARView: View {
         })
         .sheet(isPresented: $showingAddSheet) {
             NavigationView {
-//                Form {
-//                    CheckpointFormContent(
-//                        title: $tempTitle,
-//                        taskDescription: $tempDesc,
-//                        interactionType: $tempInteractionType,
-//                        question: $tempQuestion,
-//                        surveyOptions: $tempSurveyOptions,
-//                        emojiLeft: $tempEmojiLeft,
-//                        emojiRight: $tempEmojiRight
-//                    )
-//                }
-//                .navigationTitle("New Checkpoint")
-//                .navigationBarItems(
-//                    leading: Button("Cancel") {
-//                        showingAddSheet = false
-//                    },
-//                    trailing: Button("Save") {
-//                        if let transform = pendingTransform {
-//                            saveCheckpoint(at: transform)
-//                        }
-//                    }
-//                    .disabled(tempTitle.isEmpty)
-//                )
+                Form {
+                    CheckpointFormContent(
+                        title: $tempTitle,
+                        taskDescription: $tempDesc,
+                        interactionType: $tempInteractionType,
+                        question: $tempQuestion,
+                        surveyOptions: $tempSurveyOptions,
+                        emojiLeft: $tempEmojiLeft,
+                        emojiRight: $tempEmojiRight
+                    )
+                }
+                .navigationTitle("New Checkpoint")
+                .navigationBarItems(
+                    leading: Button("Cancel") {
+                        showingAddSheet = false
+                    },
+                    trailing: Button("Save") {
+                        if let transform = pendingTransform {
+                            saveCheckpoint(at: transform)
+                        }
+                    }
+                    .disabled(tempTitle.isEmpty)
+                )
             }
         }
     }
