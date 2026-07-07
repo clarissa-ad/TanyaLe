@@ -37,7 +37,7 @@
 		AA2508912FFA60D5001CF21C /* WalkableAspirationSceneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508902FFA60D5001CF21C /* WalkableAspirationSceneController.swift */; };
 		AA2508A12FFA60D5001CF21C /* ARMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508A02FFA60D5001CF21C /* ARMinimapView.swift */; };
 		AA2508B12FFA60D5001CF21C /* CheckpointBoardLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508B02FFA60D5001CF21C /* CheckpointBoardLoader.swift */; };
-		AA25D3732FFC9B0D00B1256B /* RelativeARContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25D3722FFC9B0600B1256B /* RelativeARContainer.swift */; };
+		AA25D3732FFC9B0D00B1256B /* RelativeARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25D3722FFC9B0600B1256B /* RelativeARViewContainer.swift */; };
 		AA25D3752FFCAFFA00B1256B /* CheckpointFormContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25D3742FFCAFFA00B1256B /* CheckpointFormContent.swift */; };
 		DB9768932FF795DA008660F8 /* MCQBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */; };
 		DBB0D2892FFA9E4200252738 /* EmojiCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */; };
@@ -75,7 +75,7 @@
 		AA2508902FFA60D5001CF21C /* WalkableAspirationSceneController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationSceneController.swift; sourceTree = "<group>"; };
 		AA2508A02FFA60D5001CF21C /* ARMinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARMinimapView.swift; sourceTree = "<group>"; };
 		AA2508B02FFA60D5001CF21C /* CheckpointBoardLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointBoardLoader.swift; sourceTree = "<group>"; };
-		AA25D3722FFC9B0600B1256B /* RelativeARContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeARContainer.swift; sourceTree = "<group>"; };
+		AA25D3722FFC9B0600B1256B /* RelativeARViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeARViewContainer.swift; sourceTree = "<group>"; };
 		AA25D3742FFCAFFA00B1256B /* CheckpointFormContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointFormContent.swift; sourceTree = "<group>"; };
 		DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCQBoardEntity.swift; sourceTree = "<group>"; };
 		DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCelebrationView.swift; sourceTree = "<group>"; };
@@ -151,7 +151,7 @@
 				AA25086E2FFB5E7C001CF21C /* WelcomeView.swift */,
 				AA2508742FFC07F8001CF21C /* ARWalkView.swift */,
 				AA25085E2FFA6475001CF21C /* WalkableAspirationView.swift */,
-				AA25D3722FFC9B0600B1256B /* RelativeARContainer.swift */,
+				AA25D3722FFC9B0600B1256B /* RelativeARViewContainer.swift */,
 				98374C192FF76A8F005D18E1 /* Components */,
 			);
 			path = Views;
@@ -321,7 +321,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				98374C2D2FF76A8F005D18E1 /* MakerViewModel.swift in Sources */,
-				AA25D3732FFC9B0D00B1256B /* RelativeARContainer.swift in Sources */,
+				AA25D3732FFC9B0D00B1256B /* RelativeARViewContainer.swift in Sources */,
 				98374C2E2FF76A8F005D18E1 /* RelativeUserARView.swift in Sources */,
 				AA25085F2FFA647D001CF21C /* WalkableAspirationView.swift in Sources */,
 				AA25085D2FFA6252001CF21C /* WalkableAspirationButton.swift in Sources */,
