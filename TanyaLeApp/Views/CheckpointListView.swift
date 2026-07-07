@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct CheckpointListView: View {
-    @ObservedObject private var db = MockDatabaseService.shared
+    @ObservedObject private var db = DatabaseService.shared
     
     var body: some View {
         List {

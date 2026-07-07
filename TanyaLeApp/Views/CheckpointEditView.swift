@@ -3,7 +3,7 @@ import UIKit
 
 struct CheckpointEditView: View {
     @Environment(\.presentationMode) var presentationMode
-    @ObservedObject private var db = MockDatabaseService.shared
+    @ObservedObject private var db = DatabaseService.shared
     
     let checkpointId: UUID
     

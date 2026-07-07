@@ -5,7 +5,7 @@ import MapKit
 import Combine
 
 struct RelativeUserARView: View {
-    @ObservedObject private var db = MockDatabaseService.shared
+    @ObservedObject private var db = DatabaseService.shared
     @StateObject private var viewModel = CitizenARViewModel()
     
     enum MapState {
@@ -325,7 +325,7 @@ struct RelativeUserARView: View {
                 // beacon, and answers are given by tapping the card itself.
                 Task { @MainActor in
                     let saveAnswer: (String) -> Void = { answer in
-                        MockDatabaseService.shared.saveResponse(checkpointID: cp.id, answer: answer)
+                        DatabaseService.shared.saveResponse(checkpointID: cp.id, answer: answer)
                     }
                     let controller: (any ARSurveyBoard)?
                     if cp.hasMCQ {

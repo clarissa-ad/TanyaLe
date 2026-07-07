@@ -57,4 +57,20 @@ struct Checkpoint: Identifiable, Codable, Equatable {
     static func == (lhs: Checkpoint, rhs: Checkpoint) -> Bool {
         lhs.id == rhs.id
     }
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case taskDescription = "task_description"
+        case interactionType = "interaction_type"
+        case question
+        case surveyOptions = "survey_options"
+        case emojiLeft = "emoji_left"
+        case emojiRight = "emoji_right"
+        case latitude
+        case longitude
+        case relativeX = "relative_x"
+        case relativeY = "relative_y"
+        case relativeZ = "relative_z"
+    }
 }

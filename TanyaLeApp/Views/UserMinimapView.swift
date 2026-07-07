@@ -3,7 +3,7 @@ import MapKit
 
 struct UserMinimapView: View {
     @StateObject private var locationManager = LocationManager()
-    @ObservedObject private var db = MockDatabaseService.shared
+    @ObservedObject private var db = DatabaseService.shared
     
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666),

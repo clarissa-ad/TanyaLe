@@ -30,4 +30,14 @@ struct WalkableAspiration: Identifiable, Codable {
     var relativePosition: SIMD3<Float> {
         SIMD3<Float>(relativeX, relativeY, relativeZ)
     }
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case message
+        case latitude
+        case longitude
+        case relativeX = "relative_x"
+        case relativeY = "relative_y"
+        case relativeZ = "relative_z"
+    }
 }

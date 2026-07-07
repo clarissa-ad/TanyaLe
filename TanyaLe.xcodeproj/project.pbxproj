@@ -8,59 +8,66 @@
 
 /* Begin PBXBuildFile section */
 		98374BE52FF759EB005D18E1 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 98374BC12FF759EB005D18E1 /* README.md */; };
-		98374C2D2FF76A8F005D18E1 /* MakerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C202FF76A8F005D18E1 /* MakerViewModel.swift */; };
-		98374C2E2FF76A8F005D18E1 /* RelativeUserARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C292FF76A8F005D18E1 /* RelativeUserARView.swift */; };
-		98374C2F2FF76A8F005D18E1 /* MakerMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C272FF76A8F005D18E1 /* MakerMapView.swift */; };
-		98374C302FF76A8F005D18E1 /* Checkpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C142FF76A8F005D18E1 /* Checkpoint.swift */; };
-		98374C312FF76A8F005D18E1 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C122FF76A8F005D18E1 /* LocationManager.swift */; };
-		98374C322FF76A8F005D18E1 /* SandboxDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C232FF76A8F005D18E1 /* SandboxDashboardView.swift */; };
-		98374C332FF76A8F005D18E1 /* MockDatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C172FF76A8F005D18E1 /* MockDatabaseService.swift */; };
-		98374C342FF76A8F005D18E1 /* RelativeMakerARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C282FF76A8F005D18E1 /* RelativeMakerARView.swift */; };
-		98374C352FF76A8F005D18E1 /* CitizenARViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C1F2FF76A8F005D18E1 /* CitizenARViewModel.swift */; };
-		98374C362FF76A8F005D18E1 /* TanyaLeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C1C2FF76A8F005D18E1 /* TanyaLeApp.swift */; };
-		98374C372FF76A8F005D18E1 /* CheckpointEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C252FF76A8F005D18E1 /* CheckpointEditView.swift */; };
-		98374C382FF76A8F005D18E1 /* ARPlacementPrototypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C222FF76A8F005D18E1 /* ARPlacementPrototypeView.swift */; };
-		98374C392FF76A8F005D18E1 /* UserMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C2A2FF76A8F005D18E1 /* UserMinimapView.swift */; };
-		98374C3A2FF76A8F005D18E1 /* CheckpointListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C262FF76A8F005D18E1 /* CheckpointListView.swift */; };
-		AA25085B2FFA60E1001CF21C /* WalkableAspirationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25085A2FFA60D5001CF21C /* WalkableAspirationManager.swift */; };
-		AA25085D2FFA6252001CF21C /* WalkableAspirationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25085C2FFA6242001CF21C /* WalkableAspirationButton.swift */; };
-		AA25085F2FFA647D001CF21C /* WalkableAspirationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25085E2FFA6475001CF21C /* WalkableAspirationView.swift */; };
-		AA2508612FFA68B2001CF21C /* TextFieldBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508602FFA68A4001CF21C /* TextFieldBottomSheet.swift */; };
-		AA2508672FFAC1F7001CF21C /* WalkableAspiration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508662FFAC1F0001CF21C /* WalkableAspiration.swift */; };
-		AA2508692FFB574E001CF21C /* ARSurveyBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508682FFB5749001CF21C /* ARSurveyBoard.swift */; };
-		AA25086B2FFB57AB001CF21C /* MessageBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25086A2FFB57A8001CF21C /* MessageBoardEntity.swift */; };
-		AA25086D2FFB5947001CF21C /* MessageBoardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25086C2FFB593D001CF21C /* MessageBoardManager.swift */; };
-		DB9768932FF795DA008660F8 /* MCQBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */; };
-		DBB0D2892FFA9E4200252738 /* EmojiCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */; };
+		98EA8CB82FFCB2C30067F8EA /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 98EA8CB72FFCB2C30067F8EA /* Supabase */; };
+		98EA8CE12FFCB2F90067F8EA /* SandboxDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CD72FFCB2F90067F8EA /* SandboxDashboardView.swift */; };
+		98EA8CE22FFCB2F90067F8EA /* WalkableAspiration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CC02FFCB2F90067F8EA /* WalkableAspiration.swift */; };
+		98EA8CE32FFCB2F90067F8EA /* MessageBoardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CBC2FFCB2F90067F8EA /* MessageBoardManager.swift */; };
+		98EA8CE42FFCB2F90067F8EA /* CitizenARViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CD32FFCB2F90067F8EA /* CitizenARViewModel.swift */; };
+		98EA8CE52FFCB2F90067F8EA /* MakerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CD42FFCB2F90067F8EA /* MakerViewModel.swift */; };
+		98EA8CE62FFCB2F90067F8EA /* ARPlacementPrototypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CD62FFCB2F90067F8EA /* ARPlacementPrototypeView.swift */; };
+		98EA8CE72FFCB2F90067F8EA /* TanyaLeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CD02FFCB2F90067F8EA /* TanyaLeApp.swift */; };
+		98EA8CE82FFCB2F90067F8EA /* WalkableAspirationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CBD2FFCB2F90067F8EA /* WalkableAspirationManager.swift */; };
+		98EA8CE92FFCB2F90067F8EA /* SupabaseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CB92FFCB2F90067F8EA /* SupabaseConfig.swift */; };
+		98EA8CEA2FFCB2F90067F8EA /* CheckpointListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CDA2FFCB2F90067F8EA /* CheckpointListView.swift */; };
+		98EA8CEB2FFCB2F90067F8EA /* CheckpointEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CD92FFCB2F90067F8EA /* CheckpointEditView.swift */; };
+		98EA8CEC2FFCB2F90067F8EA /* ARSurveyBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CC52FFCB2F90067F8EA /* ARSurveyBoard.swift */; };
+		98EA8CED2FFCB2F90067F8EA /* DatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CC22FFCB2F90067F8EA /* DatabaseService.swift */; };
+		98EA8CEE2FFCB2F90067F8EA /* WalkableAspirationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CCB2FFCB2F90067F8EA /* WalkableAspirationButton.swift */; };
+		98EA8CEF2FFCB2F90067F8EA /* WalkableAspirationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CCD2FFCB2F90067F8EA /* WalkableAspirationView.swift */; };
+		98EA8CF02FFCB2F90067F8EA /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CBB2FFCB2F90067F8EA /* LocationManager.swift */; };
+		98EA8CF12FFCB2F90067F8EA /* RelativeUserARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CDD2FFCB2F90067F8EA /* RelativeUserARView.swift */; };
+		98EA8CF22FFCB2F90067F8EA /* CheckpointFormContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CC62FFCB2F90067F8EA /* CheckpointFormContent.swift */; };
+		98EA8CF32FFCB2F90067F8EA /* Checkpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CBF2FFCB2F90067F8EA /* Checkpoint.swift */; };
+		98EA8CF42FFCB2F90067F8EA /* EmojiCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CC72FFCB2F90067F8EA /* EmojiCelebrationView.swift */; };
+		98EA8CF52FFCB2F90067F8EA /* TextFieldBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CCA2FFCB2F90067F8EA /* TextFieldBottomSheet.swift */; };
+		98EA8CF62FFCB2F90067F8EA /* MockDatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CC32FFCB2F90067F8EA /* MockDatabaseService.swift */; };
+		98EA8CF72FFCB2F90067F8EA /* MessageBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CC92FFCB2F90067F8EA /* MessageBoardEntity.swift */; };
+		98EA8CF82FFCB2F90067F8EA /* RelativeMakerARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CDC2FFCB2F90067F8EA /* RelativeMakerARView.swift */; };
+		98EA8CF92FFCB2F90067F8EA /* MakerMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CDB2FFCB2F90067F8EA /* MakerMapView.swift */; };
+		98EA8CFA2FFCB2F90067F8EA /* UserMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CDE2FFCB2F90067F8EA /* UserMinimapView.swift */; };
+		98EA8CFB2FFCB2F90067F8EA /* MCQBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA8CC82FFCB2F90067F8EA /* MCQBoardEntity.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		98374BC12FF759EB005D18E1 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		98374C122FF76A8F005D18E1 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		98374C142FF76A8F005D18E1 /* Checkpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkpoint.swift; sourceTree = "<group>"; };
-		98374C172FF76A8F005D18E1 /* MockDatabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDatabaseService.swift; sourceTree = "<group>"; };
-		98374C1C2FF76A8F005D18E1 /* TanyaLeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TanyaLeApp.swift; sourceTree = "<group>"; };
-		98374C1F2FF76A8F005D18E1 /* CitizenARViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitizenARViewModel.swift; sourceTree = "<group>"; };
-		98374C202FF76A8F005D18E1 /* MakerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakerViewModel.swift; sourceTree = "<group>"; };
-		98374C222FF76A8F005D18E1 /* ARPlacementPrototypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPlacementPrototypeView.swift; sourceTree = "<group>"; };
-		98374C232FF76A8F005D18E1 /* SandboxDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxDashboardView.swift; sourceTree = "<group>"; };
-		98374C252FF76A8F005D18E1 /* CheckpointEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointEditView.swift; sourceTree = "<group>"; };
-		98374C262FF76A8F005D18E1 /* CheckpointListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointListView.swift; sourceTree = "<group>"; };
-		98374C272FF76A8F005D18E1 /* MakerMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakerMapView.swift; sourceTree = "<group>"; };
-		98374C282FF76A8F005D18E1 /* RelativeMakerARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeMakerARView.swift; sourceTree = "<group>"; };
-		98374C292FF76A8F005D18E1 /* RelativeUserARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeUserARView.swift; sourceTree = "<group>"; };
-		98374C2A2FF76A8F005D18E1 /* UserMinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMinimapView.swift; sourceTree = "<group>"; };
 		987379372FF61D8900739D44 /* TanyaLe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TanyaLe.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		AA25085A2FFA60D5001CF21C /* WalkableAspirationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationManager.swift; sourceTree = "<group>"; };
-		AA25085C2FFA6242001CF21C /* WalkableAspirationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationButton.swift; sourceTree = "<group>"; };
-		AA25085E2FFA6475001CF21C /* WalkableAspirationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationView.swift; sourceTree = "<group>"; };
-		AA2508602FFA68A4001CF21C /* TextFieldBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldBottomSheet.swift; sourceTree = "<group>"; };
-		AA2508662FFAC1F0001CF21C /* WalkableAspiration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspiration.swift; sourceTree = "<group>"; };
-		AA2508682FFB5749001CF21C /* ARSurveyBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSurveyBoard.swift; sourceTree = "<group>"; };
-		AA25086A2FFB57A8001CF21C /* MessageBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBoardEntity.swift; sourceTree = "<group>"; };
-		AA25086C2FFB593D001CF21C /* MessageBoardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBoardManager.swift; sourceTree = "<group>"; };
-		DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCQBoardEntity.swift; sourceTree = "<group>"; };
-		DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCelebrationView.swift; sourceTree = "<group>"; };
+		98EA8CB92FFCB2F90067F8EA /* SupabaseConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseConfig.swift; sourceTree = "<group>"; };
+		98EA8CBB2FFCB2F90067F8EA /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		98EA8CBC2FFCB2F90067F8EA /* MessageBoardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBoardManager.swift; sourceTree = "<group>"; };
+		98EA8CBD2FFCB2F90067F8EA /* WalkableAspirationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationManager.swift; sourceTree = "<group>"; };
+		98EA8CBF2FFCB2F90067F8EA /* Checkpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkpoint.swift; sourceTree = "<group>"; };
+		98EA8CC02FFCB2F90067F8EA /* WalkableAspiration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspiration.swift; sourceTree = "<group>"; };
+		98EA8CC22FFCB2F90067F8EA /* DatabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseService.swift; sourceTree = "<group>"; };
+		98EA8CC32FFCB2F90067F8EA /* MockDatabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDatabaseService.swift; sourceTree = "<group>"; };
+		98EA8CC52FFCB2F90067F8EA /* ARSurveyBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSurveyBoard.swift; sourceTree = "<group>"; };
+		98EA8CC62FFCB2F90067F8EA /* CheckpointFormContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointFormContent.swift; sourceTree = "<group>"; };
+		98EA8CC72FFCB2F90067F8EA /* EmojiCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCelebrationView.swift; sourceTree = "<group>"; };
+		98EA8CC82FFCB2F90067F8EA /* MCQBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCQBoardEntity.swift; sourceTree = "<group>"; };
+		98EA8CC92FFCB2F90067F8EA /* MessageBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBoardEntity.swift; sourceTree = "<group>"; };
+		98EA8CCA2FFCB2F90067F8EA /* TextFieldBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldBottomSheet.swift; sourceTree = "<group>"; };
+		98EA8CCB2FFCB2F90067F8EA /* WalkableAspirationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationButton.swift; sourceTree = "<group>"; };
+		98EA8CCD2FFCB2F90067F8EA /* WalkableAspirationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationView.swift; sourceTree = "<group>"; };
+		98EA8CD02FFCB2F90067F8EA /* TanyaLeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TanyaLeApp.swift; sourceTree = "<group>"; };
+		98EA8CD32FFCB2F90067F8EA /* CitizenARViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitizenARViewModel.swift; sourceTree = "<group>"; };
+		98EA8CD42FFCB2F90067F8EA /* MakerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakerViewModel.swift; sourceTree = "<group>"; };
+		98EA8CD62FFCB2F90067F8EA /* ARPlacementPrototypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPlacementPrototypeView.swift; sourceTree = "<group>"; };
+		98EA8CD72FFCB2F90067F8EA /* SandboxDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxDashboardView.swift; sourceTree = "<group>"; };
+		98EA8CD92FFCB2F90067F8EA /* CheckpointEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointEditView.swift; sourceTree = "<group>"; };
+		98EA8CDA2FFCB2F90067F8EA /* CheckpointListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointListView.swift; sourceTree = "<group>"; };
+		98EA8CDB2FFCB2F90067F8EA /* MakerMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakerMapView.swift; sourceTree = "<group>"; };
+		98EA8CDC2FFCB2F90067F8EA /* RelativeMakerARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeMakerARView.swift; sourceTree = "<group>"; };
+		98EA8CDD2FFCB2F90067F8EA /* RelativeUserARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeUserARView.swift; sourceTree = "<group>"; };
+		98EA8CDE2FFCB2F90067F8EA /* UserMinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMinimapView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,145 +75,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98EA8CB82FFCB2C30067F8EA /* Supabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		98374C132FF76A8F005D18E1 /* Manager */ = {
-			isa = PBXGroup;
-			children = (
-				AA25085A2FFA60D5001CF21C /* WalkableAspirationManager.swift */,
-				AA25086C2FFB593D001CF21C /* MessageBoardManager.swift */,
-				98374C122FF76A8F005D18E1 /* LocationManager.swift */,
-			);
-			path = Manager;
-			sourceTree = "<group>";
-		};
-		98374C152FF76A8F005D18E1 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				AA2508662FFAC1F0001CF21C /* WalkableAspiration.swift */,
-				98374C142FF76A8F005D18E1 /* Checkpoint.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		98374C162FF76A8F005D18E1 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		98374C182FF76A8F005D18E1 /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				98374C172FF76A8F005D18E1 /* MockDatabaseService.swift */,
-			);
-			path = Services;
-			sourceTree = "<group>";
-		};
-		98374C192FF76A8F005D18E1 /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				AA25086A2FFB57A8001CF21C /* MessageBoardEntity.swift */,
-				AA2508682FFB5749001CF21C /* ARSurveyBoard.swift */,
-				DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */,
-				DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */,
-				AA2508602FFA68A4001CF21C /* TextFieldBottomSheet.swift */,
-				AA25085C2FFA6242001CF21C /* WalkableAspirationButton.swift */,
-			);
-			path = Components;
-			sourceTree = "<group>";
-		};
-		98374C1A2FF76A8F005D18E1 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				AA25085E2FFA6475001CF21C /* WalkableAspirationView.swift */,
-				98374C192FF76A8F005D18E1 /* Components */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		98374C1B2FF76A8F005D18E1 /* Shared */ = {
-			isa = PBXGroup;
-			children = (
-				98374C132FF76A8F005D18E1 /* Manager */,
-				98374C152FF76A8F005D18E1 /* Models */,
-				98374C162FF76A8F005D18E1 /* Resources */,
-				98374C182FF76A8F005D18E1 /* Services */,
-				98374C1A2FF76A8F005D18E1 /* Views */,
-			);
-			path = Shared;
-			sourceTree = "<group>";
-		};
-		98374C1D2FF76A8F005D18E1 /* App */ = {
-			isa = PBXGroup;
-			children = (
-				98374C1C2FF76A8F005D18E1 /* TanyaLeApp.swift */,
-			);
-			path = App;
-			sourceTree = "<group>";
-		};
-		98374C1E2FF76A8F005D18E1 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		98374C212FF76A8F005D18E1 /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-				98374C1F2FF76A8F005D18E1 /* CitizenARViewModel.swift */,
-				98374C202FF76A8F005D18E1 /* MakerViewModel.swift */,
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
-		98374C242FF76A8F005D18E1 /* Prototypes */ = {
-			isa = PBXGroup;
-			children = (
-				98374C222FF76A8F005D18E1 /* ARPlacementPrototypeView.swift */,
-				98374C232FF76A8F005D18E1 /* SandboxDashboardView.swift */,
-			);
-			path = Prototypes;
-			sourceTree = "<group>";
-		};
-		98374C2B2FF76A8F005D18E1 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				98374C242FF76A8F005D18E1 /* Prototypes */,
-				98374C252FF76A8F005D18E1 /* CheckpointEditView.swift */,
-				98374C262FF76A8F005D18E1 /* CheckpointListView.swift */,
-				98374C272FF76A8F005D18E1 /* MakerMapView.swift */,
-				98374C282FF76A8F005D18E1 /* RelativeMakerARView.swift */,
-				98374C292FF76A8F005D18E1 /* RelativeUserARView.swift */,
-				98374C2A2FF76A8F005D18E1 /* UserMinimapView.swift */,
-			);
-			path = Views;
-			sourceTree = "<group>";
-		};
-		98374C2C2FF76A8F005D18E1 /* TanyaLeApp */ = {
-			isa = PBXGroup;
-			children = (
-				98374C1D2FF76A8F005D18E1 /* App */,
-				98374C1E2FF76A8F005D18E1 /* Resources */,
-				98374C212FF76A8F005D18E1 /* ViewModels */,
-				98374C2B2FF76A8F005D18E1 /* Views */,
-			);
-			path = TanyaLeApp;
-			sourceTree = "<group>";
-		};
 		9873792E2FF61D8900739D44 = {
 			isa = PBXGroup;
 			children = (
 				98374BC12FF759EB005D18E1 /* README.md */,
+				98EA8CCF2FFCB2F90067F8EA /* Shared */,
+				98EA8CE02FFCB2F90067F8EA /* TanyaLeApp */,
 				987379382FF61D8900739D44 /* Products */,
-				98374C1B2FF76A8F005D18E1 /* Shared */,
-				98374C2C2FF76A8F005D18E1 /* TanyaLeApp */,
 			);
 			sourceTree = "<group>";
 		};
@@ -216,6 +98,135 @@
 				987379372FF61D8900739D44 /* TanyaLe.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		98EA8CBA2FFCB2F90067F8EA /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				98EA8CB92FFCB2F90067F8EA /* SupabaseConfig.swift */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		98EA8CBE2FFCB2F90067F8EA /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				98EA8CBB2FFCB2F90067F8EA /* LocationManager.swift */,
+				98EA8CBC2FFCB2F90067F8EA /* MessageBoardManager.swift */,
+				98EA8CBD2FFCB2F90067F8EA /* WalkableAspirationManager.swift */,
+			);
+			path = Manager;
+			sourceTree = "<group>";
+		};
+		98EA8CC12FFCB2F90067F8EA /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				98EA8CBF2FFCB2F90067F8EA /* Checkpoint.swift */,
+				98EA8CC02FFCB2F90067F8EA /* WalkableAspiration.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		98EA8CC42FFCB2F90067F8EA /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				98EA8CC22FFCB2F90067F8EA /* DatabaseService.swift */,
+				98EA8CC32FFCB2F90067F8EA /* MockDatabaseService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		98EA8CCC2FFCB2F90067F8EA /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				98EA8CC52FFCB2F90067F8EA /* ARSurveyBoard.swift */,
+				98EA8CC62FFCB2F90067F8EA /* CheckpointFormContent.swift */,
+				98EA8CC72FFCB2F90067F8EA /* EmojiCelebrationView.swift */,
+				98EA8CC82FFCB2F90067F8EA /* MCQBoardEntity.swift */,
+				98EA8CC92FFCB2F90067F8EA /* MessageBoardEntity.swift */,
+				98EA8CCA2FFCB2F90067F8EA /* TextFieldBottomSheet.swift */,
+				98EA8CCB2FFCB2F90067F8EA /* WalkableAspirationButton.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		98EA8CCE2FFCB2F90067F8EA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				98EA8CCC2FFCB2F90067F8EA /* Components */,
+				98EA8CCD2FFCB2F90067F8EA /* WalkableAspirationView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		98EA8CCF2FFCB2F90067F8EA /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				98EA8CBA2FFCB2F90067F8EA /* Config */,
+				98EA8CBE2FFCB2F90067F8EA /* Manager */,
+				98EA8CC12FFCB2F90067F8EA /* Models */,
+				98EA8CC42FFCB2F90067F8EA /* Services */,
+				98EA8CCE2FFCB2F90067F8EA /* Views */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		98EA8CD12FFCB2F90067F8EA /* App */ = {
+			isa = PBXGroup;
+			children = (
+				98EA8CD02FFCB2F90067F8EA /* TanyaLeApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		98EA8CD22FFCB2F90067F8EA /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		98EA8CD52FFCB2F90067F8EA /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				98EA8CD32FFCB2F90067F8EA /* CitizenARViewModel.swift */,
+				98EA8CD42FFCB2F90067F8EA /* MakerViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		98EA8CD82FFCB2F90067F8EA /* Prototypes */ = {
+			isa = PBXGroup;
+			children = (
+				98EA8CD62FFCB2F90067F8EA /* ARPlacementPrototypeView.swift */,
+				98EA8CD72FFCB2F90067F8EA /* SandboxDashboardView.swift */,
+			);
+			path = Prototypes;
+			sourceTree = "<group>";
+		};
+		98EA8CDF2FFCB2F90067F8EA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				98EA8CD82FFCB2F90067F8EA /* Prototypes */,
+				98EA8CD92FFCB2F90067F8EA /* CheckpointEditView.swift */,
+				98EA8CDA2FFCB2F90067F8EA /* CheckpointListView.swift */,
+				98EA8CDB2FFCB2F90067F8EA /* MakerMapView.swift */,
+				98EA8CDC2FFCB2F90067F8EA /* RelativeMakerARView.swift */,
+				98EA8CDD2FFCB2F90067F8EA /* RelativeUserARView.swift */,
+				98EA8CDE2FFCB2F90067F8EA /* UserMinimapView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		98EA8CE02FFCB2F90067F8EA /* TanyaLeApp */ = {
+			isa = PBXGroup;
+			children = (
+				98EA8CD12FFCB2F90067F8EA /* App */,
+				98EA8CD22FFCB2F90067F8EA /* Resources */,
+				98EA8CD52FFCB2F90067F8EA /* ViewModels */,
+				98EA8CDF2FFCB2F90067F8EA /* Views */,
+			);
+			path = TanyaLeApp;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -235,6 +246,7 @@
 			);
 			name = TanyaLe;
 			packageProductDependencies = (
+				98EA8CB72FFCB2C30067F8EA /* Supabase */,
 			);
 			productName = TanyaLe;
 			productReference = 987379372FF61D8900739D44 /* TanyaLe.app */;
@@ -264,6 +276,9 @@
 			);
 			mainGroup = 9873792E2FF61D8900739D44;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				98EA8CB62FFCB24E0067F8EA /* XCRemoteSwiftPackageReference "supabase-swift" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 987379382FF61D8900739D44 /* Products */;
 			projectDirPath = "";
@@ -290,30 +305,33 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				98374C2D2FF76A8F005D18E1 /* MakerViewModel.swift in Sources */,
-				98374C2E2FF76A8F005D18E1 /* RelativeUserARView.swift in Sources */,
-				AA25085F2FFA647D001CF21C /* WalkableAspirationView.swift in Sources */,
-				AA25085D2FFA6252001CF21C /* WalkableAspirationButton.swift in Sources */,
-				98374C2F2FF76A8F005D18E1 /* MakerMapView.swift in Sources */,
-				AA2508692FFB574E001CF21C /* ARSurveyBoard.swift in Sources */,
-				98374C302FF76A8F005D18E1 /* Checkpoint.swift in Sources */,
-				DB9768932FF795DA008660F8 /* MCQBoardEntity.swift in Sources */,
-				98374C312FF76A8F005D18E1 /* LocationManager.swift in Sources */,
-				98374C322FF76A8F005D18E1 /* SandboxDashboardView.swift in Sources */,
-				98374C332FF76A8F005D18E1 /* MockDatabaseService.swift in Sources */,
-				98374C342FF76A8F005D18E1 /* RelativeMakerARView.swift in Sources */,
-				98374C352FF76A8F005D18E1 /* CitizenARViewModel.swift in Sources */,
-				98374C362FF76A8F005D18E1 /* TanyaLeApp.swift in Sources */,
-				AA2508672FFAC1F7001CF21C /* WalkableAspiration.swift in Sources */,
-				98374C372FF76A8F005D18E1 /* CheckpointEditView.swift in Sources */,
-				DBB0D2892FFA9E4200252738 /* EmojiCelebrationView.swift in Sources */,
-				98374C382FF76A8F005D18E1 /* ARPlacementPrototypeView.swift in Sources */,
-				AA25085B2FFA60E1001CF21C /* WalkableAspirationManager.swift in Sources */,
-				98374C392FF76A8F005D18E1 /* UserMinimapView.swift in Sources */,
-				AA25086D2FFB5947001CF21C /* MessageBoardManager.swift in Sources */,
-				AA25086B2FFB57AB001CF21C /* MessageBoardEntity.swift in Sources */,
-				AA2508612FFA68B2001CF21C /* TextFieldBottomSheet.swift in Sources */,
-				98374C3A2FF76A8F005D18E1 /* CheckpointListView.swift in Sources */,
+				98EA8CE12FFCB2F90067F8EA /* SandboxDashboardView.swift in Sources */,
+				98EA8CE22FFCB2F90067F8EA /* WalkableAspiration.swift in Sources */,
+				98EA8CE32FFCB2F90067F8EA /* MessageBoardManager.swift in Sources */,
+				98EA8CE42FFCB2F90067F8EA /* CitizenARViewModel.swift in Sources */,
+				98EA8CE52FFCB2F90067F8EA /* MakerViewModel.swift in Sources */,
+				98EA8CE62FFCB2F90067F8EA /* ARPlacementPrototypeView.swift in Sources */,
+				98EA8CE72FFCB2F90067F8EA /* TanyaLeApp.swift in Sources */,
+				98EA8CE82FFCB2F90067F8EA /* WalkableAspirationManager.swift in Sources */,
+				98EA8CE92FFCB2F90067F8EA /* SupabaseConfig.swift in Sources */,
+				98EA8CEA2FFCB2F90067F8EA /* CheckpointListView.swift in Sources */,
+				98EA8CEB2FFCB2F90067F8EA /* CheckpointEditView.swift in Sources */,
+				98EA8CEC2FFCB2F90067F8EA /* ARSurveyBoard.swift in Sources */,
+				98EA8CED2FFCB2F90067F8EA /* DatabaseService.swift in Sources */,
+				98EA8CEE2FFCB2F90067F8EA /* WalkableAspirationButton.swift in Sources */,
+				98EA8CEF2FFCB2F90067F8EA /* WalkableAspirationView.swift in Sources */,
+				98EA8CF02FFCB2F90067F8EA /* LocationManager.swift in Sources */,
+				98EA8CF12FFCB2F90067F8EA /* RelativeUserARView.swift in Sources */,
+				98EA8CF22FFCB2F90067F8EA /* CheckpointFormContent.swift in Sources */,
+				98EA8CF32FFCB2F90067F8EA /* Checkpoint.swift in Sources */,
+				98EA8CF42FFCB2F90067F8EA /* EmojiCelebrationView.swift in Sources */,
+				98EA8CF52FFCB2F90067F8EA /* TextFieldBottomSheet.swift in Sources */,
+				98EA8CF62FFCB2F90067F8EA /* MockDatabaseService.swift in Sources */,
+				98EA8CF72FFCB2F90067F8EA /* MessageBoardEntity.swift in Sources */,
+				98EA8CF82FFCB2F90067F8EA /* RelativeMakerARView.swift in Sources */,
+				98EA8CF92FFCB2F90067F8EA /* MakerMapView.swift in Sources */,
+				98EA8CFA2FFCB2F90067F8EA /* UserMinimapView.swift in Sources */,
+				98EA8CFB2FFCB2F90067F8EA /* MCQBoardEntity.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -327,7 +345,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VX33BG7ZDD;
+				DEVELOPMENT_TEAM = MABNSMHA8L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = CAMERA_USAGE_DESCRIPTION;
@@ -343,7 +361,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ian.TanyaLe;
+				PRODUCT_BUNDLE_IDENTIFIER = com.caca.TanyaLe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -362,7 +380,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VX33BG7ZDD;
+				DEVELOPMENT_TEAM = MABNSMHA8L;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = CAMERA_USAGE_DESCRIPTION;
@@ -378,7 +396,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ian.TanyaLe;
+				PRODUCT_BUNDLE_IDENTIFIER = com.caca.TanyaLe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -531,6 +549,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		98EA8CB62FFCB24E0067F8EA /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		98EA8CB72FFCB2C30067F8EA /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 98EA8CB62FFCB24E0067F8EA /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9873792F2FF61D8900739D44 /* Project object */;
 }

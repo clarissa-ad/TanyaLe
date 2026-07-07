@@ -60,7 +60,7 @@ class CitizenARViewModel: ObservableObject {
         let camPos = SIMD3<Float>(camTransform.columns.3.x, camTransform.columns.3.y, camTransform.columns.3.z)
         
         // --- 1. Calculate AR Map Coordinates (Indoor Tracking) ---
-        if let origin = MockDatabaseService.shared.surveyOrigin {
+        if let origin = DatabaseService.shared.surveyOrigin {
             let latOffset = Double(camPos.z) / 111111.0
             let lonOffset = Double(camPos.x) / 111111.0
             arUserLocation = CLLocationCoordinate2D(latitude: origin.latitude + latOffset, longitude: origin.longitude + lonOffset)
@@ -72,7 +72,7 @@ class CitizenARViewModel: ObservableObject {
         var minDistance: Float = .infinity
         var closestCP: Checkpoint? = nil
         
-        let checkpoints = MockDatabaseService.shared.checkpoints
+        let checkpoints = DatabaseService.shared.checkpoints
         
         for cp in checkpoints {
             let cpPos = SIMD3<Float>(cp.relativeX, cp.relativeY, cp.relativeZ)

@@ -10,14 +10,14 @@ class MakerViewModel: ObservableObject {
     
     init() {
         // Subscribe to MockDatabase updates
-        MockDatabaseService.shared.$checkpoints
+        DatabaseService.shared.$checkpoints
             .assign(to: \.checkpoints, on: self)
             .store(in: &cancellables)
     }
     
-    func addCheckpointAt(transform: SIMD3<Float>, title: String, description: String, interactionType: Checkpoint.InteractionType, question: String, surveyOptions: [String], emojiLeft: String, emojiRight: String, overrideLocation: CLLocationCoordinate2D? = nil) {
+    func addCheckpointAt(transform: SIMD3<Float>, title: String, description: String, interactionType: Checkpoint.InteractionType = .none, question: String = "", surveyOptions: [String] = [], emojiLeft: String = "😡", emojiRight: String = "😍", overrideLocation: CLLocationCoordinate2D? = nil) {
         
-        let origin = overrideLocation ?? MockDatabaseService.shared.surveyOrigin ?? CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666)
+        let origin = overrideLocation ?? DatabaseService.shared.surveyOrigin ?? CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666)
         
         // 1 degree of latitude/longitude is very roughly 111,111 meters
         // We will apply a tiny offset so the map pins visually match the AR layout
@@ -41,6 +41,6 @@ class MakerViewModel: ObservableObject {
             relativeY: transform.y,
             relativeZ: transform.z
         )
-        MockDatabaseService.shared.saveCheckpoint(newCheckpoint)
+        DatabaseService.shared.saveCheckpoint(newCheckpoint)
     }
 }

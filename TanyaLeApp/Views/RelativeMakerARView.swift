@@ -75,7 +75,7 @@ struct RelativeMakerARView: View {
                                 if isOriginSet {
                                     // Lock the Origin GPS!
                                     let loc = locationManager.userLocation?.coordinate ?? CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666)
-                                    MockDatabaseService.shared.surveyOrigin = loc
+                                    DatabaseService.shared.surveyOrigin = loc
                                 }
                             }
                         }) {
