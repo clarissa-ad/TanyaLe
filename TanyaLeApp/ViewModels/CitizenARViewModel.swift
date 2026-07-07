@@ -9,6 +9,9 @@ class CitizenARViewModel: ObservableObject {
     @Published var nearestDistance: Float?
     @Published var nearestCheckpoint: Checkpoint?
     @Published var arUserLocation: CLLocationCoordinate2D?
+    /// Clockwise screen-space rotation (radians) for a 2D navigator arrow so it
+    /// points at the nearest checkpoint. `nil` when there's nothing to point at.
+    @Published var arrowHeading: Double?
     
     private var trackingTimer: AnyCancellable?
     
@@ -86,17 +89,46 @@ class CitizenARViewModel: ObservableObject {
         if minDistance < 100 {
             nearestDistance = minDistance
             nearestCheckpoint = closestCP
-            
-            // Point the arrow at the closest checkpoint!
-            if let arrow = arContainer.arrowEntity, let cp = closestCP {
+
+            if let cp = closestCP {
                 let cpPos = SIMD3<Float>(cp.relativeX, cp.relativeY, cp.relativeZ)
-                arrow.look(at: cpPos, from: arrow.position(relativeTo: nil), relativeTo: nil)
-                arrow.isEnabled = true
+
+                // Point the 3D arrow (RelativeUserARView) at the closest checkpoint.
+                if let arrow = arContainer.arrowEntity {
+                    arrow.look(at: cpPos, from: arrow.position(relativeTo: nil), relativeTo: nil)
+                    arrow.isEnabled = true
+                }
+
+                // Screen-space heading for the 2D arrow (ARWalkView).
+                arrowHeading = Self.screenHeading(from: camTransform, to: cpPos)
             }
         } else {
             nearestDistance = nil
             nearestCheckpoint = nil
+            arrowHeading = nil
             arContainer.arrowEntity?.isEnabled = false
         }
+    }
+
+    /// Angle (radians, clockwise) to rotate an up-pointing 2D arrow so it aims
+    /// at `target` from the camera's point of view. Screen-up maps to the
+    /// camera's forward direction and screen-right to the camera's right, both
+    /// flattened to the horizontal plane so the arrow reads like a compass.
+    private static func screenHeading(from cam: simd_float4x4, to target: SIMD3<Float>) -> Double {
+        let camPos = SIMD3<Float>(cam.columns.3.x, cam.columns.3.y, cam.columns.3.z)
+
+        func flatten(_ v: SIMD4<Float>) -> SIMD3<Float> { SIMD3<Float>(v.x, 0, v.z) }
+        let forward = flatten(-cam.columns.2)          // camera looks down -Z
+        let right = flatten(cam.columns.0)             // camera +X
+        let toTarget = SIMD3<Float>(target.x - camPos.x, 0, target.z - camPos.z)
+
+        guard simd_length(forward) > 1e-4,
+              simd_length(right) > 1e-4,
+              simd_length(toTarget) > 1e-4 else { return 0 }
+
+        let f = simd_normalize(forward)
+        let r = simd_normalize(right)
+        let t = simd_normalize(toTarget)
+        return Double(atan2(simd_dot(t, r), simd_dot(t, f)))
     }
 }

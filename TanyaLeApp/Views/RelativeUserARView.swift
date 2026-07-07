@@ -8,17 +8,9 @@ struct RelativeUserARView: View {
     @ObservedObject private var db = MockDatabaseService.shared
     @StateObject private var viewModel = CitizenARViewModel()
     
-    enum MapState {
-        case hidden, preview, expanded
-    }
-    @State private var mapState: MapState = .preview
     /// When set, the bottom half of the screen fills with this emoji.
     @State private var celebrationEmoji: String?
-    @State private var mapRegion = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666),
-        span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001) // Max zoom
-    )
-    
+
     class ARContainer {
         var view: ARView?
         var arrowEntity: Entity?
@@ -54,101 +46,13 @@ struct RelativeUserARView: View {
             VStack {
                 HStack {
                     Spacer()
-                    
+
                     if viewModel.isOriginSet {
-                        VStack(alignment: .trailing) {
-                            if mapState != .hidden {
-                                Map(coordinateRegion: $mapRegion, annotationItems: db.checkpoints) { cp in
-                                    MapAnnotation(coordinate: cp.coordinate) {
-                                        Circle()
-                                            .fill(Color.green)
-                                            .frame(width: 15, height: 15)
-                                            .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                                    }
-                                }
-                                .frame(width: mapState == .expanded ? 300 : 120, 
-                                       height: mapState == .expanded ? 400 : 120)
-                                .cornerRadius(15)
-                                .shadow(radius: 5)
-                                .overlay(
-                                    // Custom AR Blue Dot for Indoor Tracking
-                                    Group {
-                                        if let userLoc = viewModel.arUserLocation {
-                                            GeometryReader { proxy in
-                                                let mapCenter = mapRegion.center
-                                                let span = mapRegion.span
-                                                
-                                                // Convert coordinates to screen points based on region
-                                                // This is a rough estimation for the minimap preview
-                                                let xOffset = (userLoc.longitude - mapCenter.longitude) / span.longitudeDelta * Double(proxy.size.width)
-                                                let yOffset = (mapCenter.latitude - userLoc.latitude) / span.latitudeDelta * Double(proxy.size.height)
-                                                
-                                                Circle()
-                                                    .fill(Color.blue)
-                                                    .frame(width: 15, height: 15)
-                                                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                                                    .shadow(radius: 2)
-                                                    .position(x: proxy.size.width / 2 + CGFloat(xOffset),
-                                                              y: proxy.size.height / 2 + CGFloat(yOffset))
-                                                    .animation(.linear(duration: 0.2), value: userLoc.latitude)
-                                            }
-                                        }
-                                    }
-                                )
-                                .onAppear {
-                                    // Snap to origin when map appears
-                                    if let origin = db.surveyOrigin {
-                                        mapRegion.center = origin
-                                    }
-                                }
-                            }
-                            
-                            // Floating Toggle Buttons
-                            HStack(spacing: 15) {
-                                if mapState != .hidden {
-                                    Button(action: {
-                                        withAnimation(.spring()) {
-                                            mapState = (mapState == .preview) ? .expanded : .preview
-                                        }
-                                    }) {
-                                        Image(systemName: mapState == .expanded ? "arrow.down.right.and.arrow.up.left" : "arrow.up.left.and.arrow.down.right")
-                                            .padding(10)
-                                            .background(Color.white.opacity(0.9))
-                                            .clipShape(Circle())
-                                            .shadow(radius: 3)
-                                    }
-                                    
-                                    Button(action: {
-                                        if let userLoc = viewModel.arUserLocation {
-                                            withAnimation {
-                                                mapRegion.center = userLoc
-                                            }
-                                        }
-                                    }) {
-                                        Image(systemName: "location.fill")
-                                            .padding(10)
-                                            .background(Color.white.opacity(0.9))
-                                            .clipShape(Circle())
-                                            .shadow(radius: 3)
-                                            .foregroundColor(.blue)
-                                    }
-                                }
-                                
-                                Button(action: {
-                                    withAnimation(.spring()) {
-                                        mapState = (mapState == .hidden) ? .preview : .hidden
-                                    }
-                                }) {
-                                    Image(systemName: mapState == .hidden ? "map.fill" : "eye.slash.fill")
-                                        .padding(10)
-                                        .background(Color.white.opacity(0.9))
-                                        .clipShape(Circle())
-                                        .shadow(radius: 3)
-                                }
-                            }
-                            .padding(.top, 5)
-                        }
-                        .padding()
+                        ARMinimapView(
+                            checkpoints: db.checkpoints,
+                            userLocation: viewModel.arUserLocation,
+                            origin: db.surveyOrigin
+                        )
                     }
                 }
                 Spacer()
@@ -308,66 +212,11 @@ struct RelativeUserARView: View {
     }
 
     private func loadCheckpoints() {
-        guard let arView = arContainer.view else { return }
-        
-        for cp in db.checkpoints {
-            let position = SIMD3<Float>(cp.relativeX, cp.relativeY, cp.relativeZ)
-            let anchor = AnchorEntity(world: position)
-            
-            let boxMesh = MeshResource.generateBox(size: 0.2)
-            let material = SimpleMaterial(color: .green, isMetallic: true)
-            let boxEntity = ModelEntity(mesh: boxMesh, materials: [material])
-            anchor.addChild(boxEntity)
-
-            if cp.hasMCQ || cp.hasEmojiSlider {
-                // Interactive survey card floats above the marker box. It gets
-                // yawed toward the camera every frame, staying upright like a
-                // beacon, and answers are given by tapping the card itself.
-                Task { @MainActor in
-                    let saveAnswer: (String) -> Void = { answer in
-                        MockDatabaseService.shared.saveResponse(checkpointID: cp.id, answer: answer)
-                    }
-                    let controller: (any ARSurveyBoard)?
-                    if cp.hasMCQ {
-                        controller = await MCQBoardController.make(for: cp, onSubmit: saveAnswer)
-                    } else {
-                        controller = await EmojiSliderBoardController.make(for: cp) { answer, chosenEmoji in
-                            saveAnswer(answer)
-                            showEmojiCelebration(chosenEmoji)
-                        }
-                    }
-
-                    if let controller {
-                        controller.rootEntity.position = [0, 1.0, 0]
-                        anchor.addChild(controller.rootEntity)
-                        arContainer.faceCameraEntities.append(controller.rootEntity)
-                        arContainer.boardControllers.append(controller)
-                    }
-                }
-            } else {
-                // No MCQ configured yet: show a floating title label instead.
-                let textMesh = MeshResource.generateText(
-                    cp.title,
-                    extrusionDepth: 0.01,
-                    font: .systemFont(ofSize: 0.1),
-                    containerFrame: .zero,
-                    alignment: .center,
-                    lineBreakMode: .byWordWrapping
-                )
-                let textEntity = ModelEntity(mesh: textMesh, materials: [SimpleMaterial(color: .white, isMetallic: false)])
-                // Center the text on its holder so the camera-facing rotation
-                // pivots around the middle instead of the glyphs' corner.
-                textEntity.position = [-textMesh.bounds.center.x, 0, 0]
-
-                let titleHolder = Entity()
-                titleHolder.position = [0, 0.25, 0]
-                titleHolder.addChild(textEntity)
-                boxEntity.addChild(titleHolder)
-                arContainer.faceCameraEntities.append(titleHolder)
-            }
-
-            arView.scene.addAnchor(anchor)
-        }
+        CheckpointBoardLoader.load(
+            into: arContainer,
+            checkpoints: db.checkpoints,
+            onEmojiCelebration: showEmojiCelebration
+        )
     }
 }
 

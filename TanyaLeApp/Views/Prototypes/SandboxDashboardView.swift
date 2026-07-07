@@ -23,6 +23,9 @@ struct SandboxDashboardView: View {
                     NavigationLink(destination: WalkableAspirationView()) {
                         Label("Walkable Aspiration View", systemImage: "ellipsis.bubble")
                     }
+                    NavigationLink(destination: ARWalkView()) {
+                        Label("AR Walk View", systemImage: "arkit")
+                    }
                 }
                 
                 Section(header: Text("UI Prototypes")) {

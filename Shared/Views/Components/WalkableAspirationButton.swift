@@ -12,13 +12,13 @@ struct WalkableAspirationButton: View {
 
     let systemName: String
     let accessibilityLabel: String
-    let action: () -> Void
+    /// Called with the text the user submitted in the sheet.
+    let onSubmit: (String) -> Void
 
     var body: some View {
-        
-        ZStack{
+
+        ZStack {
             Button {
-                action()
                 showSheet.toggle()
             } label: {
                 Image(systemName: systemName)
@@ -32,7 +32,7 @@ struct WalkableAspirationButton: View {
             .accessibilityLabel(accessibilityLabel)
             .sheet(isPresented: $showSheet) {
                 TextFieldBottomSheet { text in
-                    print("User wrote:", text)
+                    onSubmit(text)
                 }
             }
             .glassEffect()
@@ -41,5 +41,7 @@ struct WalkableAspirationButton: View {
 }
 
 #Preview {
-    WalkableAspirationButton(systemName: "bubble.and.pencil", accessibilityLabel: "Add messages", action: {})
+    WalkableAspirationButton(systemName: "bubble.and.pencil", accessibilityLabel: "Add messages") { text in
+        print("User wrote:", text)
+    }
 }

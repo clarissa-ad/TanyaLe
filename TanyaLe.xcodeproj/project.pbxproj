@@ -22,6 +22,7 @@
 		98374C382FF76A8F005D18E1 /* ARPlacementPrototypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C222FF76A8F005D18E1 /* ARPlacementPrototypeView.swift */; };
 		98374C392FF76A8F005D18E1 /* UserMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C2A2FF76A8F005D18E1 /* UserMinimapView.swift */; };
 		98374C3A2FF76A8F005D18E1 /* CheckpointListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C262FF76A8F005D18E1 /* CheckpointListView.swift */; };
+		AA164A902FFC985400783485 /* appicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = AA164A8F2FFC985400783485 /* appicon_tanyale.icon */; };
 		AA25085B2FFA60E1001CF21C /* WalkableAspirationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25085A2FFA60D5001CF21C /* WalkableAspirationManager.swift */; };
 		AA25085D2FFA6252001CF21C /* WalkableAspirationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25085C2FFA6242001CF21C /* WalkableAspirationButton.swift */; };
 		AA25085F2FFA647D001CF21C /* WalkableAspirationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25085E2FFA6475001CF21C /* WalkableAspirationView.swift */; };
@@ -29,10 +30,14 @@
 		AA2508672FFAC1F7001CF21C /* WalkableAspiration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508662FFAC1F0001CF21C /* WalkableAspiration.swift */; };
 		AA2508692FFB574E001CF21C /* ARSurveyBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508682FFB5749001CF21C /* ARSurveyBoard.swift */; };
 		AA25086B2FFB57AB001CF21C /* MessageBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25086A2FFB57A8001CF21C /* MessageBoardEntity.swift */; };
-		AA25086D2FFB5947001CF21C /* MessageBoardManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25086C2FFB593D001CF21C /* MessageBoardManager.swift */; };
 		AA25086F2FFB5F39001CF21C /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25086E2FFB5E7C001CF21C /* WelcomeView.swift */; };
 		AA2508712FFB6075001CF21C /* tanyale_map_illustration.svg in Resources */ = {isa = PBXBuildFile; fileRef = AA2508702FFB6075001CF21C /* tanyale_map_illustration.svg */; };
 		AA2508732FFB6589001CF21C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA2508722FFB6589001CF21C /* Assets.xcassets */; };
+		AA2508752FFC080D001CF21C /* ARWalkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508742FFC07F8001CF21C /* ARWalkView.swift */; };
+		AA2508912FFA60D5001CF21C /* WalkableAspirationSceneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508902FFA60D5001CF21C /* WalkableAspirationSceneController.swift */; };
+		AA2508A12FFA60D5001CF21C /* ARMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508A02FFA60D5001CF21C /* ARMinimapView.swift */; };
+		AA2508B12FFA60D5001CF21C /* CheckpointBoardLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508B02FFA60D5001CF21C /* CheckpointBoardLoader.swift */; };
+		AA25D3732FFC9B0D00B1256B /* RelativeARContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25D3722FFC9B0600B1256B /* RelativeARContainer.swift */; };
 		DB9768932FF795DA008660F8 /* MCQBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */; };
 		DBB0D2892FFA9E4200252738 /* EmojiCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */; };
 /* End PBXBuildFile section */
@@ -54,6 +59,7 @@
 		98374C292FF76A8F005D18E1 /* RelativeUserARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeUserARView.swift; sourceTree = "<group>"; };
 		98374C2A2FF76A8F005D18E1 /* UserMinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMinimapView.swift; sourceTree = "<group>"; };
 		987379372FF61D8900739D44 /* TanyaLe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TanyaLe.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA164A8F2FFC985400783485 /* appicon_tanyale.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = appicon_tanyale.icon; sourceTree = "<group>"; };
 		AA25085A2FFA60D5001CF21C /* WalkableAspirationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationManager.swift; sourceTree = "<group>"; };
 		AA25085C2FFA6242001CF21C /* WalkableAspirationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationButton.swift; sourceTree = "<group>"; };
 		AA25085E2FFA6475001CF21C /* WalkableAspirationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationView.swift; sourceTree = "<group>"; };
@@ -61,10 +67,14 @@
 		AA2508662FFAC1F0001CF21C /* WalkableAspiration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspiration.swift; sourceTree = "<group>"; };
 		AA2508682FFB5749001CF21C /* ARSurveyBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSurveyBoard.swift; sourceTree = "<group>"; };
 		AA25086A2FFB57A8001CF21C /* MessageBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBoardEntity.swift; sourceTree = "<group>"; };
-		AA25086C2FFB593D001CF21C /* MessageBoardManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBoardManager.swift; sourceTree = "<group>"; };
 		AA25086E2FFB5E7C001CF21C /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		AA2508702FFB6075001CF21C /* tanyale_map_illustration.svg */ = {isa = PBXFileReference; lastKnownFileType = text; path = tanyale_map_illustration.svg; sourceTree = "<group>"; };
 		AA2508722FFB6589001CF21C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA2508742FFC07F8001CF21C /* ARWalkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARWalkView.swift; sourceTree = "<group>"; };
+		AA2508902FFA60D5001CF21C /* WalkableAspirationSceneController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationSceneController.swift; sourceTree = "<group>"; };
+		AA2508A02FFA60D5001CF21C /* ARMinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARMinimapView.swift; sourceTree = "<group>"; };
+		AA2508B02FFA60D5001CF21C /* CheckpointBoardLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointBoardLoader.swift; sourceTree = "<group>"; };
+		AA25D3722FFC9B0600B1256B /* RelativeARContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeARContainer.swift; sourceTree = "<group>"; };
 		DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCQBoardEntity.swift; sourceTree = "<group>"; };
 		DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCelebrationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,7 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				AA25085A2FFA60D5001CF21C /* WalkableAspirationManager.swift */,
-				AA25086C2FFB593D001CF21C /* MessageBoardManager.swift */,
+				AA2508902FFA60D5001CF21C /* WalkableAspirationSceneController.swift */,
 				98374C122FF76A8F005D18E1 /* LocationManager.swift */,
 			);
 			path = Manager;
@@ -103,6 +113,7 @@
 			isa = PBXGroup;
 			children = (
 				AA2508702FFB6075001CF21C /* tanyale_map_illustration.svg */,
+				AA164A8F2FFC985400783485 /* appicon_tanyale.icon */,
 				AA2508722FFB6589001CF21C /* Assets.xcassets */,
 			);
 			path = Resources;
@@ -119,6 +130,8 @@
 		98374C192FF76A8F005D18E1 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				AA2508A02FFA60D5001CF21C /* ARMinimapView.swift */,
+				AA2508B02FFA60D5001CF21C /* CheckpointBoardLoader.swift */,
 				AA25086A2FFB57A8001CF21C /* MessageBoardEntity.swift */,
 				AA2508682FFB5749001CF21C /* ARSurveyBoard.swift */,
 				DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */,
@@ -133,7 +146,9 @@
 			isa = PBXGroup;
 			children = (
 				AA25086E2FFB5E7C001CF21C /* WelcomeView.swift */,
+				AA2508742FFC07F8001CF21C /* ARWalkView.swift */,
 				AA25085E2FFA6475001CF21C /* WalkableAspirationView.swift */,
+				AA25D3722FFC9B0600B1256B /* RelativeARContainer.swift */,
 				98374C192FF76A8F005D18E1 /* Components */,
 			);
 			path = Views;
@@ -290,6 +305,7 @@
 			files = (
 				AA2508712FFB6075001CF21C /* tanyale_map_illustration.svg in Resources */,
 				98374BE52FF759EB005D18E1 /* README.md in Resources */,
+				AA164A902FFC985400783485 /* appicon_tanyale.icon in Resources */,
 				AA2508732FFB6589001CF21C /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -302,10 +318,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				98374C2D2FF76A8F005D18E1 /* MakerViewModel.swift in Sources */,
+				AA25D3732FFC9B0D00B1256B /* RelativeARContainer.swift in Sources */,
 				98374C2E2FF76A8F005D18E1 /* RelativeUserARView.swift in Sources */,
 				AA25085F2FFA647D001CF21C /* WalkableAspirationView.swift in Sources */,
 				AA25085D2FFA6252001CF21C /* WalkableAspirationButton.swift in Sources */,
 				98374C2F2FF76A8F005D18E1 /* MakerMapView.swift in Sources */,
+				AA2508752FFC080D001CF21C /* ARWalkView.swift in Sources */,
 				AA2508692FFB574E001CF21C /* ARSurveyBoard.swift in Sources */,
 				98374C302FF76A8F005D18E1 /* Checkpoint.swift in Sources */,
 				DB9768932FF795DA008660F8 /* MCQBoardEntity.swift in Sources */,
@@ -320,9 +338,11 @@
 				DBB0D2892FFA9E4200252738 /* EmojiCelebrationView.swift in Sources */,
 				98374C382FF76A8F005D18E1 /* ARPlacementPrototypeView.swift in Sources */,
 				AA25085B2FFA60E1001CF21C /* WalkableAspirationManager.swift in Sources */,
+				AA2508912FFA60D5001CF21C /* WalkableAspirationSceneController.swift in Sources */,
+				AA2508A12FFA60D5001CF21C /* ARMinimapView.swift in Sources */,
+				AA2508B12FFA60D5001CF21C /* CheckpointBoardLoader.swift in Sources */,
 				98374C392FF76A8F005D18E1 /* UserMinimapView.swift in Sources */,
 				AA25086F2FFB5F39001CF21C /* WelcomeView.swift in Sources */,
-				AA25086D2FFB5947001CF21C /* MessageBoardManager.swift in Sources */,
 				AA25086B2FFB57AB001CF21C /* MessageBoardEntity.swift in Sources */,
 				AA2508612FFA68B2001CF21C /* TextFieldBottomSheet.swift in Sources */,
 				98374C3A2FF76A8F005D18E1 /* CheckpointListView.swift in Sources */,
@@ -335,7 +355,7 @@
 		987379452FF61D8A00739D44 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = appicon_tanyale;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -370,7 +390,7 @@
 		987379462FF61D8A00739D44 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = appicon_tanyale;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
