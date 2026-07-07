@@ -11,8 +11,8 @@ import ARKit
 import Combine
 
 struct WalkableAspirationView: View {
-    @StateObject private var manager = WalkableAspirationManager()
-    @StateObject private var locationManager = LocationManager()
+    @State private var manager = WalkableAspirationManager()
+    @State private var locationManager = LocationManager()
     @State private var showSheet = false
 
     // Insulate the ARView from SwiftUI re-renders (same trick as RelativeUserARView).
@@ -34,7 +34,7 @@ struct WalkableAspirationView: View {
             // "You are here" marker in the center of the screen.
             Image(systemName: "location.north.circle")
                 .font(.system(size: 28, weight: .light))
-                .foregroundColor(.white)
+                .foregroundStyle(.white)
                 .shadow(color: .black, radius: 2)
 
             VStack {
@@ -43,7 +43,7 @@ struct WalkableAspirationView: View {
                     .font(.caption)
                     .padding(8)
                     .background(Color.black.opacity(0.6))
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .cornerRadius(10)
                     .padding(.top, 50)
 
@@ -57,7 +57,7 @@ struct WalkableAspirationView: View {
                 } label: {
                     Image(systemName: "bubble.and.pencil")
                         .font(.system(size: 24, weight: .semibold))
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .frame(width: 64, height: 64)
                         .background(Color.blue)
                         .clipShape(Circle())

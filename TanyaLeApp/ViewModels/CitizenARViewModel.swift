@@ -1,16 +1,19 @@
 import Foundation
+import Observation
 import Combine
 import RealityKit
 import ARKit
 import CoreLocation
 
-class CitizenARViewModel: ObservableObject {
-    @Published var isOriginSet = false
-    @Published var nearestDistance: Float?
-    @Published var nearestCheckpoint: Checkpoint?
-    @Published var arUserLocation: CLLocationCoordinate2D?
-    
-    private var trackingTimer: AnyCancellable?
+@Observable
+class CitizenARViewModel {
+    var isOriginSet = false
+    var nearestDistance: Float?
+    var nearestCheckpoint: Checkpoint?
+    var arUserLocation: CLLocationCoordinate2D?
+
+    // Internal timer handle; views never read it, so keep it out of tracking.
+    @ObservationIgnored private var trackingTimer: AnyCancellable?
     
     func setOrigin(arView: ARView) {
         let screenCenter = CGPoint(x: arView.bounds.midX, y: arView.bounds.midY)

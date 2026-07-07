@@ -5,8 +5,8 @@ import MapKit
 import Combine
 
 struct RelativeUserARView: View {
-    @ObservedObject private var db = MockDatabaseService.shared
-    @StateObject private var viewModel = CitizenARViewModel()
+    private var db = MockDatabaseService.shared
+    @State private var viewModel = CitizenARViewModel()
     
     enum MapState {
         case hidden, preview, expanded
@@ -14,10 +14,12 @@ struct RelativeUserARView: View {
     @State private var mapState: MapState = .preview
     /// When set, the bottom half of the screen fills with this emoji.
     @State private var celebrationEmoji: String?
-    @State private var mapRegion = MKCoordinateRegion(
+    /// Fixed minimap zoom level (max zoom).
+    private let minimapSpan = MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001)
+    @State private var mapPosition = MapCameraPosition.region(MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666),
-        span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001) // Max zoom
-    )
+        span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001)
+    ))
     
     class ARContainer {
         var view: ARView?
@@ -34,12 +36,12 @@ struct RelativeUserARView: View {
         ZStack {
             // The AR Camera is safely insulated from SwiftUI re-renders!
             RelativeUserARViewContainer(arContainer: arContainer)
-                .edgesIgnoringSafeArea(.all)
+                .ignoresSafeArea()
             
             // Aiming Crosshair
             Image(systemName: "plus")
                 .font(.system(size: 30, weight: .light))
-                .foregroundColor(.white)
+                .foregroundStyle(.white)
                 .shadow(color: .black, radius: 2)
 
             // Emoji celebration after submitting an emoji slider
@@ -58,47 +60,35 @@ struct RelativeUserARView: View {
                     if viewModel.isOriginSet {
                         VStack(alignment: .trailing) {
                             if mapState != .hidden {
-                                Map(coordinateRegion: $mapRegion, annotationItems: db.checkpoints) { cp in
-                                    MapAnnotation(coordinate: cp.coordinate) {
-                                        Circle()
-                                            .fill(Color.green)
-                                            .frame(width: 15, height: 15)
-                                            .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                                    }
-                                }
-                                .frame(width: mapState == .expanded ? 300 : 120, 
-                                       height: mapState == .expanded ? 400 : 120)
-                                .cornerRadius(15)
-                                .shadow(radius: 5)
-                                .overlay(
-                                    // Custom AR Blue Dot for Indoor Tracking
-                                    Group {
-                                        if let userLoc = viewModel.arUserLocation {
-                                            GeometryReader { proxy in
-                                                let mapCenter = mapRegion.center
-                                                let span = mapRegion.span
-                                                
-                                                // Convert coordinates to screen points based on region
-                                                // This is a rough estimation for the minimap preview
-                                                let xOffset = (userLoc.longitude - mapCenter.longitude) / span.longitudeDelta * Double(proxy.size.width)
-                                                let yOffset = (mapCenter.latitude - userLoc.latitude) / span.latitudeDelta * Double(proxy.size.height)
-                                                
-                                                Circle()
-                                                    .fill(Color.blue)
-                                                    .frame(width: 15, height: 15)
-                                                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                                                    .shadow(radius: 2)
-                                                    .position(x: proxy.size.width / 2 + CGFloat(xOffset),
-                                                              y: proxy.size.height / 2 + CGFloat(yOffset))
-                                                    .animation(.linear(duration: 0.2), value: userLoc.latitude)
-                                            }
+                                Map(position: $mapPosition) {
+                                    ForEach(db.checkpoints) { cp in
+                                        Annotation("", coordinate: cp.coordinate) {
+                                            Circle()
+                                                .fill(Color.green)
+                                                .frame(width: 15, height: 15)
+                                                .overlay(Circle().stroke(Color.white, lineWidth: 2))
                                         }
                                     }
-                                )
+
+                                    // AR Blue Dot for Indoor Tracking
+                                    if let userLoc = viewModel.arUserLocation {
+                                        Annotation("", coordinate: userLoc) {
+                                            Circle()
+                                                .fill(Color.blue)
+                                                .frame(width: 15, height: 15)
+                                                .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                                .shadow(radius: 2)
+                                        }
+                                    }
+                                }
+                                .frame(width: mapState == .expanded ? 300 : 120,
+                                       height: mapState == .expanded ? 400 : 120)
+                                .clipShape(RoundedRectangle(cornerRadius: 15))
+                                .shadow(radius: 5)
                                 .onAppear {
                                     // Snap to origin when map appears
                                     if let origin = db.surveyOrigin {
-                                        mapRegion.center = origin
+                                        mapPosition = .region(MKCoordinateRegion(center: origin, span: minimapSpan))
                                     }
                                 }
                             }
@@ -121,7 +111,7 @@ struct RelativeUserARView: View {
                                     Button(action: {
                                         if let userLoc = viewModel.arUserLocation {
                                             withAnimation {
-                                                mapRegion.center = userLoc
+                                                mapPosition = .region(MKCoordinateRegion(center: userLoc, span: minimapSpan))
                                             }
                                         }
                                     }) {
@@ -130,7 +120,7 @@ struct RelativeUserARView: View {
                                             .background(Color.white.opacity(0.9))
                                             .clipShape(Circle())
                                             .shadow(radius: 3)
-                                            .foregroundColor(.blue)
+                                            .foregroundStyle(.blue)
                                     }
                                 }
                                 
@@ -162,7 +152,7 @@ struct RelativeUserARView: View {
                         .font(.headline)
                         .padding()
                         .background(dist < 2.0 ? Color.green.opacity(0.8) : Color.black.opacity(0.7))
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .cornerRadius(10)
                         .padding(.top, 40)
                         .animation(.easeInOut, value: dist)
@@ -171,7 +161,7 @@ struct RelativeUserARView: View {
                         .font(.caption)
                         .padding()
                         .background(Color.black.opacity(0.7))
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .cornerRadius(10)
                         .padding(.top, 40)
                 }
@@ -185,7 +175,7 @@ struct RelativeUserARView: View {
                             .multilineTextAlignment(.center)
                             .padding()
                             .background(Color.black.opacity(0.7))
-                            .foregroundColor(.white)
+                            .foregroundStyle(.white)
                             .cornerRadius(10)
                         
                         Button(action: {
@@ -223,7 +213,7 @@ struct RelativeUserARView: View {
                                 .frame(maxWidth: .infinity)
                                 .padding()
                                 .background(Color.green)
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                                 .cornerRadius(15)
                         }
                     }
@@ -244,22 +234,22 @@ struct RelativeUserARView: View {
                             if let answer = db.responses[cp.id] {
                                 Label("Answered: \(answer)", systemImage: "checkmark.circle.fill")
                                     .font(.body.bold())
-                                    .foregroundColor(.green)
+                                    .foregroundStyle(.green)
                             } else if cp.hasMCQ {
                                 Label("Tap an option on the floating card, then hit Submit", systemImage: "hand.tap")
                                     .font(.subheadline)
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(.secondary)
                             } else {
                                 Label("Tap along the slider on the floating card, then hit Submit", systemImage: "hand.tap")
                                     .font(.subheadline)
-                                    .foregroundColor(.secondary)
+                                    .foregroundStyle(.secondary)
                             }
                         } else if cp.interactionType == .photobooth {
                             Label("Photobooth interaction coming soon", systemImage: "camera")
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                         } else if cp.interactionType == .emojiSlider {
                             Label("Emoji slider needs a question configured", systemImage: "face.smiling")
-                                .foregroundColor(.secondary)
+                                .foregroundStyle(.secondary)
                         } else {
                             Text(cp.taskDescription)
                                 .font(.body)
@@ -271,7 +261,7 @@ struct RelativeUserARView: View {
                                     .frame(maxWidth: .infinity)
                                     .padding()
                                     .background(Color.purple)
-                                    .foregroundColor(.white)
+                                    .foregroundStyle(.white)
                                     .cornerRadius(10)
                             }
                         }
@@ -462,6 +452,23 @@ struct RelativeUserARViewContainer: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: ARView, context: Context) {}
+
+    static func dismantleUIView(_ uiView: ARView, coordinator: Coordinator) {
+        // Tear the session down when leaving the screen. Without this, the
+        // gesture recognizers keep the old ARView alive (view → recognizer →
+        // coordinator → container → view), its session never pauses, and the
+        // camera feed appears frozen when the AR screen is reopened.
+        uiView.session.pause()
+        uiView.gestureRecognizers?.forEach(uiView.removeGestureRecognizer)
+
+        let container = coordinator.arContainer
+        container.updateSubscription?.cancel()
+        container.updateSubscription = nil
+        container.faceCameraEntities = []
+        container.boardControllers = []
+        container.arrowEntity = nil
+        container.view = nil
+    }
 }
 
 #Preview {

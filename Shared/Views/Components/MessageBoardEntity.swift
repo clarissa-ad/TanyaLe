@@ -75,7 +75,7 @@ private struct MessageTitleView: View {
     var body: some View {
         Text("Message")
             .font(.system(size: 30, weight: .heavy))
-            .foregroundColor(.black)
+            .foregroundStyle(.black)
             .frame(width: 292, alignment: .leading)
             .background(Color.white)
     }
@@ -87,7 +87,7 @@ private struct MessageBodyView: View {
     var body: some View {
         Text(text)
             .font(.system(size: 20))
-            .foregroundColor(.black)
+            .foregroundStyle(.black)
             .fixedSize(horizontal: false, vertical: true)
             .frame(width: 292, alignment: .leading)
             .background(Color.white)

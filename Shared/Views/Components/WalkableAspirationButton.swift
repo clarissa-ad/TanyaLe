@@ -23,7 +23,7 @@ struct WalkableAspirationButton: View {
             } label: {
                 Image(systemName: systemName)
                     .font(.system(size: 20, weight: .semibold))
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .frame(width: 50, height: 50)
                     .background(Color.blue)
                     .glassEffect()

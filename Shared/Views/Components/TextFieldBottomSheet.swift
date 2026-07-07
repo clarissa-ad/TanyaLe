@@ -27,7 +27,7 @@ struct TextFieldBottomSheet: View {
                     } label: {
                         Image(systemName: "xmark")
                             .font(.system(size: 18, weight: .semibold))
-                            .foregroundColor(.primary)
+                            .foregroundStyle(.primary)
                             .frame(width: 44, height: 44)
                             .background(.ultraThinMaterial, in: Circle())
                     }
@@ -43,7 +43,7 @@ struct TextFieldBottomSheet: View {
             ZStack(alignment: .topLeading) {
                 if message.isEmpty {
                     Text("Write your message...")
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                         .padding(.horizontal, 20)
                         .padding(.vertical, 22)
                 }
@@ -59,7 +59,7 @@ struct TextFieldBottomSheet: View {
             } label: {
                 Text("Leave my thought")
                     .font(.headline)
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 18)
                     .background(Color.purple,

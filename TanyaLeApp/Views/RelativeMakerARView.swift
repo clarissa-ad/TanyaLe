@@ -5,8 +5,8 @@ import ARKit
 import CoreLocation
 
 struct RelativeMakerARView: View {
-    @StateObject private var viewModel = MakerViewModel()
-    @StateObject private var locationManager = LocationManager()
+    @State private var viewModel = MakerViewModel()
+    @State private var locationManager = LocationManager()
     
     @State private var isOriginSet = false
     @State private var showingAddSheet = false
@@ -32,7 +32,7 @@ struct RelativeMakerARView: View {
             // Aiming Crosshair (Always visible so you can aim the origin too!)
             Image(systemName: "plus")
                 .font(.system(size: 30, weight: .light))
-                .foregroundColor(.white)
+                .foregroundStyle(.white)
                 .shadow(color: .black, radius: 2)
             
             VStack {
@@ -45,7 +45,7 @@ struct RelativeMakerARView: View {
                             .multilineTextAlignment(.center)
                             .padding()
                             .background(Color.black.opacity(0.7))
-                            .foregroundColor(.white)
+                            .foregroundStyle(.white)
                             .cornerRadius(10)
                         
                         Button(action: {
@@ -84,7 +84,7 @@ struct RelativeMakerARView: View {
                                 .frame(maxWidth: .infinity)
                                 .padding()
                                 .background(Color.blue)
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                                 .cornerRadius(15)
                         }
                     }
@@ -124,7 +124,7 @@ struct RelativeMakerARView: View {
                         .padding()
                         .frame(maxWidth: .infinity)
                         .background(Color.purple)
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .cornerRadius(15)
                         .padding(.horizontal, 20)
                         .padding(.bottom, 30)
@@ -140,7 +140,7 @@ struct RelativeMakerARView: View {
         .navigationBarItems(trailing: NavigationLink(destination: CheckpointListView()) {
             Image(systemName: "list.bullet")
                 .font(.title2)
-                .foregroundColor(.blue)
+                .foregroundStyle(.blue)
         })
         .sheet(isPresented: $showingAddSheet) {
             NavigationView {
@@ -208,20 +208,42 @@ struct RelativeMakerARView: View {
 
 struct RelativeMakerARViewContainer: UIViewRepresentable {
     let arContainer: RelativeMakerARView.ARContainer
-    
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(arContainer: arContainer)
+    }
+
+    /// Keeps a handle to the container so the session can be torn down when
+    /// the view is dismantled.
+    @MainActor
+    class Coordinator {
+        let arContainer: RelativeMakerARView.ARContainer
+
+        init(arContainer: RelativeMakerARView.ARContainer) {
+            self.arContainer = arContainer
+        }
+    }
+
     func makeUIView(context: Context) -> ARView {
         let arView = ARView(frame: .zero)
-        
+
         let config = ARWorldTrackingConfiguration()
         config.planeDetection = [.horizontal, .vertical]
         config.worldAlignment = .gravityAndHeading // Locks Z-axis to True North
         arView.session.run(config, options: [.resetTracking, .removeExistingAnchors])
-        
+
         arContainer.view = arView
         return arView
     }
-    
+
     func updateUIView(_ uiView: ARView, context: Context) {}
+
+    static func dismantleUIView(_ uiView: ARView, coordinator: Coordinator) {
+        // Pause the camera session when leaving so reopening the AR screen
+        // starts from a clean state instead of a frozen feed.
+        uiView.session.pause()
+        coordinator.arContainer.view = nil
+    }
 }
 
 #Preview {

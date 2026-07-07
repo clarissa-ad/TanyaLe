@@ -2,44 +2,49 @@ import SwiftUI
 import MapKit
 
 struct MakerMapView: View {
-    @StateObject private var locationManager = LocationManager()
-    @StateObject private var viewModel = MakerViewModel()
+    @State private var locationManager = LocationManager()
+    @State private var viewModel = MakerViewModel()
     
-    // Default region for map
-    @State private var region = MKCoordinateRegion(
+    /// Default map zoom level.
+    private let mapSpan = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+    @State private var mapPosition = MapCameraPosition.region(MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666),
         span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-    )
-    
+    ))
+
     var body: some View {
         ZStack(alignment: .bottom) {
-            Map(coordinateRegion: $region, showsUserLocation: true, annotationItems: viewModel.checkpoints) { checkpoint in
-                MapAnnotation(coordinate: checkpoint.coordinate) {
-                    VStack {
-                        Image(systemName: "mappin.circle.fill")
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                            .foregroundColor(.purple)
-                        Text(checkpoint.title)
-                            .font(.caption)
-                            .bold()
-                            .padding(4)
-                            .background(Color.white.opacity(0.8))
-                            .cornerRadius(4)
+            Map(position: $mapPosition) {
+                UserAnnotation()
+
+                ForEach(viewModel.checkpoints) { checkpoint in
+                    Annotation("", coordinate: checkpoint.coordinate) {
+                        VStack {
+                            Image(systemName: "mappin.circle.fill")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                                .foregroundStyle(.purple)
+                            Text(checkpoint.title)
+                                .font(.caption)
+                                .bold()
+                                .padding(4)
+                                .background(Color.white.opacity(0.8))
+                                .cornerRadius(4)
+                        }
                     }
                 }
             }
-            .edgesIgnoringSafeArea(.all)
-            .onReceive(locationManager.$userLocation) { location in
+            .ignoresSafeArea()
+            .onChange(of: locationManager.userLocation) { _, location in
                 guard let location = location else { return }
-                region.center = location.coordinate
+                mapPosition = .region(MKCoordinateRegion(center: location.coordinate, span: mapSpan))
             }
             
             VStack {
                 Text("Maker: 2D Minimap")
                     .padding()
                     .background(Color.black.opacity(0.7))
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .cornerRadius(10)
                     .padding(.top, 40)
                 Spacer()
@@ -60,7 +65,7 @@ struct MakerMapView: View {
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(Color.purple)
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                         .cornerRadius(15)
                 }
                 .padding(20)

@@ -12,7 +12,7 @@ struct ARPlacementPrototypeView: View {
                 Text("AR Sandbox (No logic yet)")
                     .padding()
                     .background(Color.black.opacity(0.7))
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .cornerRadius(10)
                     .padding(.bottom, 40)
             }

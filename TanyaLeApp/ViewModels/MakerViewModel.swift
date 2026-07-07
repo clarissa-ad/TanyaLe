@@ -1,20 +1,17 @@
 import Foundation
-import Combine
+import Observation
 import RealityKit
 import CoreLocation
 
-class MakerViewModel: ObservableObject {
-    @Published var checkpoints: [Checkpoint] = []
-    
-    private var cancellables = Set<AnyCancellable>()
-    
-    init() {
-        // Subscribe to MockDatabase updates
-        MockDatabaseService.shared.$checkpoints
-            .assign(to: \.checkpoints, on: self)
-            .store(in: &cancellables)
+@Observable
+class MakerViewModel {
+    /// Mirrors the shared mock database. Observation tracks reads through
+    /// this computed property, so views update when checkpoints change —
+    /// no Combine subscription needed.
+    var checkpoints: [Checkpoint] {
+        MockDatabaseService.shared.checkpoints
     }
-    
+
     func addCheckpointAt(transform: SIMD3<Float>, title: String, description: String, interactionType: Checkpoint.InteractionType, question: String, surveyOptions: [String], emojiLeft: String, emojiRight: String, overrideLocation: CLLocationCoordinate2D? = nil) {
         
         let origin = overrideLocation ?? MockDatabaseService.shared.surveyOrigin ?? CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666)
