@@ -2,49 +2,55 @@ import SwiftUI
 import MapKit
 
 struct UserMinimapView: View {
-    @StateObject private var locationManager = LocationManager()
-    @ObservedObject private var db = MockDatabaseService.shared
+    @State private var locationManager = LocationManager()
+    private var db = MockDatabaseService.shared
     
-    @State private var region = MKCoordinateRegion(
+    /// Default map zoom level.
+    private let mapSpan = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+    @State private var mapPosition = MapCameraPosition.region(MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666),
         span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-    )
-    
+    ))
+
     @State private var selectedCheckpoint: Checkpoint?
-    
+
     var body: some View {
         ZStack(alignment: .bottom) {
-            Map(coordinateRegion: $region, showsUserLocation: true, annotationItems: db.checkpoints) { checkpoint in
-                MapAnnotation(coordinate: checkpoint.coordinate) {
-                    Button(action: {
-                        selectedCheckpoint = checkpoint
-                    }) {
-                        VStack {
-                            Image(systemName: "mappin.circle.fill")
-                                .resizable()
-                                .frame(width: 30, height: 30)
-                                .foregroundColor(.green)
-                            Text(checkpoint.title)
-                                .font(.caption)
-                                .bold()
-                                .padding(4)
-                                .background(Color.white.opacity(0.8))
-                                .cornerRadius(4)
+            Map(position: $mapPosition) {
+                UserAnnotation()
+
+                ForEach(db.checkpoints) { checkpoint in
+                    Annotation("", coordinate: checkpoint.coordinate) {
+                        Button(action: {
+                            selectedCheckpoint = checkpoint
+                        }) {
+                            VStack {
+                                Image(systemName: "mappin.circle.fill")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .foregroundStyle(.green)
+                                Text(checkpoint.title)
+                                    .font(.caption)
+                                    .bold()
+                                    .padding(4)
+                                    .background(Color.white.opacity(0.8))
+                                    .cornerRadius(4)
+                            }
                         }
                     }
                 }
             }
-            .edgesIgnoringSafeArea(.all)
-            .onReceive(locationManager.$userLocation) { location in
+            .ignoresSafeArea()
+            .onChange(of: locationManager.userLocation) { _, location in
                 guard let location = location else { return }
-                region.center = location.coordinate
+                mapPosition = .region(MKCoordinateRegion(center: location.coordinate, span: mapSpan))
             }
             
             VStack {
                 Text("Citizen: 2D Minimap")
                     .padding()
                     .background(Color.black.opacity(0.7))
-                    .foregroundColor(.white)
+                    .foregroundStyle(.white)
                     .cornerRadius(10)
                     .padding(.top, 40)
                 Spacer()
@@ -58,7 +64,7 @@ struct UserMinimapView: View {
                             Spacer()
                             Button(action: { selectedCheckpoint = nil }) {
                                 Image(systemName: "xmark.circle.fill")
-                                    .foregroundColor(.gray)
+                                    .foregroundStyle(.gray)
                             }
                         }
                         Text(cp.taskDescription)
@@ -72,7 +78,7 @@ struct UserMinimapView: View {
                                 .frame(maxWidth: .infinity)
                                 .padding()
                                 .background(Color.green)
-                                .foregroundColor(.white)
+                                .foregroundStyle(.white)
                                 .cornerRadius(10)
                         }
                     }

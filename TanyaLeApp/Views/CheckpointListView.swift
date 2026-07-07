@@ -1,13 +1,13 @@
 import SwiftUI
 
 struct CheckpointListView: View {
-    @ObservedObject private var db = MockDatabaseService.shared
+    private var db = MockDatabaseService.shared
     
     var body: some View {
         List {
             if db.checkpoints.isEmpty {
                 Text("No checkpoints created yet.")
-                    .foregroundColor(.gray)
+                    .foregroundStyle(.gray)
             } else {
                 ForEach(db.checkpoints) { checkpoint in
                     NavigationLink(destination: CheckpointEditView(checkpoint: checkpoint)) {
@@ -16,7 +16,7 @@ struct CheckpointListView: View {
                                 .font(.headline)
                             Text(checkpoint.taskDescription)
                                 .font(.subheadline)
-                                .foregroundColor(.gray)
+                                .foregroundStyle(.gray)
                                 .lineLimit(1)
                             
                             if checkpoint.interactionType != .none {
@@ -25,7 +25,7 @@ struct CheckpointListView: View {
                                     .padding(.horizontal, 6)
                                     .padding(.vertical, 2)
                                     .background(Color.blue.opacity(0.1))
-                                    .foregroundColor(.blue)
+                                    .foregroundStyle(.blue)
                                     .cornerRadius(4)
                             }
                         }

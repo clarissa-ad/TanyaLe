@@ -1,5 +1,5 @@
 import Foundation
-import Combine
+import Observation
 import CoreLocation
 
 /// ⚠️ TEMPORARY DEV FILE ⚠️
@@ -7,16 +7,17 @@ import CoreLocation
 /// It holds checkpoints in memory so both Maker and User views can share state
 /// without needing an active CloudKit connection.
 /// DO NOT USE IN PRODUCTION.
-class MockDatabaseService: ObservableObject {
+@Observable
+class MockDatabaseService {
     static let shared = MockDatabaseService()
     
-    @Published var checkpoints: [Checkpoint] = []
+    var checkpoints: [Checkpoint] = []
 
     /// Selected MCQ answer per checkpoint ID (in-memory only).
-    @Published var responses: [UUID: String] = [:]
+    var responses: [UUID: String] = [:]
 
     // The locked GPS coordinate c where the AR Origin was set
-    @Published var surveyOrigin: CLLocationCoordinate2D?
+    var surveyOrigin: CLLocationCoordinate2D?
     
     private init() {
         checkpoints = [

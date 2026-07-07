@@ -40,6 +40,7 @@
 		AA25D3732FFC9B0D00B1256B /* RelativeARContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25D3722FFC9B0600B1256B /* RelativeARContainer.swift */; };
 		DB9768932FF795DA008660F8 /* MCQBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */; };
 		DBB0D2892FFA9E4200252738 /* EmojiCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */; };
+		DBB0D28D2FFCAFAB00252738 /* CheckpointFormContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB0D28C2FFCAFAB00252738 /* CheckpointFormContent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,6 +78,7 @@
 		AA25D3722FFC9B0600B1256B /* RelativeARContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeARContainer.swift; sourceTree = "<group>"; };
 		DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCQBoardEntity.swift; sourceTree = "<group>"; };
 		DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCelebrationView.swift; sourceTree = "<group>"; };
+		DBB0D28C2FFCAFAB00252738 /* CheckpointFormContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointFormContent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,8 +136,9 @@
 				AA2508B02FFA60D5001CF21C /* CheckpointBoardLoader.swift */,
 				AA25086A2FFB57A8001CF21C /* MessageBoardEntity.swift */,
 				AA2508682FFB5749001CF21C /* ARSurveyBoard.swift */,
-				DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */,
 				DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */,
+				DBB0D28C2FFCAFAB00252738 /* CheckpointFormContent.swift */,
+				DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */,
 				AA2508602FFA68A4001CF21C /* TextFieldBottomSheet.swift */,
 				AA25085C2FFA6242001CF21C /* WalkableAspirationButton.swift */,
 			);
@@ -334,6 +337,7 @@
 				98374C352FF76A8F005D18E1 /* CitizenARViewModel.swift in Sources */,
 				98374C362FF76A8F005D18E1 /* TanyaLeApp.swift in Sources */,
 				AA2508672FFAC1F7001CF21C /* WalkableAspiration.swift in Sources */,
+				DBB0D28D2FFCAFAB00252738 /* CheckpointFormContent.swift in Sources */,
 				98374C372FF76A8F005D18E1 /* CheckpointEditView.swift in Sources */,
 				DBB0D2892FFA9E4200252738 /* EmojiCelebrationView.swift in Sources */,
 				98374C382FF76A8F005D18E1 /* ARPlacementPrototypeView.swift in Sources */,
@@ -359,7 +363,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VX33BG7ZDD;
+				DEVELOPMENT_TEAM = 8QT63UDSK5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = CAMERA_USAGE_DESCRIPTION;
@@ -394,7 +398,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = VX33BG7ZDD;
+				DEVELOPMENT_TEAM = 8QT63UDSK5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSCameraUsageDescription = CAMERA_USAGE_DESCRIPTION;

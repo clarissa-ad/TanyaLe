@@ -3,7 +3,7 @@ import UIKit
 
 struct CheckpointEditView: View {
     @Environment(\.presentationMode) var presentationMode
-    @ObservedObject private var db = MockDatabaseService.shared
+    private var db = MockDatabaseService.shared
     
     let checkpointId: UUID
     
@@ -28,24 +28,24 @@ struct CheckpointEditView: View {
     }
     
     var body: some View {
-//        Form {
-//            CheckpointFormContent(
-//                title: $title,
-//                taskDescription: $taskDescription,
-//                interactionType: $interactionType,
-//                question: $question,
-//                surveyOptions: $surveyOptions,
-//                emojiLeft: $emojiLeft,
-//                emojiRight: $emojiRight
-//            )
-//        }
-//        .navigationTitle("Edit Checkpoint")
-//        .navigationBarItems(trailing: HStack {
-//            EditButton()
-//            Button("Save") {
-//                saveChanges()
-//            }
-//        })
+        Form {
+            CheckpointFormContent(
+                title: $title,
+                taskDescription: $taskDescription,
+                interactionType: $interactionType,
+                question: $question,
+                surveyOptions: $surveyOptions,
+                emojiLeft: $emojiLeft,
+                emojiRight: $emojiRight
+            )
+        }
+        .navigationTitle("Edit Checkpoint")
+        .navigationBarItems(trailing: HStack {
+            EditButton()
+            Button("Save") {
+                saveChanges()
+            }
+        })
     }
     
     private func saveChanges() {

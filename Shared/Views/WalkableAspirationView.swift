@@ -11,8 +11,9 @@ import ARKit
 import Combine
 
 struct WalkableAspirationView: View {
-    @StateObject private var manager = WalkableAspirationManager()
-    @StateObject private var locationManager = LocationManager()
+    @State private var manager = WalkableAspirationManager()
+    @State private var locationManager = LocationManager()
+    @State private var showSheet = false
 
     // Owns the ARView and everything in the AR scene; insulated from SwiftUI re-renders.
     private let sceneController = WalkableAspirationSceneController()

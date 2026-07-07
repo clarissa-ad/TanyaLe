@@ -30,7 +30,7 @@ struct SandboxDashboardView: View {
                 
                 Section(header: Text("UI Prototypes")) {
                     Text("Test 3D Asset Likability UI (Coming Soon)")
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                 }
             }
             .navigationTitle("Developer Sandbox")
