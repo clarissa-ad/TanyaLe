@@ -2,7 +2,7 @@ import SwiftUI
 
 struct MakerResponsesView: View {
     let checkpoint: Checkpoint
-    @ObservedObject private var photoService = MockPhotoService.shared
+    var photoService = MockPhotoService.shared
     
     // We can also inject DatabaseService here if we want to show MCQ answers,
     // but for now, this focuses on the photobooth gallery.

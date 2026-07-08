@@ -1,14 +1,15 @@
 import Foundation
 import SwiftUI
-import Combine
+import Observation
 
 /// A mock service to hold photos in-memory for the AR Photobooth feature.
 @MainActor
-class MockPhotoService: ObservableObject {
+@Observable
+class MockPhotoService {
     static let shared = MockPhotoService()
     
     // Maps a Checkpoint's UUID to an array of UIImages taken at that checkpoint.
-    @Published var photos: [UUID: [UIImage]] = [:]
+    var photos: [UUID: [UIImage]] = [:]
     
     private init() {}
     
@@ -36,5 +37,17 @@ class MockPhotoService: ObservableObject {
         photos[checkpointId] = cpPhotos
         
         print("MockPhotoService: Deleted photo for checkpoint \(checkpointId). Remaining: \(cpPhotos.count)")
+    }
+    
+    // MARK: - Prompt Photos
+    var promptPhotos: [String: UIImage] = [:]
+    
+    func savePromptPhoto(image: UIImage, id: String) {
+        promptPhotos[id] = image
+        print("MockPhotoService: Saved prompt photo with id \(id)")
+    }
+    
+    func fetchPromptPhoto(id: String) -> UIImage? {
+        return promptPhotos[id]
     }
 }

@@ -17,6 +17,10 @@ struct RelativeMakerARView: View {
     @State private var tempSurveyOptions: [String] = []
     @State private var tempEmojiLeft: String = ""
     @State private var tempEmojiRight: String = ""
+    @State private var tempPromptPhotoID: String? = nil
+    @State private var showingImagePicker = false
+    @State private var selectedPromptPhoto: UIImage? = nil
+    
     @State private var pendingTransform: SIMD3<Float>?
     
     class ARContainer {
@@ -152,7 +156,9 @@ struct RelativeMakerARView: View {
                         question: $tempQuestion,
                         surveyOptions: $tempSurveyOptions,
                         emojiLeft: $tempEmojiLeft,
-                        emojiRight: $tempEmojiRight
+                        emojiRight: $tempEmojiRight,
+                        promptPhotoID: $tempPromptPhotoID,
+                        showingImagePicker: $showingImagePicker
                     )
                 }
                 .navigationTitle("New Checkpoint")
@@ -167,6 +173,15 @@ struct RelativeMakerARView: View {
                     }
                     .disabled(tempTitle.isEmpty)
                 )
+                .sheet(isPresented: $showingImagePicker) {
+                    ImagePicker(sourceType: .photoLibrary, selectedImage: $selectedPromptPhoto) {
+                        if let image = selectedPromptPhoto {
+                            let id = UUID().uuidString
+                            MockPhotoService.shared.savePromptPhoto(image: image, id: id)
+                            tempPromptPhotoID = id
+                        }
+                    }
+                }
             }
         }
     }
@@ -191,7 +206,8 @@ struct RelativeMakerARView: View {
             question: tempQuestion.trimmingCharacters(in: .whitespaces),
             surveyOptions: tempSurveyOptions.filter { !$0.isEmpty },
             emojiLeft: tempEmojiLeft,
-            emojiRight: tempEmojiRight
+            emojiRight: tempEmojiRight,
+            promptPhotoID: tempPromptPhotoID
         )
         
         // Reset sheet state
@@ -202,6 +218,7 @@ struct RelativeMakerARView: View {
         tempSurveyOptions = []
         tempEmojiLeft = ""
         tempEmojiRight = ""
+        tempPromptPhotoID = nil
         showingAddSheet = false
     }
 }

@@ -8,6 +8,8 @@ struct CheckpointFormContent: View {
     @Binding var surveyOptions: [String]
     @Binding var emojiLeft: String
     @Binding var emojiRight: String
+    @Binding var promptPhotoID: String?
+    @Binding var showingImagePicker: Bool
     
     @State private var newOption: String = ""
     
@@ -57,9 +59,30 @@ struct CheckpointFormContent: View {
                 }
             }
         } else if interactionType == .photobooth {
-            Section {
-                Text("Photobooth configuration coming soon.")
-                    .foregroundColor(.secondary)
+            Section(header: Text("Photobooth Prompt"), footer: Text("The text prompt and reference photo shown to citizens when taking a photo.")) {
+                TextField("Text Prompt (e.g. Take a selfie...)", text: $question)
+                
+                HStack {
+                    if let id = promptPhotoID, let image = MockPhotoService.shared.fetchPromptPhoto(id: id) {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 50, height: 50)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                    } else {
+                        Rectangle()
+                            .fill(Color.gray.opacity(0.3))
+                            .frame(width: 50, height: 50)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                            .overlay(Image(systemName: "photo").foregroundColor(.gray))
+                    }
+                    
+                    Button(action: {
+                        showingImagePicker = true
+                    }) {
+                        Text(promptPhotoID == nil ? "Upload Prompt Photo" : "Change Prompt Photo")
+                    }
+                }
             }
         } else if interactionType == .emojiSlider {
             Section(header: Text("Emoji Slider"), footer: Text("The citizen slides between the two emoji to answer the question. Use the arrows to swap sides.")) {

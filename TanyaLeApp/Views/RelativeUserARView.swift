@@ -227,8 +227,8 @@ struct RelativeUserARView: View {
             }
         }
         .sheet(isPresented: $showingImagePicker) {
-            ImagePicker(selectedImage: $selectedImage) {
-                if let image = selectedImage, let cp = activeCheckpoint {
+            if let cp = activeCheckpoint {
+                PhotoboothCaptureView(checkpoint: cp) { image in
                     MockPhotoService.shared.savePhoto(image: image, forCheckpoint: cp.id)
                 }
             }
@@ -236,6 +236,15 @@ struct RelativeUserARView: View {
         .sheet(isPresented: $showingGallery) {
             if let cp = activeCheckpoint {
                 PhotoGalleryView(checkpoint: cp)
+            }
+        }
+        .onChange(of: showingImagePicker) { _, isShowing in
+            if isShowing {
+                arContainer.view?.session.pause()
+            } else {
+                if let config = arContainer.view?.session.configuration {
+                    arContainer.view?.session.run(config)
+                }
             }
         }
         .onDisappear {

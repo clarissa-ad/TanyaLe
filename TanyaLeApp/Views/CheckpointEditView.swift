@@ -14,6 +14,10 @@ struct CheckpointEditView: View {
     @State private var surveyOptions: [String]
     @State private var emojiLeft: String
     @State private var emojiRight: String
+    @State private var promptPhotoID: String?
+    
+    @State private var showingImagePicker = false
+    @State private var selectedPromptPhoto: UIImage?
 
     @State private var newOption: String = ""
     init(checkpoint: Checkpoint) {
@@ -25,6 +29,7 @@ struct CheckpointEditView: View {
         _surveyOptions = State(initialValue: checkpoint.surveyOptions)
         _emojiLeft = State(initialValue: checkpoint.emojiLeft)
         _emojiRight = State(initialValue: checkpoint.emojiRight)
+        _promptPhotoID = State(initialValue: checkpoint.promptPhotoID)
     }
     
     var body: some View {
@@ -36,7 +41,9 @@ struct CheckpointEditView: View {
                 question: $question,
                 surveyOptions: $surveyOptions,
                 emojiLeft: $emojiLeft,
-                emojiRight: $emojiRight
+                emojiRight: $emojiRight,
+                promptPhotoID: $promptPhotoID,
+                showingImagePicker: $showingImagePicker
             )
             
             if interactionType == .photobooth, let cp = db.checkpoints.first(where: { $0.id == checkpointId }) {
@@ -55,6 +62,15 @@ struct CheckpointEditView: View {
                 saveChanges()
             }
         })
+        .sheet(isPresented: $showingImagePicker) {
+            ImagePicker(sourceType: .photoLibrary, selectedImage: $selectedPromptPhoto) {
+                if let image = selectedPromptPhoto {
+                    let id = UUID().uuidString
+                    MockPhotoService.shared.savePromptPhoto(image: image, id: id)
+                    promptPhotoID = id
+                }
+            }
+        }
     }
     
     private func saveChanges() {
@@ -70,6 +86,7 @@ struct CheckpointEditView: View {
             let right = emojiRight.trimmingCharacters(in: .whitespaces)
             updated.emojiLeft = left.isEmpty ? "😡" : String(left.prefix(1))
             updated.emojiRight = right.isEmpty ? "😍" : String(right.prefix(1))
+            updated.promptPhotoID = promptPhotoID
             db.updateCheckpoint(updated)
         }
         presentationMode.wrappedValue.dismiss()

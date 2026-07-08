@@ -2,7 +2,7 @@ import SwiftUI
 
 struct PhotoGalleryView: View {
     @Environment(\.presentationMode) private var presentationMode
-    @ObservedObject private var photoService = MockPhotoService.shared
+    var photoService = MockPhotoService.shared
     let checkpoint: Checkpoint
     
     var body: some View {
