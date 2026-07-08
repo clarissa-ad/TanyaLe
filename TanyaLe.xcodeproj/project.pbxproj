@@ -39,6 +39,11 @@
 		AA2508B12FFA60D5001CF21C /* CheckpointBoardLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508B02FFA60D5001CF21C /* CheckpointBoardLoader.swift */; };
 		AA25D3732FFC9B0D00B1256B /* RelativeARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25D3722FFC9B0600B1256B /* RelativeARViewContainer.swift */; };
 		AA25D3752FFCAFFA00B1256B /* CheckpointFormContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25D3742FFCAFFA00B1256B /* CheckpointFormContent.swift */; };
+		DB8E69412FFE6FC2008E6F2B /* MakerResponsesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8E693F2FFE6FC2008E6F2B /* MakerResponsesView.swift */; };
+		DB8E69422FFE6FC2008E6F2B /* PhotoGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8E69402FFE6FC2008E6F2B /* PhotoGalleryView.swift */; };
+		DB8E69462FFE705F008E6F2B /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8E69452FFE705F008E6F2B /* ImagePicker.swift */; };
+		DB8E69482FFE70D9008E6F2B /* MockPhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8E69472FFE70D9008E6F2B /* MockPhotoService.swift */; };
+		DB8E694A2FFE93A1008E6F2B /* JourneyLandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8E69492FFE93A1008E6F2B /* JourneyLandingView.swift */; };
 		DB9768932FF795DA008660F8 /* MCQBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */; };
 		DBB0D2892FFA9E4200252738 /* EmojiCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */; };
 		DBB0D28D2FFCAFAB00252738 /* CheckpointFormContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB0D28C2FFCAFAB00252738 /* CheckpointFormContent.swift */; };
@@ -78,6 +83,11 @@
 		AA2508B02FFA60D5001CF21C /* CheckpointBoardLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointBoardLoader.swift; sourceTree = "<group>"; };
 		AA25D3722FFC9B0600B1256B /* RelativeARViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeARViewContainer.swift; sourceTree = "<group>"; };
 		AA25D3742FFCAFFA00B1256B /* CheckpointFormContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointFormContent.swift; sourceTree = "<group>"; };
+		DB8E693F2FFE6FC2008E6F2B /* MakerResponsesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakerResponsesView.swift; sourceTree = "<group>"; };
+		DB8E69402FFE6FC2008E6F2B /* PhotoGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGalleryView.swift; sourceTree = "<group>"; };
+		DB8E69452FFE705F008E6F2B /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		DB8E69472FFE70D9008E6F2B /* MockPhotoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPhotoService.swift; sourceTree = "<group>"; };
+		DB8E69492FFE93A1008E6F2B /* JourneyLandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyLandingView.swift; sourceTree = "<group>"; };
 		DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCQBoardEntity.swift; sourceTree = "<group>"; };
 		DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCelebrationView.swift; sourceTree = "<group>"; };
 		DBB0D28C2FFCAFAB00252738 /* CheckpointFormContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointFormContent.swift; sourceTree = "<group>"; };
@@ -126,6 +136,7 @@
 		98374C182FF76A8F005D18E1 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				DB8E69472FFE70D9008E6F2B /* MockPhotoService.swift */,
 				98374C172FF76A8F005D18E1 /* MockDatabaseService.swift */,
 			);
 			path = Services;
@@ -134,6 +145,7 @@
 		98374C192FF76A8F005D18E1 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				DB8E69452FFE705F008E6F2B /* ImagePicker.swift */,
 				AA25D3742FFCAFFA00B1256B /* CheckpointFormContent.swift */,
 				AA2508A02FFA60D5001CF21C /* ARMinimapView.swift */,
 				AA2508B02FFA60D5001CF21C /* CheckpointBoardLoader.swift */,
@@ -210,11 +222,14 @@
 			children = (
 				98374C242FF76A8F005D18E1 /* Prototypes */,
 				98374C252FF76A8F005D18E1 /* CheckpointEditView.swift */,
+				DB8E693F2FFE6FC2008E6F2B /* MakerResponsesView.swift */,
+				DB8E69402FFE6FC2008E6F2B /* PhotoGalleryView.swift */,
 				98374C262FF76A8F005D18E1 /* CheckpointListView.swift */,
 				98374C272FF76A8F005D18E1 /* MakerMapView.swift */,
 				98374C282FF76A8F005D18E1 /* RelativeMakerARView.swift */,
 				98374C292FF76A8F005D18E1 /* RelativeUserARView.swift */,
 				98374C2A2FF76A8F005D18E1 /* UserMinimapView.swift */,
+				DB8E69492FFE93A1008E6F2B /* JourneyLandingView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -326,9 +341,13 @@
 				98374C2D2FF76A8F005D18E1 /* MakerViewModel.swift in Sources */,
 				AA25D3732FFC9B0D00B1256B /* RelativeARViewContainer.swift in Sources */,
 				98374C2E2FF76A8F005D18E1 /* RelativeUserARView.swift in Sources */,
+				DB8E69482FFE70D9008E6F2B /* MockPhotoService.swift in Sources */,
+				DB8E69462FFE705F008E6F2B /* ImagePicker.swift in Sources */,
 				AA25085F2FFA647D001CF21C /* WalkableAspirationView.swift in Sources */,
 				AA25085D2FFA6252001CF21C /* WalkableAspirationButton.swift in Sources */,
 				98374C2F2FF76A8F005D18E1 /* MakerMapView.swift in Sources */,
+				DB8E69412FFE6FC2008E6F2B /* MakerResponsesView.swift in Sources */,
+				DB8E69422FFE6FC2008E6F2B /* PhotoGalleryView.swift in Sources */,
 				AA2508752FFC080D001CF21C /* ARWalkView.swift in Sources */,
 				AA2508692FFB574E001CF21C /* ARSurveyBoard.swift in Sources */,
 				98374C302FF76A8F005D18E1 /* Checkpoint.swift in Sources */,
@@ -350,6 +369,7 @@
 				AA2508A12FFA60D5001CF21C /* ARMinimapView.swift in Sources */,
 				AA2508B12FFA60D5001CF21C /* CheckpointBoardLoader.swift in Sources */,
 				98374C392FF76A8F005D18E1 /* UserMinimapView.swift in Sources */,
+				DB8E694A2FFE93A1008E6F2B /* JourneyLandingView.swift in Sources */,
 				AA25086F2FFB5F39001CF21C /* WelcomeView.swift in Sources */,
 				AA25086B2FFB57AB001CF21C /* MessageBoardEntity.swift in Sources */,
 				AA2508612FFA68B2001CF21C /* TextFieldBottomSheet.swift in Sources */,
