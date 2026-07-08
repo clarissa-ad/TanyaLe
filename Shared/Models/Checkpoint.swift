@@ -11,6 +11,7 @@ struct Checkpoint: Identifiable, Codable, Equatable {
         case mcq = "Multiple Choice"
         case photobooth = "Photobooth"
         case emojiSlider = "Emoji Slider"
+        case likedislike = "Like/Dislike"
 
         var id: String { rawValue }
     }
@@ -29,6 +30,13 @@ struct Checkpoint: Identifiable, Codable, Equatable {
     var emojiLeft: String = "😡"
     var emojiRight: String = "😍"
 
+    // Like/Dislike configuration (used when interactionType == .likedislike).
+    // Stores a reference to an Asset3D by id rather than a copy of its data,
+    // so MockAssetService stays the single source of truth — editing an
+    // asset's description keeps every checkpoint that references it in sync.
+    // Reuses `question` above for the custom Like/Dislike question.
+    var selectedAssetId: String?
+
     /// Whether this checkpoint has a complete multiple choice question to display.
     var hasMCQ: Bool {
         interactionType == .mcq && !question.isEmpty && surveyOptions.count >= 2
@@ -37,6 +45,11 @@ struct Checkpoint: Identifiable, Codable, Equatable {
     /// Whether this checkpoint has a complete emoji slider to display.
     var hasEmojiSlider: Bool {
         interactionType == .emojiSlider && !question.isEmpty && !emojiLeft.isEmpty && !emojiRight.isEmpty
+    }
+
+    /// Whether this checkpoint has a complete Like/Dislike setup to display.
+    var hasLikeDislike: Bool {
+        interactionType == .likedislike && !question.isEmpty && selectedAssetId != nil
     }
     
     // GPS Coordinates (for 2D Map)

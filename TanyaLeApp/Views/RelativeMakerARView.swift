@@ -17,6 +17,7 @@ struct RelativeMakerARView: View {
     @State private var tempSurveyOptions: [String] = []
     @State private var tempEmojiLeft: String = ""
     @State private var tempEmojiRight: String = ""
+    @State private var tempSelectedAssetId: String?
     @State private var pendingTransform: SIMD3<Float>?
     
     class ARContainer {
@@ -152,7 +153,8 @@ struct RelativeMakerARView: View {
                         question: $tempQuestion,
                         surveyOptions: $tempSurveyOptions,
                         emojiLeft: $tempEmojiLeft,
-                        emojiRight: $tempEmojiRight
+                        emojiRight: $tempEmojiRight,
+                        selectedAssetId: $tempSelectedAssetId
                     )
                 }
                 .navigationTitle("New Checkpoint")
@@ -191,9 +193,10 @@ struct RelativeMakerARView: View {
             question: tempQuestion.trimmingCharacters(in: .whitespaces),
             surveyOptions: tempSurveyOptions.filter { !$0.isEmpty },
             emojiLeft: tempEmojiLeft,
-            emojiRight: tempEmojiRight
+            emojiRight: tempEmojiRight,
+            selectedAssetId: tempSelectedAssetId
         )
-        
+
         // Reset sheet state
         tempTitle = ""
         tempDesc = ""
@@ -202,6 +205,7 @@ struct RelativeMakerARView: View {
         tempSurveyOptions = []
         tempEmojiLeft = ""
         tempEmojiRight = ""
+        tempSelectedAssetId = nil
         showingAddSheet = false
     }
 }

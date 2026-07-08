@@ -8,15 +8,32 @@ struct CheckpointFormContent: View {
     @Binding var surveyOptions: [String]
     @Binding var emojiLeft: String
     @Binding var emojiRight: String
-    
+    @Binding var selectedAssetId: String?
+
     @State private var newOption: String = ""
-    
+    @State private var showingAssetPicker = false
+
+    private var selectedAsset: Asset3D? {
+        guard let selectedAssetId else { return nil }
+        return MockAssetService.shared.asset(withId: selectedAssetId)
+    }
+
     var body: some View {
+        Group {
+            formSections
+        }
+        .sheet(isPresented: $showingAssetPicker) {
+            AssetPickerView(selectedAssetId: $selectedAssetId)
+        }
+    }
+
+    @ViewBuilder
+    private var formSections: some View {
         Section(header: Text("Checkpoint Details")) {
             TextField("Title", text: $title)
             TextField("Description", text: $taskDescription)
         }
-        
+
         Section(header: Text("Interaction"), footer: Text("Choose what the citizen does when they reach this checkpoint. A plain checkpoint just needs to be visited.")) {
             Picker("Type", selection: $interactionType) {
                 ForEach(Checkpoint.InteractionType.allCases) { type in
@@ -82,6 +99,30 @@ struct CheckpointFormContent: View {
                     TextField("Right", text: $emojiRight)
                         .multilineTextAlignment(.center)
                 }
+            }
+        } else if interactionType == .likedislike {
+            Section(header: Text("Like & Dislike"), footer: Text("The citizen sees this 3D item in AR and votes whether they like it.")) {
+                Button {
+                    showingAssetPicker = true
+                } label: {
+                    HStack {
+                        if let selectedAsset {
+                            AssetThumbnailImage(asset: selectedAsset, iconSize: 20)
+                                .frame(width: 28, height: 28)
+                            Text(selectedAsset.name)
+                                .foregroundStyle(.primary)
+                        } else {
+                            Text("Select an Item")
+                                .foregroundStyle(.primary)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundStyle(.secondary)
+                            .font(.caption)
+                    }
+                }
+
+                TextField("Custom Question", text: $question)
             }
         }
     }

@@ -14,6 +14,7 @@ struct CheckpointEditView: View {
     @State private var surveyOptions: [String]
     @State private var emojiLeft: String
     @State private var emojiRight: String
+    @State private var selectedAssetId: String?
 
     @State private var newOption: String = ""
     init(checkpoint: Checkpoint) {
@@ -25,8 +26,9 @@ struct CheckpointEditView: View {
         _surveyOptions = State(initialValue: checkpoint.surveyOptions)
         _emojiLeft = State(initialValue: checkpoint.emojiLeft)
         _emojiRight = State(initialValue: checkpoint.emojiRight)
+        _selectedAssetId = State(initialValue: checkpoint.selectedAssetId)
     }
-    
+
     var body: some View {
         Form {
             CheckpointFormContent(
@@ -36,7 +38,8 @@ struct CheckpointEditView: View {
                 question: $question,
                 surveyOptions: $surveyOptions,
                 emojiLeft: $emojiLeft,
-                emojiRight: $emojiRight
+                emojiRight: $emojiRight,
+                selectedAssetId: $selectedAssetId
             )
             
             if interactionType == .photobooth, let cp = db.checkpoints.first(where: { $0.id == checkpointId }) {
@@ -70,6 +73,7 @@ struct CheckpointEditView: View {
             let right = emojiRight.trimmingCharacters(in: .whitespaces)
             updated.emojiLeft = left.isEmpty ? "😡" : String(left.prefix(1))
             updated.emojiRight = right.isEmpty ? "😍" : String(right.prefix(1))
+            updated.selectedAssetId = selectedAssetId
             db.updateCheckpoint(updated)
         }
         presentationMode.wrappedValue.dismiss()
