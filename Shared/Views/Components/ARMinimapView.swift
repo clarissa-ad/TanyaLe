@@ -95,7 +95,7 @@ struct ARMinimapView: View {
                             .background(Color.white.opacity(0.9))
                             .clipShape(Circle())
                             .shadow(radius: 3)
-                            .foregroundColor(.blue)
+                            .foregroundStyle(.blue)
                     }
                 }
 
