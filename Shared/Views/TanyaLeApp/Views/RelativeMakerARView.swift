@@ -91,6 +91,9 @@ struct RelativeMakerARView: View {
             }
         }
         .onAppear {
+            // Scope the view model to this journey: checkpoint counts/lists
+            // and auto-association all follow the journey from here on.
+            viewModel.journeyID = journey.id
             locationManager.requestPermission()
         }
         .navigationTitle(journey.name)
@@ -103,7 +106,7 @@ struct RelativeMakerARView: View {
             }
             
             ToolbarItem(placement: .primaryAction) {
-                NavigationLink(destination: CheckpointListView()) {
+                NavigationLink(destination: CheckpointListView(journey: journey)) {
                     Image(systemName: "list.bullet")
                 }
             }
@@ -159,8 +162,8 @@ struct RelativeMakerARView: View {
             anchor.addChild(marker)
         }
         
-        // Save to DB
-        let checkpoint = viewModel.addCheckpointAt(
+        // Save to DB — the view model associates it with the journey too.
+        _ = viewModel.addCheckpointAt(
             transform: position,
             title: tempTitle,
             description: tempDesc,
@@ -170,10 +173,7 @@ struct RelativeMakerARView: View {
             emojiLeft: tempEmojiLeft,
             emojiRight: tempEmojiRight
         )
-        
-        // Associate checkpoint with journey
-        journeyService.addCheckpoint(checkpoint.id, to: journey.id)
-        
+
         // Reset sheet state
         tempTitle = ""
         tempDesc = ""

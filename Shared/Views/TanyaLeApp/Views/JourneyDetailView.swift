@@ -109,8 +109,11 @@ struct JourneyDetailView: View {
             QRCodeView(journey: journey)
         }
         .sheet(isPresented: $showEditCheckpoints) {
-            // TODO: Show checkpoint management view for this journey
-            CheckpointListView()
+            // Scoped to this journey; the navigation stack makes the
+            // edit-checkpoint and responses links work inside the sheet.
+            NavigationView {
+                CheckpointListView(journey: journey)
+            }
         }
     }
     

@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct PhotoGalleryView: View {
-    @Environment(\.presentationMode) private var presentationMode
-    @ObservedObject private var photoService = MockPhotoService.shared
+    @Environment(\.dismiss) private var dismiss
+    var photoService = MockPhotoService.shared
     let checkpoint: Checkpoint
     
     var body: some View {
@@ -38,9 +38,13 @@ struct PhotoGalleryView: View {
                 }
             }
             .navigationTitle("Photo Gallery")
-            .navigationBarItems(trailing: Button("Done") {
-                presentationMode.wrappedValue.dismiss()
-            })
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") {
+                        dismiss()
+                    }
+                }
+            }
         }
     }
 }
