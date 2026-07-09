@@ -66,7 +66,12 @@ enum CheckpointBoardLoader {
                     }
 
                     if let controller {
-                        controller.rootEntity.position = [0, 1.0, 0]
+                        if cp.interactionType == .photobooth {
+                            // Lower the photobooth board so it's not too high
+                            controller.rootEntity.position = [0, 0.45, 0]
+                        } else {
+                            controller.rootEntity.position = [0, 1.0, 0]
+                        }
                         anchor.addChild(controller.rootEntity)
                         arContainer.faceCameraEntities.append(controller.rootEntity)
                         arContainer.boardControllers.append(controller)
@@ -108,10 +113,10 @@ enum CheckpointBoardLoader {
                 for (index, image) in photos.enumerated() {
                     Task { @MainActor in
                         if let entity = createPhotoEntity(from: image) {
-                            // Float slightly above and spread horizontally with wider spacing
-                            let spacing: Float = 0.5 // Adjust this to give more/less space
-                            let offset = Float(index) * spacing - Float(max(0, photos.count - 1)) * (spacing / 2)
-                            entity.position = [offset, 0.3 + Float(index % 2) * 0.05, 0]
+                            // Place the floating photos beside the board (starting to the right)
+                            let spacing: Float = 0.5
+                            let xOffset: Float = 0.45 + Float(index) * spacing
+                            entity.position = [xOffset, 0.45 + Float(index % 2) * 0.05, 0]
                             anchor.addChild(entity)
                             arContainer.faceCameraEntities.append(entity)
                         }

@@ -257,10 +257,10 @@ struct RelativeUserARView: View {
                             
                             Task { @MainActor in
                                 if let entity = CheckpointBoardLoader.createPhotoEntity(from: image) {
-                                    // Float slightly above and spread horizontally
+                                    // Place the floating photos beside the board (starting to the right)
                                     let spacing: Float = 0.5
-                                    let offset = Float(photosCount - 1) * spacing - Float(photosCount) * (spacing / 2)
-                                    entity.position = [offset, 0.3 + Float(photosCount % 2) * 0.05, 0]
+                                    let xOffset: Float = 0.45 + Float(photosCount - 1) * spacing
+                                    entity.position = [xOffset, 0.45 + Float(photosCount % 2) * 0.05, 0]
                                     anchor.addChild(entity)
                                     arContainer.faceCameraEntities.append(entity)
                                 }

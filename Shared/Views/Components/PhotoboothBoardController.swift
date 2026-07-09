@@ -67,11 +67,13 @@ final class PhotoboothBoardController: ARSurveyBoard {
         rootEntity.addChild(qEntity)
         cursor -= Float(questionPiece.sizePoints.height + SurveyCard.sectionSpacingPoints) * s
         
-        // 2. Image
-        let imgEntity = SurveyCard.pieceEntity(imagePiece)
-        imgEntity.position = [0, cursor - Float(imagePiece.sizePoints.height) * s / 2, 0.002]
-        rootEntity.addChild(imgEntity)
-        cursor -= Float(imagePiece.sizePoints.height + SurveyCard.sectionSpacingPoints) * s
+        // 2. Image (if present)
+        if let imgPiece = imagePiece {
+            let imgEntity = SurveyCard.pieceEntity(imgPiece)
+            imgEntity.position = [0, cursor - Float(imgPiece.sizePoints.height) * s / 2, 0.002]
+            rootEntity.addChild(imgEntity)
+            cursor -= Float(imgPiece.sizePoints.height + SurveyCard.sectionSpacingPoints) * s
+        }
         
         // 3. Buttons
         let btnsEntity = SurveyCard.pieceEntity(buttonsPiece)
@@ -84,20 +86,20 @@ final class PhotoboothBoardController: ARSurveyBoard {
         let mainHit = Entity()
         mainHit.components.set(CollisionComponent(shapes: [
             .generateBox(width: SurveyCard.boardWidthMeters,
-                         height: boardHeightMeters * 0.75,
+                         height: boardHeightMeters * 0.65,
                          depth: 0.02)
         ]))
-        mainHit.position.y = boardHeightMeters * 0.125
+        mainHit.position.y = boardHeightMeters * 0.175
         rootEntity.addChild(mainHit)
         self.cameraHitEntity = mainHit
         
         let galleryHit = Entity()
         galleryHit.components.set(CollisionComponent(shapes: [
             .generateBox(width: SurveyCard.boardWidthMeters,
-                         height: boardHeightMeters * 0.25,
+                         height: boardHeightMeters * 0.35,
                          depth: 0.02)
         ]))
-        galleryHit.position.y = -boardHeightMeters * 0.375
+        galleryHit.position.y = -boardHeightMeters * 0.325
         rootEntity.addChild(galleryHit)
         self.galleryHitEntity = galleryHit
         
@@ -130,6 +132,7 @@ private struct PromptTextView: View {
             .font(.system(size: 24, weight: .bold))
             .foregroundColor(.black)
             .multilineTextAlignment(.center)
+            .fixedSize(horizontal: false, vertical: true) // Prevents black glitch in ImageRenderer
             .frame(width: SurveyCard.innerWidthPoints)
     }
 }
@@ -142,22 +145,6 @@ private struct PromptImageView: View {
             .scaledToFill()
             .frame(width: SurveyCard.innerWidthPoints, height: 200)
             .clipShape(RoundedRectangle(cornerRadius: 12))
-    }
-}
-
-private struct PromptImageFallbackView: View {
-    var body: some View {
-        VStack(spacing: 8) {
-            Image(systemName: "camera.viewfinder")
-                .font(.system(size: 40))
-                .foregroundColor(.gray)
-            Text("Snap a photo here")
-                .font(.headline)
-                .foregroundColor(.gray)
-        }
-        .frame(width: SurveyCard.innerWidthPoints, height: 120)
-        .background(Color(white: 0.95))
-        .clipShape(RoundedRectangle(cornerRadius: 12))
     }
 }
 
