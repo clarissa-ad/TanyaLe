@@ -43,7 +43,7 @@ struct AssetPlacementConfig {
         // testing indoors; bump back toward 0.01 for outdoor/real-size use.
         "kandang_ayam": AssetPlacementConfig(
             usdzFileName: "asset3d_kandang-ayam",
-            scale: 0.0004,
+            scale: 0.004,
             defaultRotationY: 0
         ),
         // Authored in meters but modeled oversized (raw extents ~2.0×3.0×2.0
