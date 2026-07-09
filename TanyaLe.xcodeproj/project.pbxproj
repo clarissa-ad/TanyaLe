@@ -17,11 +17,11 @@
 		98374C332FF76A8F005D18E1 /* MockDatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C172FF76A8F005D18E1 /* MockDatabaseService.swift */; };
 		98374C342FF76A8F005D18E1 /* RelativeMakerARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C282FF76A8F005D18E1 /* RelativeMakerARView.swift */; };
 		98374C352FF76A8F005D18E1 /* CitizenARViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C1F2FF76A8F005D18E1 /* CitizenARViewModel.swift */; };
-		98374C362FF76A8F005D18E1 /* TanyaLeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C1C2FF76A8F005D18E1 /* TanyaLeApp.swift */; };
 		98374C372FF76A8F005D18E1 /* CheckpointEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C252FF76A8F005D18E1 /* CheckpointEditView.swift */; };
 		98374C382FF76A8F005D18E1 /* ARPlacementPrototypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C222FF76A8F005D18E1 /* ARPlacementPrototypeView.swift */; };
 		98374C392FF76A8F005D18E1 /* UserMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C2A2FF76A8F005D18E1 /* UserMinimapView.swift */; };
 		98374C3A2FF76A8F005D18E1 /* CheckpointListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C262FF76A8F005D18E1 /* CheckpointListView.swift */; };
+		AA07A9432FFE0B7400CCB838 /* TanyaleAppClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = AA07A9372FFE0B7300CCB838 /* TanyaleAppClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AA164A902FFC985400783485 /* appicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = AA164A8F2FFC985400783485 /* appicon_tanyale.icon */; };
 		AA25085B2FFA60E1001CF21C /* WalkableAspirationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25085A2FFA60D5001CF21C /* WalkableAspirationManager.swift */; };
 		AA25085D2FFA6252001CF21C /* WalkableAspirationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25085C2FFA6242001CF21C /* WalkableAspirationButton.swift */; };
@@ -31,7 +31,6 @@
 		AA2508692FFB574E001CF21C /* ARSurveyBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508682FFB5749001CF21C /* ARSurveyBoard.swift */; };
 		AA25086B2FFB57AB001CF21C /* MessageBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25086A2FFB57A8001CF21C /* MessageBoardEntity.swift */; };
 		AA25086F2FFB5F39001CF21C /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25086E2FFB5E7C001CF21C /* WelcomeView.swift */; };
-		AA2508712FFB6075001CF21C /* tanyale_map_illustration.svg in Resources */ = {isa = PBXBuildFile; fileRef = AA2508702FFB6075001CF21C /* tanyale_map_illustration.svg */; };
 		AA2508732FFB6589001CF21C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA2508722FFB6589001CF21C /* Assets.xcassets */; };
 		AA2508752FFC080D001CF21C /* ARWalkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508742FFC07F8001CF21C /* ARWalkView.swift */; };
 		AA2508912FFA60D5001CF21C /* WalkableAspirationSceneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508902FFA60D5001CF21C /* WalkableAspirationSceneController.swift */; };
@@ -39,17 +38,72 @@
 		AA2508B12FFA60D5001CF21C /* CheckpointBoardLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508B02FFA60D5001CF21C /* CheckpointBoardLoader.swift */; };
 		AA25D3732FFC9B0D00B1256B /* RelativeARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25D3722FFC9B0600B1256B /* RelativeARViewContainer.swift */; };
 		AA25D3752FFCAFFA00B1256B /* CheckpointFormContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25D3742FFCAFFA00B1256B /* CheckpointFormContent.swift */; };
+		AA25D3C92FFCB91B00B1256B /* TutorialPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25D3C82FFCB87400B1256B /* TutorialPopup.swift */; };
+		AA5E76112FFEBB04009F664A /* AppClipRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5E76102FFEBB04009F664A /* AppClipRootView.swift */; };
+		AA5E76122FFEBB04009F664A /* AppClipRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5E76102FFEBB04009F664A /* AppClipRootView.swift */; };
+		AA5E762F2FFEC017009F664A /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25086E2FFB5E7C001CF21C /* WelcomeView.swift */; };
+		AA5E76382FFEC1F3009F664A /* WalkableAspirationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25085A2FFA60D5001CF21C /* WalkableAspirationManager.swift */; };
+		AA5E76392FFEC1FB009F664A /* WalkableAspirationSceneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508902FFA60D5001CF21C /* WalkableAspirationSceneController.swift */; };
+		AA5E763A2FFEC203009F664A /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C122FF76A8F005D18E1 /* LocationManager.swift */; };
+		AA5E763B2FFEC209009F664A /* WalkableAspiration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508662FFAC1F0001CF21C /* WalkableAspiration.swift */; };
+		AA5E763C2FFEC210009F664A /* Checkpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C142FF76A8F005D18E1 /* Checkpoint.swift */; };
+		AA5E763D2FFEC217009F664A /* MockDatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C172FF76A8F005D18E1 /* MockDatabaseService.swift */; };
+		AA5E763E2FFEC22E009F664A /* RelativeARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25D3722FFC9B0600B1256B /* RelativeARViewContainer.swift */; };
+		AA5E763F2FFEC236009F664A /* TutorialPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25D3C82FFCB87400B1256B /* TutorialPopup.swift */; };
+		AA5E76402FFEC23E009F664A /* CheckpointFormContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25D3742FFCAFFA00B1256B /* CheckpointFormContent.swift */; };
+		AA5E76412FFEC245009F664A /* ARMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508A02FFA60D5001CF21C /* ARMinimapView.swift */; };
+		AA5E76422FFEC24B009F664A /* CheckpointBoardLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508B02FFA60D5001CF21C /* CheckpointBoardLoader.swift */; };
+		AA5E76432FFEC251009F664A /* MessageBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25086A2FFB57A8001CF21C /* MessageBoardEntity.swift */; };
+		AA5E76442FFEC258009F664A /* ARSurveyBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508682FFB5749001CF21C /* ARSurveyBoard.swift */; };
+		AA5E76452FFEC25E009F664A /* EmojiCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */; };
+		AA5E76462FFEC265009F664A /* CheckpointFormContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB0D28C2FFCAFAB00252738 /* CheckpointFormContent.swift */; };
+		AA5E76472FFEC26A009F664A /* MCQBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */; };
+		AA5E76482FFEC270009F664A /* TextFieldBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508602FFA68A4001CF21C /* TextFieldBottomSheet.swift */; };
+		AA5E76492FFEC278009F664A /* WalkableAspirationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25085C2FFA6242001CF21C /* WalkableAspirationButton.swift */; };
+		AA5E764A2FFEC2A5009F664A /* RelativeUserARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C292FF76A8F005D18E1 /* RelativeUserARView.swift */; };
+		AA5E764B2FFEC2C5009F664A /* CitizenARViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C1F2FF76A8F005D18E1 /* CitizenARViewModel.swift */; };
+		AA5E764C2FFF2906009F664A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA2508722FFB6589001CF21C /* Assets.xcassets */; };
+		AA5E764E2FFF2914009F664A /* appicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = AA164A8F2FFC985400783485 /* appicon_tanyale.icon */; };
+		AA5E76502FFF2D37009F664A /* Lele_Checkpoint.usdz in Resources */ = {isa = PBXBuildFile; fileRef = AA5E764F2FFF2D37009F664A /* Lele_Checkpoint.usdz */; };
+		AA5E76512FFEC300009F664A /* TanyaLeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5E76502FFEC300009F664A /* TanyaLeApp.swift */; };
+		AA5E76512FFF2D37009F664A /* Lele_Checkpoint.usdz in Resources */ = {isa = PBXBuildFile; fileRef = AA5E764F2FFF2D37009F664A /* Lele_Checkpoint.usdz */; };
+		AABFC5DD2FFF3F1E0079F1FF /* ARWalkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508742FFC07F8001CF21C /* ARWalkView.swift */; };
+		AABFC5DF2FFF43440079F1FF /* appclipicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = AABFC5DE2FFF43440079F1FF /* appclipicon_tanyale.icon */; };
+		AABFC5E12FFF434B0079F1FF /* appicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = AABFC5E02FFF434B0079F1FF /* appicon_tanyale.icon */; };
 		DB9768932FF795DA008660F8 /* MCQBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */; };
 		DBB0D2892FFA9E4200252738 /* EmojiCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */; };
 		DBB0D28D2FFCAFAB00252738 /* CheckpointFormContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB0D28C2FFCAFAB00252738 /* CheckpointFormContent.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		AA07A9412FFE0B7400CCB838 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9873792F2FF61D8900739D44 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA07A9362FFE0B7300CCB838;
+			remoteInfo = TanyaleAppClip;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AA07A9482FFE0B7400CCB838 /* Embed App Clips */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/AppClips";
+			dstSubfolderSpec = 16;
+			files = (
+				AA07A9432FFE0B7400CCB838 /* TanyaleAppClip.app in Embed App Clips */,
+			);
+			name = "Embed App Clips";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		98374BC12FF759EB005D18E1 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		98374C122FF76A8F005D18E1 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		98374C142FF76A8F005D18E1 /* Checkpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkpoint.swift; sourceTree = "<group>"; };
 		98374C172FF76A8F005D18E1 /* MockDatabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDatabaseService.swift; sourceTree = "<group>"; };
-		98374C1C2FF76A8F005D18E1 /* TanyaLeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TanyaLeApp.swift; sourceTree = "<group>"; };
 		98374C1F2FF76A8F005D18E1 /* CitizenARViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitizenARViewModel.swift; sourceTree = "<group>"; };
 		98374C202FF76A8F005D18E1 /* MakerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakerViewModel.swift; sourceTree = "<group>"; };
 		98374C222FF76A8F005D18E1 /* ARPlacementPrototypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPlacementPrototypeView.swift; sourceTree = "<group>"; };
@@ -61,6 +115,7 @@
 		98374C292FF76A8F005D18E1 /* RelativeUserARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeUserARView.swift; sourceTree = "<group>"; };
 		98374C2A2FF76A8F005D18E1 /* UserMinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMinimapView.swift; sourceTree = "<group>"; };
 		987379372FF61D8900739D44 /* TanyaLe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TanyaLe.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA07A9372FFE0B7300CCB838 /* TanyaleAppClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TanyaleAppClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA164A8F2FFC985400783485 /* appicon_tanyale.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = appicon_tanyale.icon; sourceTree = "<group>"; };
 		AA25085A2FFA60D5001CF21C /* WalkableAspirationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationManager.swift; sourceTree = "<group>"; };
 		AA25085C2FFA6242001CF21C /* WalkableAspirationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationButton.swift; sourceTree = "<group>"; };
@@ -70,7 +125,6 @@
 		AA2508682FFB5749001CF21C /* ARSurveyBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSurveyBoard.swift; sourceTree = "<group>"; };
 		AA25086A2FFB57A8001CF21C /* MessageBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBoardEntity.swift; sourceTree = "<group>"; };
 		AA25086E2FFB5E7C001CF21C /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
-		AA2508702FFB6075001CF21C /* tanyale_map_illustration.svg */ = {isa = PBXFileReference; lastKnownFileType = text; path = tanyale_map_illustration.svg; sourceTree = "<group>"; };
 		AA2508722FFB6589001CF21C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA2508742FFC07F8001CF21C /* ARWalkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARWalkView.swift; sourceTree = "<group>"; };
 		AA2508902FFA60D5001CF21C /* WalkableAspirationSceneController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationSceneController.swift; sourceTree = "<group>"; };
@@ -78,13 +132,47 @@
 		AA2508B02FFA60D5001CF21C /* CheckpointBoardLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointBoardLoader.swift; sourceTree = "<group>"; };
 		AA25D3722FFC9B0600B1256B /* RelativeARViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeARViewContainer.swift; sourceTree = "<group>"; };
 		AA25D3742FFCAFFA00B1256B /* CheckpointFormContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointFormContent.swift; sourceTree = "<group>"; };
+		AA25D3C82FFCB87400B1256B /* TutorialPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialPopup.swift; sourceTree = "<group>"; };
+		AA5E76102FFEBB04009F664A /* AppClipRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipRootView.swift; sourceTree = "<group>"; };
+		AA5E764F2FFF2D37009F664A /* Lele_Checkpoint.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = Lele_Checkpoint.usdz; sourceTree = "<group>"; };
+		AA5E76502FFEC300009F664A /* TanyaLeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TanyaLeApp.swift; sourceTree = "<group>"; };
+		AABFC5DE2FFF43440079F1FF /* appclipicon_tanyale.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = appclipicon_tanyale.icon; sourceTree = "<group>"; };
+		AABFC5E02FFF434B0079F1FF /* appicon_tanyale.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; name = appicon_tanyale.icon; path = Shared/Resources/appicon_tanyale.icon; sourceTree = "<group>"; };
 		DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCQBoardEntity.swift; sourceTree = "<group>"; };
 		DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCelebrationView.swift; sourceTree = "<group>"; };
 		DBB0D28C2FFCAFAB00252738 /* CheckpointFormContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointFormContent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		AA07A9442FFE0B7400CCB838 /* Exceptions for "TanyaleAppClip" folder in "TanyaleAppClip" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = AA07A9362FFE0B7300CCB838 /* TanyaleAppClip */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		AA07A9382FFE0B7300CCB838 /* TanyaleAppClip */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AA07A9442FFE0B7400CCB838 /* Exceptions for "TanyaleAppClip" folder in "TanyaleAppClip" target */,
+			);
+			path = TanyaleAppClip;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		987379342FF61D8900739D44 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA07A9342FFE0B7300CCB838 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -116,8 +204,9 @@
 		98374C162FF76A8F005D18E1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				AA2508702FFB6075001CF21C /* tanyale_map_illustration.svg */,
+				AA5E764F2FFF2D37009F664A /* Lele_Checkpoint.usdz */,
 				AA164A8F2FFC985400783485 /* appicon_tanyale.icon */,
+				AABFC5DE2FFF43440079F1FF /* appclipicon_tanyale.icon */,
 				AA2508722FFB6589001CF21C /* Assets.xcassets */,
 			);
 			path = Resources;
@@ -134,6 +223,7 @@
 		98374C192FF76A8F005D18E1 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				AA25D3C82FFCB87400B1256B /* TutorialPopup.swift */,
 				AA25D3742FFCAFFA00B1256B /* CheckpointFormContent.swift */,
 				AA2508A02FFA60D5001CF21C /* ARMinimapView.swift */,
 				AA2508B02FFA60D5001CF21C /* CheckpointBoardLoader.swift */,
@@ -152,8 +242,8 @@
 			isa = PBXGroup;
 			children = (
 				AA25086E2FFB5E7C001CF21C /* WelcomeView.swift */,
+				AA5E76102FFEBB04009F664A /* AppClipRootView.swift */,
 				AA2508742FFC07F8001CF21C /* ARWalkView.swift */,
-				AA25085E2FFA6475001CF21C /* WalkableAspirationView.swift */,
 				AA25D3722FFC9B0600B1256B /* RelativeARViewContainer.swift */,
 				98374C192FF76A8F005D18E1 /* Components */,
 			);
@@ -175,7 +265,7 @@
 		98374C1D2FF76A8F005D18E1 /* App */ = {
 			isa = PBXGroup;
 			children = (
-				98374C1C2FF76A8F005D18E1 /* TanyaLeApp.swift */,
+				AA5E76502FFEC300009F664A /* TanyaLeApp.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -183,6 +273,7 @@
 		98374C1E2FF76A8F005D18E1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				AABFC5E02FFF434B0079F1FF /* appicon_tanyale.icon */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -199,6 +290,7 @@
 		98374C242FF76A8F005D18E1 /* Prototypes */ = {
 			isa = PBXGroup;
 			children = (
+				AA25085E2FFA6475001CF21C /* WalkableAspirationView.swift */,
 				98374C222FF76A8F005D18E1 /* ARPlacementPrototypeView.swift */,
 				98374C232FF76A8F005D18E1 /* SandboxDashboardView.swift */,
 			);
@@ -234,6 +326,7 @@
 			isa = PBXGroup;
 			children = (
 				98374BC12FF759EB005D18E1 /* README.md */,
+				AA07A9382FFE0B7300CCB838 /* TanyaleAppClip */,
 				987379382FF61D8900739D44 /* Products */,
 				98374C1B2FF76A8F005D18E1 /* Shared */,
 				98374C2C2FF76A8F005D18E1 /* TanyaLeApp */,
@@ -244,6 +337,7 @@
 			isa = PBXGroup;
 			children = (
 				987379372FF61D8900739D44 /* TanyaLe.app */,
+				AA07A9372FFE0B7300CCB838 /* TanyaleAppClip.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -258,10 +352,12 @@
 				987379332FF61D8900739D44 /* Sources */,
 				987379342FF61D8900739D44 /* Frameworks */,
 				987379352FF61D8900739D44 /* Resources */,
+				AA07A9482FFE0B7400CCB838 /* Embed App Clips */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				AA07A9422FFE0B7400CCB838 /* PBXTargetDependency */,
 			);
 			name = TanyaLe;
 			packageProductDependencies = (
@@ -270,6 +366,28 @@
 			productReference = 987379372FF61D8900739D44 /* TanyaLe.app */;
 			productType = "com.apple.product-type.application";
 		};
+		AA07A9362FFE0B7300CCB838 /* TanyaleAppClip */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA07A9452FFE0B7400CCB838 /* Build configuration list for PBXNativeTarget "TanyaleAppClip" */;
+			buildPhases = (
+				AA07A9332FFE0B7300CCB838 /* Sources */,
+				AA07A9342FFE0B7300CCB838 /* Frameworks */,
+				AA07A9352FFE0B7300CCB838 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				AA07A9382FFE0B7300CCB838 /* TanyaleAppClip */,
+			);
+			name = TanyaleAppClip;
+			packageProductDependencies = (
+			);
+			productName = TanyaleAppClip;
+			productReference = AA07A9372FFE0B7300CCB838 /* TanyaleAppClip.app */;
+			productType = "com.apple.product-type.application.on-demand-install-capable";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -277,11 +395,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2660;
+				LastSwiftUpdateCheck = 2630;
 				LastUpgradeCheck = 2660;
 				TargetAttributes = {
 					987379362FF61D8900739D44 = {
 						CreatedOnToolsVersion = 26.6;
+					};
+					AA07A9362FFE0B7300CCB838 = {
+						CreatedOnToolsVersion = 26.3;
 					};
 				};
 			};
@@ -300,6 +421,7 @@
 			projectRoot = "";
 			targets = (
 				987379362FF61D8900739D44 /* TanyaLe */,
+				AA07A9362FFE0B7300CCB838 /* TanyaleAppClip */,
 			);
 		};
 /* End PBXProject section */
@@ -309,10 +431,22 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA2508712FFB6075001CF21C /* tanyale_map_illustration.svg in Resources */,
+				AA5E76502FFF2D37009F664A /* Lele_Checkpoint.usdz in Resources */,
+				AABFC5E12FFF434B0079F1FF /* appicon_tanyale.icon in Resources */,
 				98374BE52FF759EB005D18E1 /* README.md in Resources */,
 				AA164A902FFC985400783485 /* appicon_tanyale.icon in Resources */,
 				AA2508732FFB6589001CF21C /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA07A9352FFE0B7300CCB838 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AABFC5DF2FFF43440079F1FF /* appclipicon_tanyale.icon in Resources */,
+				AA5E76512FFF2D37009F664A /* Lele_Checkpoint.usdz in Resources */,
+				AA5E764C2FFF2906009F664A /* Assets.xcassets in Resources */,
+				AA5E764E2FFF2914009F664A /* appicon_tanyale.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -339,8 +473,8 @@
 				98374C332FF76A8F005D18E1 /* MockDatabaseService.swift in Sources */,
 				98374C342FF76A8F005D18E1 /* RelativeMakerARView.swift in Sources */,
 				98374C352FF76A8F005D18E1 /* CitizenARViewModel.swift in Sources */,
-				98374C362FF76A8F005D18E1 /* TanyaLeApp.swift in Sources */,
 				AA2508672FFAC1F7001CF21C /* WalkableAspiration.swift in Sources */,
+				AA25D3C92FFCB91B00B1256B /* TutorialPopup.swift in Sources */,
 				DBB0D28D2FFCAFAB00252738 /* CheckpointFormContent.swift in Sources */,
 				98374C372FF76A8F005D18E1 /* CheckpointEditView.swift in Sources */,
 				DBB0D2892FFA9E4200252738 /* EmojiCelebrationView.swift in Sources */,
@@ -351,13 +485,53 @@
 				AA2508B12FFA60D5001CF21C /* CheckpointBoardLoader.swift in Sources */,
 				98374C392FF76A8F005D18E1 /* UserMinimapView.swift in Sources */,
 				AA25086F2FFB5F39001CF21C /* WelcomeView.swift in Sources */,
+				AA5E76112FFEBB04009F664A /* AppClipRootView.swift in Sources */,
+				AA5E76512FFEC300009F664A /* TanyaLeApp.swift in Sources */,
 				AA25086B2FFB57AB001CF21C /* MessageBoardEntity.swift in Sources */,
 				AA2508612FFA68B2001CF21C /* TextFieldBottomSheet.swift in Sources */,
 				98374C3A2FF76A8F005D18E1 /* CheckpointListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AA07A9332FFE0B7300CCB838 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AABFC5DD2FFF3F1E0079F1FF /* ARWalkView.swift in Sources */,
+				AA5E763B2FFEC209009F664A /* WalkableAspiration.swift in Sources */,
+				AA5E76402FFEC23E009F664A /* CheckpointFormContent.swift in Sources */,
+				AA5E763C2FFEC210009F664A /* Checkpoint.swift in Sources */,
+				AA5E762F2FFEC017009F664A /* WelcomeView.swift in Sources */,
+				AA5E76442FFEC258009F664A /* ARSurveyBoard.swift in Sources */,
+				AA5E76382FFEC1F3009F664A /* WalkableAspirationManager.swift in Sources */,
+				AA5E763A2FFEC203009F664A /* LocationManager.swift in Sources */,
+				AA5E764B2FFEC2C5009F664A /* CitizenARViewModel.swift in Sources */,
+				AA5E76492FFEC278009F664A /* WalkableAspirationButton.swift in Sources */,
+				AA5E76452FFEC25E009F664A /* EmojiCelebrationView.swift in Sources */,
+				AA5E76472FFEC26A009F664A /* MCQBoardEntity.swift in Sources */,
+				AA5E76422FFEC24B009F664A /* CheckpointBoardLoader.swift in Sources */,
+				AA5E76462FFEC265009F664A /* CheckpointFormContent.swift in Sources */,
+				AA5E763D2FFEC217009F664A /* MockDatabaseService.swift in Sources */,
+				AA5E76392FFEC1FB009F664A /* WalkableAspirationSceneController.swift in Sources */,
+				AA5E764A2FFEC2A5009F664A /* RelativeUserARView.swift in Sources */,
+				AA5E76412FFEC245009F664A /* ARMinimapView.swift in Sources */,
+				AA5E76482FFEC270009F664A /* TextFieldBottomSheet.swift in Sources */,
+				AA5E763E2FFEC22E009F664A /* RelativeARViewContainer.swift in Sources */,
+				AA5E76432FFEC251009F664A /* MessageBoardEntity.swift in Sources */,
+				AA5E763F2FFEC236009F664A /* TutorialPopup.swift in Sources */,
+				AA5E76122FFEBB04009F664A /* AppClipRootView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AA07A9422FFE0B7400CCB838 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA07A9362FFE0B7300CCB838 /* TanyaleAppClip */;
+			targetProxy = AA07A9412FFE0B7400CCB838 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		987379452FF61D8A00739D44 /* Debug */ = {
@@ -383,7 +557,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ian.TanyaLe;
+				PRODUCT_BUNDLE_IDENTIFIER = com.al.TanyaLe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -418,7 +592,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ian.TanyaLe;
+				PRODUCT_BUNDLE_IDENTIFIER = com.al.TanyaLe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -549,6 +723,78 @@
 			};
 			name = Release;
 		};
+		AA07A9462FFE0B7400CCB838 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = appclipicon_tanyale;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TanyaleAppClip/TanyaleAppClip.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VX33BG7ZDD;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TanyaleAppClip/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "TanyaLe App Clip";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.al.TanyaLe.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AA07A9472FFE0B7400CCB838 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = appclipicon_tanyale;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = TanyaleAppClip/TanyaleAppClip.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = VX33BG7ZDD;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TanyaleAppClip/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "TanyaLe App Clip";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.al.TanyaLe.Clip;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -566,6 +812,15 @@
 			buildConfigurations = (
 				987379452FF61D8A00739D44 /* Debug */,
 				987379462FF61D8A00739D44 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA07A9452FFE0B7400CCB838 /* Build configuration list for PBXNativeTarget "TanyaleAppClip" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA07A9462FFE0B7400CCB838 /* Debug */,
+				AA07A9472FFE0B7400CCB838 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

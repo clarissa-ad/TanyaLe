@@ -29,6 +29,9 @@ struct SandboxDashboardView: View {
                 }
                 
                 Section(header: Text("UI Prototypes")) {
+                    NavigationLink(destination: WelcomeView()){
+                        Label("Main Flow Citizen", systemImage: "hand.thumbsup")
+                    }
                     Text("Test 3D Asset Likability UI (Coming Soon)")
                         .foregroundStyle(.secondary)
                 }
