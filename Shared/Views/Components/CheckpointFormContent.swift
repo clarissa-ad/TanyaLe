@@ -15,17 +15,9 @@ struct CheckpointFormContent: View {
     var body: some View {
         Section(header: Text("Checkpoint Details")) {
             TextField("Title", text: $title)
-            ZStack(alignment: .topLeading) {
-                if taskDescription.isEmpty {
-                    Text("Description (optional)")
-                        .foregroundStyle(.tertiary)
-                        .padding(.horizontal, 4)
-                        .padding(.vertical, 8)
-                }
-                TextEditor(text: $taskDescription)
-                    .frame(minHeight: 200)
-            }
-            .padding(.bottom, 5)
+        }
+        Section(header: Text("Checkpoint Description")) {
+            TextField("Description (optional)", text: $taskDescription)
         }
 
         Section(
@@ -45,16 +37,15 @@ struct CheckpointFormContent: View {
                 footer: Text("Options 1 and 2 are required. Tap \"Add More Answers\" to unlock two extra slots (6 max).")
             ) {
                 TextField("Question", text: $question)
-                    .font(.system(size: 20, weight: .bold))
 
-                optionField(at: 0, placeholder: "Answer 1 ")
-                optionField(at: 1, placeholder: "Answer 2 ")
-                optionField(at: 2, placeholder: "Answer 3 (optional)")
-                optionField(at: 3, placeholder: "Answer 4 (optional)")
+                optionField(at: 0, placeholder: "Option 1 (required)")
+                optionField(at: 1, placeholder: "Option 2 (required)")
+                optionField(at: 2, placeholder: "Option 3 (optional)")
+                optionField(at: 3, placeholder: "Option 4 (optional)")
 
                 if showExtraOptions {
-                    optionField(at: 4, placeholder: "Answer 5 (optional)")
-                    optionField(at: 5, placeholder: "Answer 6 (optional)")
+                    optionField(at: 4, placeholder: "Option 5 (optional)")
+                    optionField(at: 5, placeholder: "Option 6 (optional)")
                 } else {
                     Button(action: {
                         ensureCapacity(6)
@@ -71,7 +62,7 @@ struct CheckpointFormContent: View {
         } else if interactionType == .photobooth {
             Section {
                 Text("Photobooth configuration coming soon.")
-                    .foregroundStyle(.secondary)
+                    .foregroundColor(.secondary)
             }
         } else if interactionType == .emojiSlider {
             Section(
@@ -90,7 +81,7 @@ struct CheckpointFormContent: View {
                         emojiRight = temp
                     }) {
                         Image(systemName: "arrow.left.arrow.right")
-                            .foregroundStyle(.blue)
+                            .foregroundColor(.blue)
                     }
                     .buttonStyle(.borderless)
 

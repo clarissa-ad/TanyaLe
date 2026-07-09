@@ -21,7 +21,7 @@ struct ARWalkView: View {
     private var db = MockDatabaseService.shared
     @State private var viewModel = CitizenARViewModel()
     @State private var aspirationManager = WalkableAspirationManager()
-    @State private var locationManager = LocationManager()
+    private var locationManager = LocationManager.shared
 
     // One AR scene shared by the tracking view model, the survey boards, and the
     // dropped aspiration messages.

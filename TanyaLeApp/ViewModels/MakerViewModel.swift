@@ -12,7 +12,7 @@ class MakerViewModel {
         MockDatabaseService.shared.checkpoints
     }
 
-    func addCheckpointAt(transform: SIMD3<Float>, title: String, description: String, interactionType: Checkpoint.InteractionType, question: String, surveyOptions: [String], emojiLeft: String, emojiRight: String, overrideLocation: CLLocationCoordinate2D? = nil) {
+    func addCheckpointAt(transform: SIMD3<Float>, title: String, description: String, interactionType: Checkpoint.InteractionType, question: String, surveyOptions: [String], emojiLeft: String, emojiRight: String, overrideLocation: CLLocationCoordinate2D? = nil) -> Checkpoint {
         
         let origin = overrideLocation ?? MockDatabaseService.shared.surveyOrigin ?? CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666)
         
@@ -39,5 +39,6 @@ class MakerViewModel {
             relativeZ: transform.z
         )
         MockDatabaseService.shared.saveCheckpoint(newCheckpoint)
+        return newCheckpoint
     }
 }
