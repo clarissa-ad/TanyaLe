@@ -11,31 +11,15 @@
 		AA07A9432FFE0B7400CCB838 /* TanyaleAppClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = AA07A9372FFE0B7300CCB838 /* TanyaleAppClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AA5E76462FFEC265009F664A /* (null) in Sources */ = {isa = PBXBuildFile; };
 		DB9289E82FFF5E310054B34A /* MockDatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D02FFF5E310054B34A /* MockDatabaseService.swift */; };
-		DB9289E92FFF5E310054B34A /* ARWalkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E22FFF5E310054B34A /* ARWalkView.swift */; };
 		DB9289EA2FFF5E310054B34A /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C12FFF5E310054B34A /* LocationManager.swift */; };
 		DB9289EB2FFF5E310054B34A /* BrandTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D52FFF5E310054B34A /* BrandTheme.swift */; };
 		DB9289EC2FFF5E310054B34A /* WalkableAspiration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C62FFF5E310054B34A /* WalkableAspiration.swift */; };
 		DB9289ED2FFF5E310054B34A /* MockPhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D12FFF5E310054B34A /* MockPhotoService.swift */; };
-		DB9289EE2FFF5E310054B34A /* ARMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D32FFF5E310054B34A /* ARMinimapView.swift */; };
-		DB9289EF2FFF5E310054B34A /* RelativeARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E32FFF5E310054B34A /* RelativeARViewContainer.swift */; };
-		DB9289F02FFF5E310054B34A /* RelativeUserARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E42FFF5E310054B34A /* RelativeUserARView.swift */; };
-		DB9289F12FFF5E310054B34A /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D92FFF5E310054B34A /* ImagePicker.swift */; };
 		DB9289F22FFF5E310054B34A /* AppClipRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E12FFF5E310054B34A /* AppClipRootView.swift */; };
-		DB9289F32FFF5E310054B34A /* ARSurveyBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D42FFF5E310054B34A /* ARSurveyBoard.swift */; };
-		DB9289F42FFF5E310054B34A /* EmojiCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D82FFF5E310054B34A /* EmojiCelebrationView.swift */; };
 		DB9289F52FFF5E310054B34A /* Checkpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C52FFF5E310054B34A /* Checkpoint.swift */; };
-		DB9289F62FFF5E310054B34A /* MessageBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DB2FFF5E310054B34A /* MessageBoardEntity.swift */; };
-		DB9289F72FFF5E310054B34A /* MCQBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DA2FFF5E310054B34A /* MCQBoardEntity.swift */; };
 		DB9289F82FFF5E310054B34A /* WalkableAspirationSceneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C32FFF5E310054B34A /* WalkableAspirationSceneController.swift */; };
 		DB9289F92FFF5E310054B34A /* WalkableAspirationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C22FFF5E310054B34A /* WalkableAspirationManager.swift */; };
 		DB9289FA2FFF5E310054B34A /* CitizenARViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C02FFF5E310054B34A /* CitizenARViewModel.swift */; };
-		DB9289FB2FFF5E310054B34A /* CheckpointFormContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D72FFF5E310054B34A /* CheckpointFormContent.swift */; };
-		DB9289FC2FFF5E310054B34A /* TutorialPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DE2FFF5E310054B34A /* TutorialPopup.swift */; };
-		DB9289FD2FFF5E310054B34A /* CheckpointBoardLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D62FFF5E310054B34A /* CheckpointBoardLoader.swift */; };
-		DB9289FE2FFF5E310054B34A /* TextFieldBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DD2FFF5E310054B34A /* TextFieldBottomSheet.swift */; };
-		DB9289FF2FFF5E310054B34A /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E52FFF5E310054B34A /* WelcomeView.swift */; };
-		DB928A002FFF5E310054B34A /* PhotoGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DC2FFF5E310054B34A /* PhotoGalleryView.swift */; };
-		DB928A012FFF5E310054B34A /* WalkableAspirationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DF2FFF5E310054B34A /* WalkableAspirationButton.swift */; };
 		DB928A022FFF5E310054B34A /* appclipicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = DB9289C82FFF5E310054B34A /* appclipicon_tanyale.icon */; };
 		DB928A032FFF5E310054B34A /* tanyale_map_illustrationx2.svg in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CD2FFF5E310054B34A /* tanyale_map_illustrationx2.svg */; };
 		DB928A042FFF5E310054B34A /* Lele_Checkpoint.usdz in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CC2FFF5E310054B34A /* Lele_Checkpoint.usdz */; };
@@ -51,31 +35,15 @@
 		DB928A0E2FFF5E310054B34A /* appicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CA2FFF5E310054B34A /* appicon_tanyale.icon */; };
 		DB928A0F2FFF5E310054B34A /* appicon.png in Resources */ = {isa = PBXBuildFile; fileRef = DB9289C92FFF5E310054B34A /* appicon.png */; };
 		DB928A102FFF5E310054B34A /* MockDatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D02FFF5E310054B34A /* MockDatabaseService.swift */; };
-		DB928A112FFF5E310054B34A /* ARWalkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E22FFF5E310054B34A /* ARWalkView.swift */; };
 		DB928A122FFF5E310054B34A /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C12FFF5E310054B34A /* LocationManager.swift */; };
 		DB928A132FFF5E310054B34A /* BrandTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D52FFF5E310054B34A /* BrandTheme.swift */; };
 		DB928A142FFF5E310054B34A /* WalkableAspiration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C62FFF5E310054B34A /* WalkableAspiration.swift */; };
 		DB928A152FFF5E310054B34A /* MockPhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D12FFF5E310054B34A /* MockPhotoService.swift */; };
-		DB928A162FFF5E310054B34A /* ARMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D32FFF5E310054B34A /* ARMinimapView.swift */; };
-		DB928A172FFF5E310054B34A /* RelativeARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E32FFF5E310054B34A /* RelativeARViewContainer.swift */; };
-		DB928A182FFF5E310054B34A /* RelativeUserARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E42FFF5E310054B34A /* RelativeUserARView.swift */; };
-		DB928A192FFF5E310054B34A /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D92FFF5E310054B34A /* ImagePicker.swift */; };
 		DB928A1A2FFF5E310054B34A /* AppClipRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E12FFF5E310054B34A /* AppClipRootView.swift */; };
-		DB928A1B2FFF5E310054B34A /* ARSurveyBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D42FFF5E310054B34A /* ARSurveyBoard.swift */; };
-		DB928A1C2FFF5E310054B34A /* EmojiCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D82FFF5E310054B34A /* EmojiCelebrationView.swift */; };
 		DB928A1D2FFF5E310054B34A /* Checkpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C52FFF5E310054B34A /* Checkpoint.swift */; };
-		DB928A1E2FFF5E310054B34A /* MessageBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DB2FFF5E310054B34A /* MessageBoardEntity.swift */; };
-		DB928A1F2FFF5E310054B34A /* MCQBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DA2FFF5E310054B34A /* MCQBoardEntity.swift */; };
 		DB928A202FFF5E310054B34A /* WalkableAspirationSceneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C32FFF5E310054B34A /* WalkableAspirationSceneController.swift */; };
 		DB928A212FFF5E310054B34A /* WalkableAspirationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C22FFF5E310054B34A /* WalkableAspirationManager.swift */; };
 		DB928A222FFF5E310054B34A /* CitizenARViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C02FFF5E310054B34A /* CitizenARViewModel.swift */; };
-		DB928A232FFF5E310054B34A /* CheckpointFormContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D72FFF5E310054B34A /* CheckpointFormContent.swift */; };
-		DB928A242FFF5E310054B34A /* TutorialPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DE2FFF5E310054B34A /* TutorialPopup.swift */; };
-		DB928A252FFF5E310054B34A /* CheckpointBoardLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D62FFF5E310054B34A /* CheckpointBoardLoader.swift */; };
-		DB928A262FFF5E310054B34A /* TextFieldBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DD2FFF5E310054B34A /* TextFieldBottomSheet.swift */; };
-		DB928A272FFF5E310054B34A /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E52FFF5E310054B34A /* WelcomeView.swift */; };
-		DB928A282FFF5E310054B34A /* PhotoGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DC2FFF5E310054B34A /* PhotoGalleryView.swift */; };
-		DB928A292FFF5E310054B34A /* WalkableAspirationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DF2FFF5E310054B34A /* WalkableAspirationButton.swift */; };
 		DB928A432FFF5E740054B34A /* JourneySetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A3A2FFF5E740054B34A /* JourneySetupView.swift */; };
 		DB928A442FFF5E740054B34A /* CheckpointListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A332FFF5E740054B34A /* CheckpointListView.swift */; };
 		DB928A452FFF5E740054B34A /* JourneyDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A362FFF5E740054B34A /* JourneyDetailView.swift */; };
@@ -141,24 +109,8 @@
 		DB9289CE2FFF5E310054B34A /* tanyale_map_illustrationx3.svg */ = {isa = PBXFileReference; lastKnownFileType = text; path = tanyale_map_illustrationx3.svg; sourceTree = "<group>"; };
 		DB9289D02FFF5E310054B34A /* MockDatabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDatabaseService.swift; sourceTree = "<group>"; };
 		DB9289D12FFF5E310054B34A /* MockPhotoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPhotoService.swift; sourceTree = "<group>"; };
-		DB9289D32FFF5E310054B34A /* ARMinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARMinimapView.swift; sourceTree = "<group>"; };
-		DB9289D42FFF5E310054B34A /* ARSurveyBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSurveyBoard.swift; sourceTree = "<group>"; };
 		DB9289D52FFF5E310054B34A /* BrandTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandTheme.swift; sourceTree = "<group>"; };
-		DB9289D62FFF5E310054B34A /* CheckpointBoardLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointBoardLoader.swift; sourceTree = "<group>"; };
-		DB9289D72FFF5E310054B34A /* CheckpointFormContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointFormContent.swift; sourceTree = "<group>"; };
-		DB9289D82FFF5E310054B34A /* EmojiCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCelebrationView.swift; sourceTree = "<group>"; };
-		DB9289D92FFF5E310054B34A /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
-		DB9289DA2FFF5E310054B34A /* MCQBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCQBoardEntity.swift; sourceTree = "<group>"; };
-		DB9289DB2FFF5E310054B34A /* MessageBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBoardEntity.swift; sourceTree = "<group>"; };
-		DB9289DC2FFF5E310054B34A /* PhotoGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGalleryView.swift; sourceTree = "<group>"; };
-		DB9289DD2FFF5E310054B34A /* TextFieldBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldBottomSheet.swift; sourceTree = "<group>"; };
-		DB9289DE2FFF5E310054B34A /* TutorialPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialPopup.swift; sourceTree = "<group>"; };
-		DB9289DF2FFF5E310054B34A /* WalkableAspirationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationButton.swift; sourceTree = "<group>"; };
 		DB9289E12FFF5E310054B34A /* AppClipRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipRootView.swift; sourceTree = "<group>"; };
-		DB9289E22FFF5E310054B34A /* ARWalkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARWalkView.swift; sourceTree = "<group>"; };
-		DB9289E32FFF5E310054B34A /* RelativeARViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeARViewContainer.swift; sourceTree = "<group>"; };
-		DB9289E42FFF5E310054B34A /* RelativeUserARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeUserARView.swift; sourceTree = "<group>"; };
-		DB9289E52FFF5E310054B34A /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
 		DB928A2A2FFF5E740054B34A /* TanyaLeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TanyaLeApp.swift; sourceTree = "<group>"; };
 		DB928A2C2FFF5E740054B34A /* MakerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakerViewModel.swift; sourceTree = "<group>"; };
 		DB928A2E2FFF5E740054B34A /* ARPlacementPrototypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPlacementPrototypeView.swift; sourceTree = "<group>"; };
@@ -185,6 +137,26 @@
 		AA07A9382FFE0B7300CCB838 /* TanyaleAppClip */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = TanyaleAppClip;
+			sourceTree = "<group>";
+		};
+		AAF2C116300010B2009F2199 /* Aspiration */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Aspiration;
+			sourceTree = "<group>";
+		};
+		AAF2C117300010C2009F2199 /* Task */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Task;
+			sourceTree = "<group>";
+		};
+		AAF2C118300010E8009F2199 /* Main View */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Main View";
+			sourceTree = "<group>";
+		};
+		AAF2C11930001115009F2199 /* Map */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Map;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -273,19 +245,11 @@
 		DB9289E02FFF5E310054B34A /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				DB9289D32FFF5E310054B34A /* ARMinimapView.swift */,
-				DB9289D42FFF5E310054B34A /* ARSurveyBoard.swift */,
+				AAF2C11930001115009F2199 /* Map */,
+				AAF2C118300010E8009F2199 /* Main View */,
+				AAF2C117300010C2009F2199 /* Task */,
+				AAF2C116300010B2009F2199 /* Aspiration */,
 				DB9289D52FFF5E310054B34A /* BrandTheme.swift */,
-				DB9289D62FFF5E310054B34A /* CheckpointBoardLoader.swift */,
-				DB9289D72FFF5E310054B34A /* CheckpointFormContent.swift */,
-				DB9289D82FFF5E310054B34A /* EmojiCelebrationView.swift */,
-				DB9289D92FFF5E310054B34A /* ImagePicker.swift */,
-				DB9289DA2FFF5E310054B34A /* MCQBoardEntity.swift */,
-				DB9289DB2FFF5E310054B34A /* MessageBoardEntity.swift */,
-				DB9289DC2FFF5E310054B34A /* PhotoGalleryView.swift */,
-				DB9289DD2FFF5E310054B34A /* TextFieldBottomSheet.swift */,
-				DB9289DE2FFF5E310054B34A /* TutorialPopup.swift */,
-				DB9289DF2FFF5E310054B34A /* WalkableAspirationButton.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -295,10 +259,6 @@
 			children = (
 				DB9289E02FFF5E310054B34A /* Components */,
 				DB9289E12FFF5E310054B34A /* AppClipRootView.swift */,
-				DB9289E22FFF5E310054B34A /* ARWalkView.swift */,
-				DB9289E32FFF5E310054B34A /* RelativeARViewContainer.swift */,
-				DB9289E42FFF5E310054B34A /* RelativeUserARView.swift */,
-				DB9289E52FFF5E310054B34A /* WelcomeView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -391,6 +351,12 @@
 			dependencies = (
 				AA07A9422FFE0B7400CCB838 /* PBXTargetDependency */,
 			);
+			fileSystemSynchronizedGroups = (
+				AAF2C116300010B2009F2199 /* Aspiration */,
+				AAF2C117300010C2009F2199 /* Task */,
+				AAF2C118300010E8009F2199 /* Main View */,
+				AAF2C11930001115009F2199 /* Map */,
+			);
 			name = TanyaLe;
 			packageProductDependencies = (
 			);
@@ -412,6 +378,10 @@
 			);
 			fileSystemSynchronizedGroups = (
 				AA07A9382FFE0B7300CCB838 /* TanyaleAppClip */,
+				AAF2C116300010B2009F2199 /* Aspiration */,
+				AAF2C117300010C2009F2199 /* Task */,
+				AAF2C118300010E8009F2199 /* Main View */,
+				AAF2C11930001115009F2199 /* Map */,
 			);
 			name = TanyaleAppClip;
 			packageProductDependencies = (
@@ -496,21 +466,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB9289E82FFF5E310054B34A /* MockDatabaseService.swift in Sources */,
-				DB9289E92FFF5E310054B34A /* ARWalkView.swift in Sources */,
 				DB9289EA2FFF5E310054B34A /* LocationManager.swift in Sources */,
 				DB9289EB2FFF5E310054B34A /* BrandTheme.swift in Sources */,
 				DB9289EC2FFF5E310054B34A /* WalkableAspiration.swift in Sources */,
 				DB9289ED2FFF5E310054B34A /* MockPhotoService.swift in Sources */,
-				DB9289EE2FFF5E310054B34A /* ARMinimapView.swift in Sources */,
-				DB9289EF2FFF5E310054B34A /* RelativeARViewContainer.swift in Sources */,
-				DB9289F02FFF5E310054B34A /* RelativeUserARView.swift in Sources */,
-				DB9289F12FFF5E310054B34A /* ImagePicker.swift in Sources */,
 				DB9289F22FFF5E310054B34A /* AppClipRootView.swift in Sources */,
-				DB9289F32FFF5E310054B34A /* ARSurveyBoard.swift in Sources */,
-				DB9289F42FFF5E310054B34A /* EmojiCelebrationView.swift in Sources */,
 				DB9289F52FFF5E310054B34A /* Checkpoint.swift in Sources */,
-				DB9289F62FFF5E310054B34A /* MessageBoardEntity.swift in Sources */,
-				DB9289F72FFF5E310054B34A /* MCQBoardEntity.swift in Sources */,
 				DB9289F82FFF5E310054B34A /* WalkableAspirationSceneController.swift in Sources */,
 				DB9289F92FFF5E310054B34A /* WalkableAspirationManager.swift in Sources */,
 				DB9289FA2FFF5E310054B34A /* CitizenARViewModel.swift in Sources */,
@@ -534,13 +495,6 @@
 				DB928A542FFF5E740054B34A /* JourneyLandingView.swift in Sources */,
 				DB928A552FFF5E740054B34A /* MakerResponsesView.swift in Sources */,
 				DB928A562FFF5E740054B34A /* JourneyARPlacementView.swift in Sources */,
-				DB9289FB2FFF5E310054B34A /* CheckpointFormContent.swift in Sources */,
-				DB9289FC2FFF5E310054B34A /* TutorialPopup.swift in Sources */,
-				DB9289FD2FFF5E310054B34A /* CheckpointBoardLoader.swift in Sources */,
-				DB9289FE2FFF5E310054B34A /* TextFieldBottomSheet.swift in Sources */,
-				DB9289FF2FFF5E310054B34A /* WelcomeView.swift in Sources */,
-				DB928A002FFF5E310054B34A /* PhotoGalleryView.swift in Sources */,
-				DB928A012FFF5E310054B34A /* WalkableAspirationButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -550,31 +504,15 @@
 			files = (
 				AA5E76462FFEC265009F664A /* (null) in Sources */,
 				DB928A102FFF5E310054B34A /* MockDatabaseService.swift in Sources */,
-				DB928A112FFF5E310054B34A /* ARWalkView.swift in Sources */,
 				DB928A122FFF5E310054B34A /* LocationManager.swift in Sources */,
 				DB928A132FFF5E310054B34A /* BrandTheme.swift in Sources */,
 				DB928A142FFF5E310054B34A /* WalkableAspiration.swift in Sources */,
 				DB928A152FFF5E310054B34A /* MockPhotoService.swift in Sources */,
-				DB928A162FFF5E310054B34A /* ARMinimapView.swift in Sources */,
-				DB928A172FFF5E310054B34A /* RelativeARViewContainer.swift in Sources */,
-				DB928A182FFF5E310054B34A /* RelativeUserARView.swift in Sources */,
-				DB928A192FFF5E310054B34A /* ImagePicker.swift in Sources */,
 				DB928A1A2FFF5E310054B34A /* AppClipRootView.swift in Sources */,
-				DB928A1B2FFF5E310054B34A /* ARSurveyBoard.swift in Sources */,
-				DB928A1C2FFF5E310054B34A /* EmojiCelebrationView.swift in Sources */,
 				DB928A1D2FFF5E310054B34A /* Checkpoint.swift in Sources */,
-				DB928A1E2FFF5E310054B34A /* MessageBoardEntity.swift in Sources */,
-				DB928A1F2FFF5E310054B34A /* MCQBoardEntity.swift in Sources */,
 				DB928A202FFF5E310054B34A /* WalkableAspirationSceneController.swift in Sources */,
 				DB928A212FFF5E310054B34A /* WalkableAspirationManager.swift in Sources */,
 				DB928A222FFF5E310054B34A /* CitizenARViewModel.swift in Sources */,
-				DB928A232FFF5E310054B34A /* CheckpointFormContent.swift in Sources */,
-				DB928A242FFF5E310054B34A /* TutorialPopup.swift in Sources */,
-				DB928A252FFF5E310054B34A /* CheckpointBoardLoader.swift in Sources */,
-				DB928A262FFF5E310054B34A /* TextFieldBottomSheet.swift in Sources */,
-				DB928A272FFF5E310054B34A /* WelcomeView.swift in Sources */,
-				DB928A282FFF5E310054B34A /* PhotoGalleryView.swift in Sources */,
-				DB928A292FFF5E310054B34A /* WalkableAspirationButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -788,7 +726,7 @@
 				CODE_SIGN_ENTITLEMENTS = TanyaleAppClip/TanyaleAppClip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8QT63UDSK5;
+				DEVELOPMENT_TEAM = VX33BG7ZDD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "TanyaLe App Clip";
@@ -806,7 +744,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ian.TanyaLe.Clip;
+				PRODUCT_BUNDLE_IDENTIFIER = com.al.TanyaLe.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -826,7 +764,7 @@
 				CODE_SIGN_ENTITLEMENTS = TanyaleAppClip/TanyaleAppClip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8QT63UDSK5;
+				DEVELOPMENT_TEAM = VX33BG7ZDD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "TanyaLe App Clip";
@@ -844,7 +782,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ian.TanyaLe.Clip;
+				PRODUCT_BUNDLE_IDENTIFIER = com.al.TanyaLe.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
