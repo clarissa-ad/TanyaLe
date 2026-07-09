@@ -15,7 +15,7 @@ struct WelcomeView: View {
     private let primary700 = Color(red: 0.278, green: 0.0, blue: 0.6)        // #470099
 
     private var brandGradient: LinearGradient {
-        .brand()
+        .brandPurpleButton()
     }
 
     var body: some View {
