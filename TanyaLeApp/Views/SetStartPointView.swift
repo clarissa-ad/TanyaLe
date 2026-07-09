@@ -165,7 +165,7 @@ struct SetStartPointView: View {
                 locationManager.improveAccuracy()
             }
             .fullScreenCover(isPresented: $showARPlacement) {
-                JourneyARPlacementView(journey: journey)
+                RelativeMakerARView(journey: journey)
             }
         }
     }
