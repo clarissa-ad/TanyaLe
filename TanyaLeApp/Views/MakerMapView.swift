@@ -2,7 +2,7 @@ import SwiftUI
 import MapKit
 
 struct MakerMapView: View {
-    @State private var locationManager = LocationManager()
+    private var locationManager = LocationManager.shared
     @State private var viewModel = MakerViewModel()
     
     /// Default map zoom level.
