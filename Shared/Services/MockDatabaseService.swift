@@ -31,7 +31,19 @@ class MockDatabaseService {
                 longitude: 106.816666,
                 relativeX: 0,
                 relativeY: 0,
-                relativeZ: -3.0
+                relativeZ: 0
+            ),
+            Checkpoint(
+                title: "Trash Can Checkpoint",
+                taskDescription: "Does this look good?",
+                interactionType: .mcq,
+                question: "How is the trash can situation here?",
+                surveyOptions: ["Yes, looks good", "Needs replacement", "Overflowing"],
+                latitude: -6.200000,
+                longitude: 106.816666,
+                relativeX: 0,
+                relativeY: 0,
+                relativeZ: 0
             )
         ]
     }
