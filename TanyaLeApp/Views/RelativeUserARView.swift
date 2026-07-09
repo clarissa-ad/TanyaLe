@@ -10,7 +10,12 @@ struct RelativeUserARView: View {
     
     /// When set, the bottom half of the screen fills with this emoji.
     @State private var celebrationEmoji: String?
-    
+
+    /// When set, shows the read-only asset detail sheet ("Read more" on a
+    /// Like/Dislike card).
+    @State private var showingAssetDetail = false
+    @State private var presentedAssetId: String?
+
     // Photobooth state
     @State private var showingImagePicker = false
     @State private var showingGallery = false
@@ -171,6 +176,20 @@ struct RelativeUserARView: View {
                                     .font(.subheadline)
                                     .foregroundStyle(.secondary)
                             }
+                        } else if cp.hasLikeDislike {
+                            // LIKE/DISLIKE: voted on the floating AR card itself
+                            Text(cp.question)
+                                .font(.headline)
+
+                            if let votes = db.likeDislikeVotes[cp.id] {
+                                Label("\(votes.likes) 👍 · \(votes.dislikes) 👎 so far", systemImage: "chart.bar.fill")
+                                    .font(.body.bold())
+                                    .foregroundStyle(.green)
+                            } else {
+                                Label("Tap 👍 or 👎 on the floating card", systemImage: "hand.tap")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
                         } else if cp.interactionType == .photobooth {
                             HStack {
                                 Button(action: {
@@ -184,7 +203,7 @@ struct RelativeUserARView: View {
                                         .foregroundStyle(.white)
                                         .cornerRadius(10)
                                 }
-                                
+
                                 Button(action: {
                                     activeCheckpoint = cp
                                     showingGallery = true
@@ -199,6 +218,9 @@ struct RelativeUserARView: View {
                             }
                         } else if cp.interactionType == .emojiSlider {
                             Label("Emoji slider needs a question configured", systemImage: "face.smiling")
+                                .foregroundStyle(.secondary)
+                        } else if cp.interactionType == .likedislike {
+                            Label("Like/Dislike needs a question configured", systemImage: "hand.thumbsup")
                                 .foregroundStyle(.secondary)
                         } else {
                             Text(cp.taskDescription)
@@ -238,6 +260,19 @@ struct RelativeUserARView: View {
                 PhotoGalleryView(checkpoint: cp)
             }
         }
+        .sheet(isPresented: $showingAssetDetail) {
+            if let presentedAssetId {
+                NavigationStack {
+                    AssetDetailView(assetId: presentedAssetId)
+                        .navigationBarItems(trailing: Button {
+                            showingAssetDetail = false
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.secondary)
+                        })
+                }
+            }
+        }
         .onDisappear {
             viewModel.stopTracking()
         }
@@ -259,11 +294,19 @@ struct RelativeUserARView: View {
         }
     }
 
+    /// Presents the read-only asset detail sheet for "Read more" on a
+    /// Like/Dislike card.
+    private func showAssetDetail(_ assetId: String) {
+        presentedAssetId = assetId
+        showingAssetDetail = true
+    }
+
     private func loadCheckpoints() {
         CheckpointBoardLoader.load(
             into: arContainer,
             checkpoints: db.checkpoints,
-            onEmojiCelebration: showEmojiCelebration
+            onEmojiCelebration: showEmojiCelebration,
+            onShowAssetDetail: showAssetDetail
         )
     }
 }

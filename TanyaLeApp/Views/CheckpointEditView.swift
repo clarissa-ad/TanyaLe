@@ -15,6 +15,7 @@ struct CheckpointEditView: View {
     @State private var emojiLeft: String
     @State private var emojiRight: String
     @State private var selectedAssetId: String?
+    @State private var showingAssetPicker = false
 
     @State private var newOption: String = ""
     init(checkpoint: Checkpoint) {
@@ -39,9 +40,10 @@ struct CheckpointEditView: View {
                 surveyOptions: $surveyOptions,
                 emojiLeft: $emojiLeft,
                 emojiRight: $emojiRight,
-                selectedAssetId: $selectedAssetId
+                selectedAssetId: $selectedAssetId,
+                showingAssetPicker: $showingAssetPicker
             )
-            
+
             if interactionType == .photobooth, let cp = db.checkpoints.first(where: { $0.id == checkpointId }) {
                 Section {
                     NavigationLink(destination: MakerResponsesView(checkpoint: cp)) {
@@ -58,6 +60,9 @@ struct CheckpointEditView: View {
                 saveChanges()
             }
         })
+        .sheet(isPresented: $showingAssetPicker) {
+            AssetPickerView(selectedAssetId: $selectedAssetId)
+        }
     }
     
     private func saveChanges() {

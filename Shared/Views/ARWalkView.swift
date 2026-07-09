@@ -30,6 +30,11 @@ struct ARWalkView: View {
     /// When set, the bottom half of the screen fills with this emoji.
     @State private var celebrationEmoji: String?
 
+    /// When set, shows the read-only asset detail sheet ("Read more" on a
+    /// Like/Dislike card).
+    @State private var showingAssetDetail = false
+    @State private var presentedAssetId: String?
+
     var body: some View {
         ZStack {
             // Background is a live AR camera (not an image).
@@ -89,6 +94,19 @@ struct ARWalkView: View {
         }
         .navigationTitle("Walk")
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showingAssetDetail) {
+            if let presentedAssetId {
+                NavigationStack {
+                    AssetDetailView(assetId: presentedAssetId)
+                        .navigationBarItems(trailing: Button {
+                            showingAssetDetail = false
+                        } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .foregroundStyle(.secondary)
+                        })
+                }
+            }
+        }
     }
 
     // MARK: - Subviews
@@ -132,11 +150,27 @@ struct ARWalkView: View {
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
+            } else if cp.hasLikeDislike {
+                Text(cp.question)
+                    .font(.headline)
+
+                if let votes = db.likeDislikeVotes[cp.id] {
+                    Label("\(votes.likes) 👍 · \(votes.dislikes) 👎 so far", systemImage: "chart.bar.fill")
+                        .font(.body.bold())
+                        .foregroundColor(.green)
+                } else {
+                    Label("Tap 👍 or 👎 on the floating card", systemImage: "hand.tap")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
             } else if cp.interactionType == .photobooth {
                 Label("Photobooth interaction coming soon", systemImage: "camera")
                     .foregroundColor(.secondary)
             } else if cp.interactionType == .emojiSlider {
                 Label("Emoji slider needs a question configured", systemImage: "face.smiling")
+                    .foregroundColor(.secondary)
+            } else if cp.interactionType == .likedislike {
+                Label("Like/Dislike needs a question configured", systemImage: "hand.thumbsup")
                     .foregroundColor(.secondary)
             } else {
                 Text(cp.taskDescription)
@@ -167,7 +201,8 @@ struct ARWalkView: View {
                     CheckpointBoardLoader.load(
                         into: arContainer,
                         checkpoints: db.checkpoints,
-                        onEmojiCelebration: showEmojiCelebration
+                        onEmojiCelebration: showEmojiCelebration,
+                        onShowAssetDetail: showAssetDetail
                     )
                     viewModel.startTracking(arContainer: arContainer)
                     return
@@ -226,6 +261,13 @@ struct ARWalkView: View {
                 celebrationEmoji = nil
             }
         }
+    }
+
+    /// Presents the read-only asset detail sheet for "Read more" on a
+    /// Like/Dislike card.
+    private func showAssetDetail(_ assetId: String) {
+        presentedAssetId = assetId
+        showingAssetDetail = true
     }
 }
 

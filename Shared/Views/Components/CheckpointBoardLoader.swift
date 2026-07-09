@@ -8,9 +8,11 @@
 import RealityKit
 import UIKit
 
-/// Drops checkpoints into a shared AR scene: a green marker box for every
-/// checkpoint, plus an interactive MCQ / emoji-slider board that faces the
-/// camera for survey checkpoints, or a floating title label otherwise.
+/// Drops checkpoints into a shared AR scene: an interactive MCQ /
+/// emoji-slider board for survey checkpoints, the real placed `.usdz` for
+/// Like/Dislike checkpoints, or a green marker box with a floating title
+/// label for anything else (including a Like/Dislike checkpoint whose asset
+/// has no real model yet).
 ///
 /// Shared by every AR screen that renders the same survey world (e.g.
 /// `RelativeUserARView`, `ARWalkView`) so the board-building logic lives in
@@ -21,12 +23,17 @@ enum CheckpointBoardLoader {
     ///     entities / interactive boards with.
     ///   - checkpoints: the checkpoints to render.
     ///   - onEmojiCelebration: called with the chosen emoji when an emoji-slider
-    ///     board is submitted, so the host view can play its celebration.
+    ///     or Like/Dislike board is submitted, so the host view can play its
+    ///     celebration.
+    ///   - onShowAssetDetail: called with an asset id when a citizen taps
+    ///     "Read more" on a Like/Dislike card, so the host view can present
+    ///     the read-only asset detail sheet.
     @MainActor
     static func load(
         into arContainer: RelativeUserARView.ARContainer,
         checkpoints: [Checkpoint],
-        onEmojiCelebration: @escaping (String) -> Void
+        onEmojiCelebration: @escaping (String) -> Void,
+        onShowAssetDetail: @escaping (String) -> Void
     ) {
         guard let arView = arContainer.view else { return }
 
@@ -34,12 +41,30 @@ enum CheckpointBoardLoader {
             let position = SIMD3<Float>(cp.relativeX, cp.relativeY, cp.relativeZ)
             let anchor = AnchorEntity(world: position)
 
-            let boxMesh = MeshResource.generateBox(size: 0.2)
-            let material = SimpleMaterial(color: .green, isMetallic: true)
-            let boxEntity = ModelEntity(mesh: boxMesh, materials: [material])
-            anchor.addChild(boxEntity)
+            // Every checkpoint type except a placeable Like/Dislike asset
+            // gets this box as its ground marker — the real 3D asset marks
+            // its own spot, so it doesn't need one too.
+            func addMarkerBox() -> ModelEntity {
+                let boxMesh = MeshResource.generateBox(size: 0.2)
+                let material = SimpleMaterial(color: .green, isMetallic: true)
+                let boxEntity = ModelEntity(mesh: boxMesh, materials: [material])
+                anchor.addChild(boxEntity)
+                return boxEntity
+            }
+
+            // Deliberately NOT `cp.hasLikeDislike` — that also requires a
+            // non-empty question, which matters for a future answer/vote
+            // UI but has nothing to do with whether the 3D object itself
+            // can be shown. Matches the exact gate the maker's placement
+            // flow uses (`RelativeMakerARView.saveCheckpoint`), so a
+            // checkpoint that got a live preview there always renders here
+            // too, question or no question.
+            let placeableAssetId = cp.interactionType == .likedislike
+                ? cp.selectedAssetId.flatMap { id in AssetPlacementConfig.config(forAssetId: id) != nil ? id : nil }
+                : nil
 
             if cp.hasMCQ || cp.hasEmojiSlider {
+                _ = addMarkerBox()
                 // Interactive survey card floats above the marker box. It gets
                 // yawed toward the camera every frame, staying upright like a
                 // beacon, and answers are given by tapping the card itself.
@@ -64,7 +89,52 @@ enum CheckpointBoardLoader {
                         arContainer.boardControllers.append(controller)
                     }
                 }
+            } else if let assetId = placeableAssetId {
+                // Same `Asset3DLoader` the maker's placement preview uses —
+                // already scaled and ground-snapped — so the citizen sees
+                // exactly what was confirmed, just with the rotation
+                // already locked in instead of being drag-adjustable.
+                Task { @MainActor in
+                    // Tracks the asset's height so the vote card (built
+                    // below, once loading finishes either way) floats
+                    // above it instead of guessing a fixed offset.
+                    var assetHeightMeters: Float = 1.0
+                    do {
+                        let entity = try await Asset3DLoader.load(assetId: assetId)
+                        anchor.addChild(entity)
+                        entity.transform.rotation = simd_quatf(angle: cp.assetRotationY, axis: [0, 1, 0])
+                        assetHeightMeters = entity.visualBounds(relativeTo: anchor).extents.y
+                    } catch {
+                        print("CheckpointBoardLoader: failed to load asset '\(assetId)' for checkpoint \(cp.id): \(error)")
+                    }
+
+                    // The card only needs a question to be meaningful — a
+                    // Like/Dislike checkpoint whose question isn't filled in
+                    // yet still shows the asset above, just without a card.
+                    guard cp.hasLikeDislike else { return }
+                    let assetDescription = MockAssetService.shared.asset(withId: assetId)?.description ?? ""
+
+                    let controller = await LikeDislikeBoardController.make(
+                        for: cp,
+                        assetDescription: assetDescription,
+                        onVote: { isLike in
+                            MockDatabaseService.shared.recordVote(checkpointID: cp.id, isLike: isLike)
+                            onEmojiCelebration(isLike ? "👍" : "👎")
+                        },
+                        onReadMore: {
+                            onShowAssetDetail(assetId)
+                        }
+                    )
+
+                    if let controller {
+                        controller.rootEntity.position = [0, assetHeightMeters + 0.3, 0]
+                        anchor.addChild(controller.rootEntity)
+                        arContainer.faceCameraEntities.append(controller.rootEntity)
+                        arContainer.boardControllers.append(controller)
+                    }
+                }
             } else {
+                let boxEntity = addMarkerBox()
                 // No survey configured yet: show a floating title label instead.
                 let textMesh = MeshResource.generateText(
                     cp.title,

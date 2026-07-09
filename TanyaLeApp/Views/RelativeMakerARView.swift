@@ -18,10 +18,26 @@ struct RelativeMakerARView: View {
     @State private var tempEmojiLeft: String = ""
     @State private var tempEmojiRight: String = ""
     @State private var tempSelectedAssetId: String?
+    @State private var showingAssetPicker = false
     @State private var pendingTransform: SIMD3<Float>?
-    
+    /// True while a Like/Dislike asset is previewed live in the scene,
+    /// waiting for the maker to drag-rotate it and confirm or cancel.
+    @State private var isConfirmingPlacement = false
+
+    /// Degrees nudged per tap of the left/right rotate buttons during
+    /// placement. Free drag still works on top of these.
+    private let rotationStepDegrees: Float = 45
+
     class ARContainer {
         var view: ARView?
+        /// The asset currently being drag-rotated before placement is
+        /// confirmed. Exactly one at a time — the pan gesture always
+        /// targets this, no hit-testing needed.
+        var activePlacement: AssetPlacementController?
+        /// The anchor holding `activePlacement`'s entity, kept separately
+        /// so a cancelled placement can be removed from the scene entirely
+        /// (`activePlacement` only knows how to remove its own entity).
+        var pendingPlacementAnchor: AnchorEntity?
     }
     private let arContainer = ARContainer()
     
@@ -91,6 +107,56 @@ struct RelativeMakerARView: View {
                     }
                     .padding(20)
                     .padding(.bottom, 20)
+                } else if isConfirmingPlacement {
+                    // Step 3: Asset is live in the scene — drag anywhere, or
+                    // tap left/right to rotate it, then confirm or cancel
+                    // the placement.
+                    VStack(spacing: 12) {
+                        Text("Drag or tap left/right to rotate")
+                            .font(.caption)
+                            .padding(8)
+                            .background(Color.black.opacity(0.7))
+                            .foregroundStyle(.white)
+                            .cornerRadius(8)
+
+                        HStack(spacing: 24) {
+                            Button {
+                                arContainer.activePlacement?.nudgeRotation(byDegrees: -rotationStepDegrees)
+                            } label: {
+                                Image(systemName: "rotate.left")
+                                    .font(.system(size: 20, weight: .bold))
+                                    .foregroundStyle(.white)
+                                    .frame(width: 44, height: 44)
+                                    .background(Color.black.opacity(0.6))
+                                    .clipShape(Circle())
+                            }
+                            Button {
+                                arContainer.activePlacement?.nudgeRotation(byDegrees: rotationStepDegrees)
+                            } label: {
+                                Image(systemName: "rotate.right")
+                                    .font(.system(size: 20, weight: .bold))
+                                    .foregroundStyle(.white)
+                                    .frame(width: 44, height: 44)
+                                    .background(Color.black.opacity(0.6))
+                                    .clipShape(Circle())
+                            }
+                        }
+
+                        HStack(spacing: 12) {
+                            Button("Cancel") {
+                                cancelPlacement()
+                            }
+                            .buttonStyle(.bordered)
+
+                            Button("Confirm Placement") {
+                                confirmPlacement()
+                            }
+                            .buttonStyle(.borderedProminent)
+                        }
+                        .controlSize(.large)
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 30)
                 } else {
                     // Step 2: Walk around and aim with crosshair to drop checkpoints
                     Button(action: {
@@ -154,7 +220,8 @@ struct RelativeMakerARView: View {
                         surveyOptions: $tempSurveyOptions,
                         emojiLeft: $tempEmojiLeft,
                         emojiRight: $tempEmojiRight,
-                        selectedAssetId: $tempSelectedAssetId
+                        selectedAssetId: $tempSelectedAssetId,
+                        showingAssetPicker: $showingAssetPicker
                     )
                 }
                 .navigationTitle("New Checkpoint")
@@ -169,22 +236,87 @@ struct RelativeMakerARView: View {
                     }
                     .disabled(tempTitle.isEmpty)
                 )
+                .sheet(isPresented: $showingAssetPicker) {
+                    AssetPickerView(selectedAssetId: $tempSelectedAssetId)
+                }
             }
         }
     }
     
     private func saveCheckpoint(at position: SIMD3<Float>) {
         guard let arView = arContainer.view else { return }
-        
-        // Spawn the box visually
+
+        // Like/Dislike with a real, placeable asset gets a live preview the
+        // maker can rotate before confirming, instead of an instant save.
+        if tempInteractionType == .likedislike,
+           let assetId = tempSelectedAssetId,
+           AssetPlacementConfig.config(forAssetId: assetId) != nil {
+            showingAddSheet = false
+            beginAssetPlacementPreview(assetId: assetId, at: position, in: arView)
+            return
+        }
+
+        // Every other checkpoint type keeps the original instant-save
+        // behavior: a placeholder box marks the spot.
         let anchor = AnchorEntity(world: position)
         let boxMesh = MeshResource.generateBox(size: 0.15)
         let material = SimpleMaterial(color: .purple, isMetallic: true)
         let boxEntity = ModelEntity(mesh: boxMesh, materials: [material])
         anchor.addChild(boxEntity)
         arView.scene.addAnchor(anchor)
-        
-        // Save to DB
+
+        persistCheckpoint(at: position, assetRotationY: 0)
+    }
+
+    /// Anchors the selected asset at `position` and loads its real model
+    /// into the scene, then switches the UI into "confirm or cancel"
+    /// placement mode. The checkpoint is NOT saved yet — only
+    /// `confirmPlacement()` persists it, so cancelling leaves no trace.
+    private func beginAssetPlacementPreview(assetId: String, at position: SIMD3<Float>, in arView: ARView) {
+        let anchor = AnchorEntity(world: position)
+        arView.scene.addAnchor(anchor)
+        arContainer.pendingPlacementAnchor = anchor
+
+        Task { @MainActor in
+            do {
+                let controller = try await AssetPlacementController.make(assetId: assetId, anchor: anchor)
+                arContainer.activePlacement = controller
+                isConfirmingPlacement = true
+            } catch {
+                // Model failed to load (e.g. resource missing) — don't
+                // strand the maker mid-flow. Drop the empty anchor and
+                // fall back to saving a plain checkpoint at that spot.
+                print("AssetPlacementController failed to load \(assetId): \(error)")
+                arView.scene.removeAnchor(anchor)
+                arContainer.pendingPlacementAnchor = nil
+                persistCheckpoint(at: position, assetRotationY: 0)
+            }
+        }
+    }
+
+    /// Saves the checkpoint with whatever rotation the maker dragged the
+    /// preview to, and leaves the now-confirmed asset exactly where it is.
+    private func confirmPlacement() {
+        guard let position = pendingTransform else { return }
+        let rotationY = arContainer.activePlacement?.rotationY ?? 0
+        persistCheckpoint(at: position, assetRotationY: rotationY)
+        arContainer.activePlacement = nil
+        arContainer.pendingPlacementAnchor = nil
+        isConfirmingPlacement = false
+    }
+
+    /// Discards the live preview without saving anything.
+    private func cancelPlacement() {
+        if let anchor = arContainer.pendingPlacementAnchor {
+            arContainer.view?.scene.removeAnchor(anchor)
+        }
+        arContainer.activePlacement = nil
+        arContainer.pendingPlacementAnchor = nil
+        isConfirmingPlacement = false
+        resetTempState()
+    }
+
+    private func persistCheckpoint(at position: SIMD3<Float>, assetRotationY: Float) {
         viewModel.addCheckpointAt(
             transform: position,
             title: tempTitle,
@@ -194,10 +326,13 @@ struct RelativeMakerARView: View {
             surveyOptions: tempSurveyOptions.filter { !$0.isEmpty },
             emojiLeft: tempEmojiLeft,
             emojiRight: tempEmojiRight,
-            selectedAssetId: tempSelectedAssetId
+            selectedAssetId: tempSelectedAssetId,
+            assetRotationY: assetRotationY
         )
+        resetTempState()
+    }
 
-        // Reset sheet state
+    private func resetTempState() {
         tempTitle = ""
         tempDesc = ""
         tempInteractionType = .none
@@ -218,18 +353,34 @@ struct RelativeMakerARViewContainer: UIViewRepresentable {
     }
 
     /// Keeps a handle to the container so the session can be torn down when
-    /// the view is dismantled.
+    /// the view is dismantled, and routes the drag-to-rotate gesture to
+    /// whichever asset placement is currently pending confirmation.
     @MainActor
-    class Coordinator {
+    class Coordinator: NSObject {
         let arContainer: RelativeMakerARView.ARContainer
 
         init(arContainer: RelativeMakerARView.ARContainer) {
             self.arContainer = arContainer
         }
+
+        @objc func handlePan(_ recognizer: UIPanGestureRecognizer) {
+            guard let activePlacement = arContainer.activePlacement else { return }
+            guard recognizer.state == .changed else { return }
+
+            // Reading + resetting translation each `.changed` event gives a
+            // clean per-frame delta instead of an ever-growing total.
+            let translation = recognizer.translation(in: recognizer.view)
+            activePlacement.rotate(byScreenDeltaX: translation.x)
+            recognizer.setTranslation(.zero, in: recognizer.view)
+        }
     }
 
     func makeUIView(context: Context) -> ARView {
         let arView = ARView(frame: .zero)
+
+        let panRecognizer = UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handlePan(_:)))
+        panRecognizer.maximumNumberOfTouches = 1
+        arView.addGestureRecognizer(panRecognizer)
 
         let config = ARWorldTrackingConfiguration()
         config.planeDetection = [.horizontal, .vertical]
@@ -246,7 +397,10 @@ struct RelativeMakerARViewContainer: UIViewRepresentable {
         // Pause the camera session when leaving so reopening the AR screen
         // starts from a clean state instead of a frozen feed.
         uiView.session.pause()
+        uiView.gestureRecognizers?.forEach(uiView.removeGestureRecognizer)
         coordinator.arContainer.view = nil
+        coordinator.arContainer.activePlacement = nil
+        coordinator.arContainer.pendingPlacementAnchor = nil
     }
 }
 

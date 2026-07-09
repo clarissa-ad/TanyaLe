@@ -34,8 +34,14 @@ struct Checkpoint: Identifiable, Codable, Equatable {
     // Stores a reference to an Asset3D by id rather than a copy of its data,
     // so MockAssetService stays the single source of truth — editing an
     // asset's description keeps every checkpoint that references it in sync.
-    // Reuses `question` above for the custom Like/Dislike question.
+    // Reuses `question` above for the custom Like/Dislike question, and
+    // relativeX/Y/Z below for the asset's placement position (it IS the
+    // checkpoint's position — no separate offset).
     var selectedAssetId: String?
+
+    /// Y-axis rotation (radians) the maker chose while placing the 3D
+    /// asset in AR, applied on top of `AssetPlacementConfig`'s default.
+    var assetRotationY: Float = 0
 
     /// Whether this checkpoint has a complete multiple choice question to display.
     var hasMCQ: Bool {

@@ -9,9 +9,15 @@ struct CheckpointFormContent: View {
     @Binding var emojiLeft: String
     @Binding var emojiRight: String
     @Binding var selectedAssetId: String?
+    /// Owned by the parent (not local `@State`) and its `.sheet` is
+    /// attached at the parent's level, outside the `Form` — a `.sheet`
+    /// attached to content living inside a `Form`'s rows can get torn down
+    /// by SwiftUI's own diffing before the user picks anything, dismissing
+    /// itself for no visible reason. Attaching it outside the row content
+    /// avoids that.
+    @Binding var showingAssetPicker: Bool
 
     @State private var newOption: String = ""
-    @State private var showingAssetPicker = false
 
     private var selectedAsset: Asset3D? {
         guard let selectedAssetId else { return nil }
@@ -19,12 +25,7 @@ struct CheckpointFormContent: View {
     }
 
     var body: some View {
-        Group {
-            formSections
-        }
-        .sheet(isPresented: $showingAssetPicker) {
-            AssetPickerView(selectedAssetId: $selectedAssetId)
-        }
+        formSections
     }
 
     @ViewBuilder

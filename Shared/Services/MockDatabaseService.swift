@@ -16,6 +16,12 @@ class MockDatabaseService {
     /// Selected MCQ answer per checkpoint ID (in-memory only).
     var responses: [UUID: String] = [:]
 
+    /// Like/Dislike vote tallies per checkpoint (in-memory only). Kept
+    /// separate from `responses` since that's a single "last answer" slot —
+    /// Like/Dislike needs a running count of both sides, not just the most
+    /// recent vote.
+    var likeDislikeVotes: [UUID: (likes: Int, dislikes: Int)] = [:]
+
     // The locked GPS coordinate c where the AR Origin was set
     var surveyOrigin: CLLocationCoordinate2D?
     
@@ -49,6 +55,17 @@ class MockDatabaseService {
     func saveResponse(checkpointID: UUID, answer: String) {
         responses[checkpointID] = answer
         print("Mock DB: Saved MCQ answer '\(answer)' for checkpoint \(checkpointID)")
+    }
+
+    func recordVote(checkpointID: UUID, isLike: Bool) {
+        var tally = likeDislikeVotes[checkpointID] ?? (likes: 0, dislikes: 0)
+        if isLike {
+            tally.likes += 1
+        } else {
+            tally.dislikes += 1
+        }
+        likeDislikeVotes[checkpointID] = tally
+        print("Mock DB: Recorded \(isLike ? "like" : "dislike") for checkpoint \(checkpointID). Now \(tally.likes) likes, \(tally.dislikes) dislikes")
     }
 
     func updateCheckpoint(_ checkpoint: Checkpoint) {

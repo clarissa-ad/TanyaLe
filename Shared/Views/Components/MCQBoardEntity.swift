@@ -413,6 +413,241 @@ final class EmojiSliderBoardController: ARSurveyBoard {
     }
 }
 
+// MARK: - Like/Dislike card
+
+/// Builds and drives the interactive floating Like/Dislike card: the
+/// checkpoint's question, a preview of the placed asset's description with
+/// a "Read more" link, and two speech-bubble vote buttons floating below
+/// the card. Voting swaps the card to a thank-you state (same pattern as
+/// `SurveyCard.swapToThankYouCard`, just with different content) and
+/// highlights the chosen bubble while dimming the other — the bubbles
+/// themselves are never rebuilt, only their materials change, the same way
+/// `MCQBoardController` re-styles an option row on selection.
+@MainActor
+final class LikeDislikeBoardController: ARSurveyBoard {
+
+    let rootEntity = Entity()
+
+    private let checkpoint: Checkpoint
+    private let assetDescription: String
+    private let onVote: (Bool) -> Void
+    private let onReadMore: () -> Void
+
+    /// Holds just the swappable card content (background + text), separate
+    /// from the bubbles so voting can rebuild one without touching the other.
+    private var cardEntity: Entity?
+    private var readMoreEntity: ModelEntity?
+    private var likeBubble: ModelEntity?
+    private var dislikeBubble: ModelEntity?
+    private var likeMaterials: (normal: UnlitMaterial, chosen: UnlitMaterial, dimmed: UnlitMaterial)?
+    private var dislikeMaterials: (normal: UnlitMaterial, chosen: UnlitMaterial, dimmed: UnlitMaterial)?
+    private var bubbleYPosition: Float = 0
+    private var isSubmitted = false
+
+    private init(checkpoint: Checkpoint, assetDescription: String, onVote: @escaping (Bool) -> Void, onReadMore: @escaping () -> Void) {
+        self.checkpoint = checkpoint
+        self.assetDescription = assetDescription
+        self.onVote = onVote
+        self.onReadMore = onReadMore
+    }
+
+    /// Creates the interactive card for a checkpoint, or nil when it has no
+    /// complete Like/Dislike question. Async because texture uploads to the
+    /// GPU are async.
+    static func make(
+        for checkpoint: Checkpoint,
+        assetDescription: String,
+        onVote: @escaping (Bool) -> Void,
+        onReadMore: @escaping () -> Void
+    ) async -> LikeDislikeBoardController? {
+        guard checkpoint.hasLikeDislike else { return nil }
+        let controller = LikeDislikeBoardController(
+            checkpoint: checkpoint,
+            assetDescription: assetDescription,
+            onVote: onVote,
+            onReadMore: onReadMore
+        )
+        guard await controller.buildCard() else { return nil }
+        return controller
+    }
+
+    func handleTap(on tappedEntity: Entity, at worldPosition: SIMD3<Float>?, cameraPosition: SIMD3<Float>) -> Bool {
+        // Proximity gate: ignore taps from too far away.
+        let boardPosition = rootEntity.position(relativeTo: nil)
+        guard simd_distance(boardPosition, cameraPosition) <= SurveyCard.maxInteractionDistance else { return false }
+
+        if tappedEntity === readMoreEntity {
+            onReadMore()
+            return true
+        }
+        guard !isSubmitted else { return false }
+        if tappedEntity === likeBubble {
+            vote(isLike: true)
+            return true
+        }
+        if tappedEntity === dislikeBubble {
+            vote(isLike: false)
+            return true
+        }
+        return false
+    }
+
+    private func vote(isLike: Bool) {
+        guard !isSubmitted else { return }
+        isSubmitted = true
+
+        if let likeMaterials {
+            likeBubble?.model?.materials = [isLike ? likeMaterials.chosen : likeMaterials.dimmed]
+        }
+        if let dislikeMaterials {
+            dislikeBubble?.model?.materials = [isLike ? dislikeMaterials.dimmed : dislikeMaterials.chosen]
+        }
+
+        onVote(isLike)
+        Task { @MainActor in
+            await swapToThankYouCard()
+        }
+    }
+
+    /// A circular tap target (unlike `SurveyCard.pieceEntity`, which is
+    /// always a plain rectangle) — matches the emoji slider knob's trick of
+    /// shaping the *mesh* as a circle so the piece's square white
+    /// background gets clipped away by the geometry.
+    private func bubbleEntity(_ piece: SurveyCard.RenderedPiece, tappable: Bool) -> ModelEntity {
+        let diameterMeters = Float(piece.sizePoints.width) * SurveyCard.metersPerPoint
+        let mesh = MeshResource.generatePlane(width: diameterMeters, height: diameterMeters, cornerRadius: diameterMeters / 2)
+        let entity = ModelEntity(mesh: mesh, materials: [piece.material])
+        if tappable {
+            entity.collision = CollisionComponent(shapes: [
+                .generateBox(width: diameterMeters, height: diameterMeters, depth: 0.01)
+            ])
+        }
+        return entity
+    }
+
+    private func buildCard() async -> Bool {
+        guard let question = await SurveyCard.renderPiece(QuestionTextView(text: checkpoint.question)),
+              let description = await SurveyCard.renderPiece(AssetDescriptionPreviewView(text: assetDescription)),
+              let readMore = await SurveyCard.renderPiece(ReadMoreLinkView()),
+              let likeNormal = await SurveyCard.renderPiece(VoteBubbleView(emoji: "👍", appearance: .normal)),
+              let likeChosen = await SurveyCard.renderPiece(VoteBubbleView(emoji: "👍", appearance: .chosen)),
+              let likeDimmed = await SurveyCard.renderPiece(VoteBubbleView(emoji: "👍", appearance: .dimmed)),
+              let dislikeNormal = await SurveyCard.renderPiece(VoteBubbleView(emoji: "👎", appearance: .normal)),
+              let dislikeChosen = await SurveyCard.renderPiece(VoteBubbleView(emoji: "👎", appearance: .chosen)),
+              let dislikeDimmed = await SurveyCard.renderPiece(VoteBubbleView(emoji: "👎", appearance: .dimmed))
+        else { return false }
+
+        let cardHeight = buildCardContent(question: question, description: description, readMore: readMore)
+
+        let s = SurveyCard.metersPerPoint
+        bubbleYPosition = -Float(cardHeight) * s / 2 - Float(likeNormal.sizePoints.height) * s / 2 - Float(SurveyCard.sectionSpacingPoints) * s
+        let bubbleGapMeters: Float = 0.03
+
+        let likeEntity = bubbleEntity(likeNormal, tappable: true)
+        likeEntity.position = [-Float(likeNormal.sizePoints.width) * s / 2 - bubbleGapMeters / 2, bubbleYPosition, 0.002]
+        rootEntity.addChild(likeEntity)
+        likeBubble = likeEntity
+        likeMaterials = (likeNormal.material, likeChosen.material, likeDimmed.material)
+
+        let dislikeEntity = bubbleEntity(dislikeNormal, tappable: true)
+        dislikeEntity.position = [Float(dislikeNormal.sizePoints.width) * s / 2 + bubbleGapMeters / 2, bubbleYPosition, 0.002]
+        rootEntity.addChild(dislikeEntity)
+        dislikeBubble = dislikeEntity
+        dislikeMaterials = (dislikeNormal.material, dislikeChosen.material, dislikeDimmed.material)
+
+        return true
+    }
+
+    /// Builds the question/description/"Read more" card into a fresh
+    /// `cardEntity` and adds it to `rootEntity`. Returns the card's height
+    /// in points, for positioning the bubbles below it.
+    @discardableResult
+    private func buildCardContent(
+        question: SurveyCard.RenderedPiece,
+        description: SurveyCard.RenderedPiece,
+        readMore: SurveyCard.RenderedPiece
+    ) -> CGFloat {
+        let s = SurveyCard.metersPerPoint
+
+        var contentHeight = question.sizePoints.height + SurveyCard.sectionSpacingPoints
+        contentHeight += description.sizePoints.height + SurveyCard.optionSpacingPoints
+        contentHeight += readMore.sizePoints.height
+        let cardHeight = contentHeight + SurveyCard.paddingPoints * 2
+
+        let card = Entity()
+        card.addChild(SurveyCard.backgroundEntity(cardHeightPoints: cardHeight))
+
+        var cursor = Float(cardHeight) * s / 2 - Float(SurveyCard.paddingPoints) * s
+
+        let questionEntity = SurveyCard.pieceEntity(question)
+        questionEntity.position = [0, cursor - Float(question.sizePoints.height) * s / 2, 0.002]
+        card.addChild(questionEntity)
+        cursor -= Float(question.sizePoints.height + SurveyCard.sectionSpacingPoints) * s
+
+        let descriptionEntity = SurveyCard.pieceEntity(description)
+        descriptionEntity.position = [0, cursor - Float(description.sizePoints.height) * s / 2, 0.002]
+        card.addChild(descriptionEntity)
+        cursor -= Float(description.sizePoints.height + SurveyCard.optionSpacingPoints) * s
+
+        let readMoreEntity = SurveyCard.pieceEntity(readMore, tappable: true)
+        readMoreEntity.position = [0, cursor - Float(readMore.sizePoints.height) * s / 2, 0.002]
+        card.addChild(readMoreEntity)
+        self.readMoreEntity = readMoreEntity
+
+        rootEntity.addChild(card)
+        cardEntity?.removeFromParent()
+        cardEntity = card
+
+        return cardHeight
+    }
+
+    /// Rebuilds just `cardEntity` with the thank-you content. The bubbles
+    /// stay exactly where they are — only their materials changed, in `vote(isLike:)`.
+    private func swapToThankYouCard() async {
+        guard let header = await SurveyCard.renderPiece(VoteThankYouHeaderView()),
+              let description = await SurveyCard.renderPiece(AssetDescriptionPreviewView(text: assetDescription)),
+              let readMore = await SurveyCard.renderPiece(ReadMoreLinkView()),
+              let explore = await SurveyCard.renderPiece(ExploreMoreView())
+        else { return }
+
+        let s = SurveyCard.metersPerPoint
+        var contentHeight = header.sizePoints.height + SurveyCard.sectionSpacingPoints
+        contentHeight += description.sizePoints.height + SurveyCard.optionSpacingPoints
+        contentHeight += readMore.sizePoints.height + SurveyCard.sectionSpacingPoints
+        contentHeight += explore.sizePoints.height
+        let cardHeight = contentHeight + SurveyCard.paddingPoints * 2
+
+        let card = Entity()
+        card.addChild(SurveyCard.backgroundEntity(cardHeightPoints: cardHeight))
+
+        var cursor = Float(cardHeight) * s / 2 - Float(SurveyCard.paddingPoints) * s
+
+        let headerEntity = SurveyCard.pieceEntity(header)
+        headerEntity.position = [0, cursor - Float(header.sizePoints.height) * s / 2, 0.002]
+        card.addChild(headerEntity)
+        cursor -= Float(header.sizePoints.height + SurveyCard.sectionSpacingPoints) * s
+
+        let descriptionEntity = SurveyCard.pieceEntity(description)
+        descriptionEntity.position = [0, cursor - Float(description.sizePoints.height) * s / 2, 0.002]
+        card.addChild(descriptionEntity)
+        cursor -= Float(description.sizePoints.height + SurveyCard.optionSpacingPoints) * s
+
+        let readMoreEntity = SurveyCard.pieceEntity(readMore, tappable: true)
+        readMoreEntity.position = [0, cursor - Float(readMore.sizePoints.height) * s / 2, 0.002]
+        card.addChild(readMoreEntity)
+        self.readMoreEntity = readMoreEntity
+        cursor -= Float(readMore.sizePoints.height + SurveyCard.sectionSpacingPoints) * s
+
+        let exploreEntity = SurveyCard.pieceEntity(explore)
+        exploreEntity.position = [0, cursor - Float(explore.sizePoints.height) * s / 2, 0.002]
+        card.addChild(exploreEntity)
+
+        rootEntity.addChild(card)
+        cardEntity?.removeFromParent()
+        cardEntity = card
+    }
+}
+
 // MARK: - Card piece designs (rendered to textures)
 
 private struct QuestionTextView: View {
@@ -506,6 +741,89 @@ private struct ThankYouCardView: View {
         .padding(28)
         .frame(width: 340)
         .background(Color.white)
+    }
+}
+
+private struct AssetDescriptionPreviewView: View {
+    let text: String
+
+    var body: some View {
+        Text(text)
+            .font(.system(size: 15))
+            .foregroundStyle(.gray)
+            .lineLimit(3)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(width: 292, alignment: .leading)
+            .background(Color.white)
+    }
+}
+
+private struct ReadMoreLinkView: View {
+    var body: some View {
+        Text("Read more...")
+            .font(.system(size: 14, weight: .semibold))
+            .foregroundStyle(tanyaPurple)
+            .frame(width: 292, alignment: .leading)
+            .background(Color.white)
+    }
+}
+
+private struct VoteThankYouHeaderView: View {
+    var body: some View {
+        VStack(spacing: 8) {
+            Text("🎉")
+                .font(.system(size: 44))
+            Text("Thank you for filling!")
+                .font(.system(size: 20, weight: .bold))
+                .foregroundStyle(.black)
+        }
+        .frame(width: 292)
+        .background(Color.white)
+    }
+}
+
+private struct ExploreMoreView: View {
+    var body: some View {
+        Text("Explore more")
+            .font(.system(size: 15, weight: .semibold))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 24)
+            .padding(.vertical, 10)
+            .background(Capsule().fill(tanyaPurple))
+            .padding(4)
+            .background(Color.white)
+    }
+}
+
+/// A vote bubble's visual state. `chosen`/`dimmed` are only used after the
+/// citizen votes — one bubble ends up highlighted, the other fades.
+private enum VoteBubbleAppearance {
+    case normal, chosen, dimmed
+}
+
+private struct VoteBubbleView: View {
+    let emoji: String
+    let appearance: VoteBubbleAppearance
+
+    private var fill: Color {
+        switch appearance {
+        case .normal: return .white
+        case .chosen: return tanyaPurple
+        case .dimmed: return Color(white: 0.85)
+        }
+    }
+
+    private var emojiOpacity: Double {
+        appearance == .dimmed ? 0.4 : 1
+    }
+
+    var body: some View {
+        Text(emoji)
+            .font(.system(size: 28))
+            .opacity(emojiOpacity)
+            .frame(width: 56, height: 56)
+            .background(Circle().fill(fill).shadow(color: .black.opacity(0.15), radius: 3, y: 2))
+            .background(Color.white)
     }
 }
 

@@ -13,15 +13,19 @@ import SwiftUI
 /// "Use this Item" action that commits the selection back to the picker.
 /// Description edits go straight through `MockAssetService`, so they apply
 /// to the shared asset record — not just the checkpoint being configured.
+///
+/// `onUseItem` is optional: pass it for Pak RT's asset-picker flow (shows
+/// Edit and "Use this Item"). Omit it for a plain read-only view — e.g. the
+/// citizen's "Read more" sheet, which only ever displays the description.
 struct AssetDetailView: View {
     let assetId: String
-    let onUseItem: () -> Void
+    let onUseItem: (() -> Void)?
 
     private let assetService = MockAssetService.shared
     @State private var isEditing = false
     @State private var draftDescription = ""
 
-    init(assetId: String, onUseItem: @escaping () -> Void) {
+    init(assetId: String, onUseItem: (() -> Void)? = nil) {
         self.assetId = assetId
         self.onUseItem = onUseItem
     }
@@ -46,13 +50,15 @@ struct AssetDetailView: View {
 
                         Spacer()
 
-                        Button(isEditing ? "Save" : "Edit") {
-                            if isEditing {
-                                assetService.updateDescription(draftDescription, forAssetId: asset.id)
-                            } else {
-                                draftDescription = asset.description
+                        if onUseItem != nil {
+                            Button(isEditing ? "Save" : "Edit") {
+                                if isEditing {
+                                    assetService.updateDescription(draftDescription, forAssetId: asset.id)
+                                } else {
+                                    draftDescription = asset.description
+                                }
+                                isEditing.toggle()
                             }
-                            isEditing.toggle()
                         }
                     }
 
@@ -74,16 +80,24 @@ struct AssetDetailView: View {
         .navigationTitle(asset?.name ?? "")
         .navigationBarTitleDisplayMode(.inline)
         .safeAreaInset(edge: .bottom) {
-            PrimaryActionButton(title: "Use this Item", isDisabled: isEditing) {
-                onUseItem()
+            if let onUseItem {
+                PrimaryActionButton(title: "Use this Item", isDisabled: isEditing) {
+                    onUseItem()
+                }
+                .padding()
             }
-            .padding()
         }
     }
 }
 
-#Preview {
+#Preview("Pak RT — pickable") {
     NavigationStack {
         AssetDetailView(assetId: "kandang_ayam") {}
+    }
+}
+
+#Preview("Citizen — read only") {
+    NavigationStack {
+        AssetDetailView(assetId: "kandang_ayam")
     }
 }
