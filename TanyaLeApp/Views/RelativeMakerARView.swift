@@ -21,8 +21,10 @@ struct RelativeMakerARView: View {
     @State private var tempInteractionType: Checkpoint.InteractionType = .none
     @State private var tempQuestion: String                            = ""
     @State private var tempSurveyOptions: [String]                     = []
-    @State private var tempEmojiLeft: String                           = ""
-    @State private var tempEmojiRight: String                          = ""
+    @State private var tempEmojiLeft: String                           = "👎"
+    @State private var tempEmojiRight: String                          = "👍"
+    @State private var tempPromptPhotoID: String?                      = nil
+    @State private var tempShowingImagePicker: Bool                    = false
 
     // Shared mutable bridge between SwiftUI and the UIViewRepresentable
     class ARContainer {
@@ -146,7 +148,9 @@ struct RelativeMakerARView: View {
                     question: $tempQuestion,
                     surveyOptions: $tempSurveyOptions,
                     emojiLeft: $tempEmojiLeft,
-                    emojiRight: $tempEmojiRight
+                    emojiRight: $tempEmojiRight,
+                    promptPhotoID: $tempPromptPhotoID,
+                    showingImagePicker: $tempShowingImagePicker
                 )
             }
             .navigationTitle("New Checkpoint")
@@ -214,7 +218,8 @@ struct RelativeMakerARView: View {
             question: tempQuestion.trimmingCharacters(in: .whitespaces),
             surveyOptions: tempSurveyOptions.filter { !$0.isEmpty },
             emojiLeft: tempEmojiLeft,
-            emojiRight: tempEmojiRight
+            emojiRight: tempEmojiRight,
+            promptPhotoID: tempPromptPhotoID
         )
 
         tempTitle           = ""
@@ -222,8 +227,10 @@ struct RelativeMakerARView: View {
         tempInteractionType = .none
         tempQuestion        = ""
         tempSurveyOptions   = []
-        tempEmojiLeft       = ""
-        tempEmojiRight      = ""
+        tempEmojiLeft       = "👎"
+        tempEmojiRight      = "👍"
+        tempPromptPhotoID   = nil
+        tempShowingImagePicker = false
         showingAddSheet     = false
     }
 }

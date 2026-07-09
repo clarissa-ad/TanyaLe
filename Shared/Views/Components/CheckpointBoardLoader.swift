@@ -86,7 +86,87 @@ enum CheckpointBoardLoader {
                 arContainer.faceCameraEntities.append(titleHolder)
             }
 
+            arContainer.checkpointAnchors[cp.id] = anchor
             arView.scene.addAnchor(anchor)
+            
+            // ── Load 3D Gallery Photos ──
+            if cp.interactionType == .photobooth {
+                let allPhotos = MockPhotoService.shared.fetchPhotos(forCheckpoint: cp.id)
+                
+                // You can adjust the max amount of image previews here:
+                let maxPreviews = 5
+                let photos = Array(allPhotos.prefix(maxPreviews))
+                
+                for (index, image) in photos.enumerated() {
+                    Task { @MainActor in
+                        if let entity = createPhotoEntity(from: image) {
+                            // Float slightly above and spread horizontally with wider spacing
+                            let spacing: Float = 0.5 // Adjust this to give more/less space
+                            let offset = Float(index) * spacing - Float(max(0, photos.count - 1)) * (spacing / 2)
+                            entity.position = [offset, 0.3 + Float(index % 2) * 0.05, 0]
+                            anchor.addChild(entity)
+                            arContainer.faceCameraEntities.append(entity)
+                        }
+                    }
+                }
+            }
         }
+    }
+    
+    @MainActor
+    static func createPhotoEntity(from image: UIImage) -> Entity? {
+        // Fix orientation (so it doesn't appear rotated 90 degrees)
+        let normalizedImage = normalizeOrientation(of: image)
+        
+        // Prepare materials
+        var mat = UnlitMaterial()
+        
+        // Attempt to generate texture from image
+        if let cgImage = normalizedImage.cgImage,
+           let tex = try? TextureResource.generate(from: cgImage, options: .init(semantic: .color)) {
+            mat.color = .init(tint: .white, texture: .init(tex))
+        } else if let ciImage = normalizedImage.ciImage {
+            // Fallback for CIImage backed UIImages
+            let context = CIContext()
+            if let cgImage = context.createCGImage(ciImage, from: ciImage.extent),
+               let tex = try? TextureResource.generate(from: cgImage, options: .init(semantic: .color)) {
+                mat.color = .init(tint: .white, texture: .init(tex))
+            } else {
+                mat.color = .init(tint: .blue) // Debug fallback
+            }
+        } else {
+            mat.color = .init(tint: .red) // Debug fallback
+        }
+        
+        let aspect = Float(normalizedImage.size.width / max(1, normalizedImage.size.height))
+        let w: Float = aspect > 1 ? 0.4 : 0.4 * aspect
+        let h: Float = aspect > 1 ? 0.4 / aspect : 0.4
+        
+        // A plane generated with width/height stands vertically facing +Z.
+        // It perfectly works with our yaw-only billboard rotation.
+        let mesh = MeshResource.generatePlane(width: w, height: h)
+        let model = ModelEntity(mesh: mesh, materials: [mat])
+        
+        // Add a slight white border backing by placing a slightly larger plane behind it
+        let borderMesh = MeshResource.generatePlane(width: w + 0.02, height: h + 0.02)
+        let borderMat = UnlitMaterial(color: .white)
+        let borderModel = ModelEntity(mesh: borderMesh, materials: [borderMat])
+        borderModel.position = [0, 0, -0.001]
+        
+        let holder = Entity()
+        holder.addChild(model)
+        holder.addChild(borderModel)
+        
+        return holder
+    }
+    
+    /// Bakes the UIImage's orientation into its pixel data so RealityKit doesn't render it sideways
+    private static func normalizeOrientation(of image: UIImage) -> UIImage {
+        if image.imageOrientation == .up { return image }
+        UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale)
+        image.draw(in: CGRect(origin: .zero, size: image.size))
+        let normalized = UIGraphicsGetImageFromCurrentImageContext() ?? image
+        UIGraphicsEndImageContext()
+        return normalized
     }
 }

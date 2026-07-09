@@ -14,6 +14,10 @@ struct RelativeUserARView: View {
     // Photobooth state
     @State private var showingImagePicker = false
     @State private var showingGallery = false
+    
+    // Photo Preview States
+    @State private var capturedPhotoForPreview: UIImage?
+    @State private var showingPhotoPreview = false
     @State private var selectedImage: UIImage?
     @State private var activeCheckpoint: Checkpoint?
     
@@ -29,6 +33,9 @@ struct RelativeUserARView: View {
         var arrowEntity: Entity?
         // Entities that should keep facing the camera (question boards, labels).
         var faceCameraEntities: [Entity] = []
+        /// Keeps track of anchors by Checkpoint ID so we can dynamically add items to them
+        var checkpointAnchors: [UUID: AnchorEntity] = [:]
+        
         var updateSubscription: Cancellable?
         // Interactive survey cards, so taps can be routed to them.
         var boardControllers: [any ARSurveyBoard] = []
@@ -229,8 +236,53 @@ struct RelativeUserARView: View {
         .sheet(isPresented: $showingImagePicker) {
             if let cp = activeCheckpoint {
                 PhotoboothCaptureView(checkpoint: cp) { image in
-                    MockPhotoService.shared.savePhoto(image: image, forCheckpoint: cp.id)
+                    // Instead of saving instantly, hold it for preview
+                    capturedPhotoForPreview = image
+                    // Small delay to allow the sheet to dismiss before presenting fullScreenCover
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        showingPhotoPreview = true
+                    }
                 }
+            }
+        }
+        .fullScreenCover(isPresented: $showingPhotoPreview) {
+            if let image = capturedPhotoForPreview, let cp = activeCheckpoint {
+                PhotoPreviewView(
+                    capturedImage: image,
+                    checkpoint: cp,
+                    onRetake: {
+                        capturedPhotoForPreview = nil
+                        showingPhotoPreview = false
+                        // Re-open camera after brief delay
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            showingImagePicker = true
+                        }
+                    },
+                    onExploreMore: {
+                         // Finalize the capture
+                        MockPhotoService.shared.savePhoto(image: image, forCheckpoint: cp.id)
+                        
+                        // Dynamically add the new photo into the 3D scene!
+                        if let anchor = arContainer.checkpointAnchors[cp.id] {
+                            // Find out how many photos already exist to position it correctly
+                            let photosCount = MockPhotoService.shared.fetchPhotos(forCheckpoint: cp.id).count
+                            
+                            Task { @MainActor in
+                                if let entity = CheckpointBoardLoader.createPhotoEntity(from: image) {
+                                    // Float slightly above and spread horizontally
+                                    let spacing: Float = 0.5
+                                    let offset = Float(photosCount - 1) * spacing - Float(photosCount) * (spacing / 2)
+                                    entity.position = [offset, 0.3 + Float(photosCount % 2) * 0.05, 0]
+                                    anchor.addChild(entity)
+                                    arContainer.faceCameraEntities.append(entity)
+                                }
+                            }
+                        }
+                        
+                        capturedPhotoForPreview = nil
+                        showingPhotoPreview = false
+                    }
+                )
             }
         }
         .sheet(isPresented: $showingGallery) {
