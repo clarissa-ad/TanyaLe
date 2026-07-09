@@ -174,13 +174,24 @@ struct RelativeMakerARView: View {
     private func saveCheckpoint(at position: SIMD3<Float>) {
         guard let arView = arContainer.view else { return }
         
-        // Spawn the box visually
+        // Spawn the Lele checkpoint model visually. Loading a .usdz is async, so
+        // we build it in a Task and fall back to a purple box if it can't load.
         let anchor = AnchorEntity(world: position)
-        let boxMesh = MeshResource.generateBox(size: 0.15)
-        let material = SimpleMaterial(color: .purple, isMetallic: true)
-        let boxEntity = ModelEntity(mesh: boxMesh, materials: [material])
-        anchor.addChild(boxEntity)
         arView.scene.addAnchor(anchor)
+        Task { @MainActor in
+            let marker: Entity
+            if let model = try? await Entity(named: "Lele_Checkpoint") {
+                marker = model
+                // The .usdz is ~2.4 m tall with a centred origin; scale it down
+                // and rest it on the anchor so it doesn't swallow the camera.
+                CheckpointBoardLoader.normalizeMarker(marker)
+            } else {
+                let boxMesh = MeshResource.generateBox(size: 0.15)
+                let material = SimpleMaterial(color: .purple, isMetallic: true)
+                marker = ModelEntity(mesh: boxMesh, materials: [material])
+            }
+            anchor.addChild(marker)
+        }
         
         // Save to DB
         viewModel.addCheckpointAt(

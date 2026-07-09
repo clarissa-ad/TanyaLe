@@ -33,14 +33,54 @@ enum CheckpointBoardLoader {
         for cp in checkpoints {
             let position = SIMD3<Float>(cp.relativeX, cp.relativeY, cp.relativeZ)
             let anchor = AnchorEntity(world: position)
+            arView.scene.addAnchor(anchor)
 
-            let boxMesh = MeshResource.generateBox(size: 0.2)
-            let material = SimpleMaterial(color: .green, isMetallic: true)
-            let boxEntity = ModelEntity(mesh: boxMesh, materials: [material])
-            anchor.addChild(boxEntity)
+            let isSurvey = cp.hasMCQ || cp.hasEmojiSlider
 
-            if cp.hasMCQ || cp.hasEmojiSlider {
-                // Interactive survey card floats above the marker box. It gets
+            // Load the Lele checkpoint model as the marker. Loading a .usdz is
+            // async, so we build it in a Task and fall back to a green box if it
+            // can't be found. The floating title label (non-survey checkpoints)
+            // is attached to whichever marker ends up being used.
+            Task { @MainActor in
+                let marker: Entity
+                if let model = try? await Entity(named: "Lele_Checkpoint") {
+                    marker = model
+                    // The .usdz is authored ~2.4 m tall with its origin at the
+                    // body centre; RealityKit treats 1 unit = 1 m, so scale it
+                    // down and drop it onto the anchor instead of swallowing it.
+                    normalizeMarker(marker)
+                } else {
+                    let boxMesh = MeshResource.generateBox(size: 0.2)
+                    let material = SimpleMaterial(color: .green, isMetallic: true)
+                    marker = ModelEntity(mesh: boxMesh, materials: [material])
+                }
+                anchor.addChild(marker)
+
+                if !isSurvey {
+                    // No survey configured yet: show a floating title label instead.
+                    let textMesh = MeshResource.generateText(
+                        cp.title,
+                        extrusionDepth: 0.01,
+                        font: .systemFont(ofSize: 0.1),
+                        containerFrame: .zero,
+                        alignment: .center,
+                        lineBreakMode: .byWordWrapping
+                    )
+                    let textEntity = ModelEntity(mesh: textMesh, materials: [SimpleMaterial(color: .white, isMetallic: false)])
+                    // Center the text on its holder so the camera-facing rotation
+                    // pivots around the middle instead of the glyphs' corner.
+                    textEntity.position = [-textMesh.bounds.center.x, 0, 0]
+
+                    let titleHolder = Entity()
+                    titleHolder.position = [0, 0.25, 0]
+                    titleHolder.addChild(textEntity)
+                    marker.addChild(titleHolder)
+                    arContainer.faceCameraEntities.append(titleHolder)
+                }
+            }
+
+            if isSurvey {
+                // Interactive survey card floats above the marker. It gets
                 // yawed toward the camera every frame, staying upright like a
                 // beacon, and answers are given by tapping the card itself.
                 Task { @MainActor in
@@ -64,29 +104,24 @@ enum CheckpointBoardLoader {
                         arContainer.boardControllers.append(controller)
                     }
                 }
-            } else {
-                // No survey configured yet: show a floating title label instead.
-                let textMesh = MeshResource.generateText(
-                    cp.title,
-                    extrusionDepth: 0.01,
-                    font: .systemFont(ofSize: 0.1),
-                    containerFrame: .zero,
-                    alignment: .center,
-                    lineBreakMode: .byWordWrapping
-                )
-                let textEntity = ModelEntity(mesh: textMesh, materials: [SimpleMaterial(color: .white, isMetallic: false)])
-                // Center the text on its holder so the camera-facing rotation
-                // pivots around the middle instead of the glyphs' corner.
-                textEntity.position = [-textMesh.bounds.center.x, 0, 0]
-
-                let titleHolder = Entity()
-                titleHolder.position = [0, 0.25, 0]
-                titleHolder.addChild(textEntity)
-                boxEntity.addChild(titleHolder)
-                arContainer.faceCameraEntities.append(titleHolder)
             }
-
-            arView.scene.addAnchor(anchor)
         }
+    }
+
+    /// Scales a freshly-loaded marker entity to a sensible AR size and lifts it
+    /// so its base rests on the anchor point. `.usdz` models are frequently
+    /// authored several metres tall with their origin at the centre; since
+    /// RealityKit maps 1 unit to 1 metre, dropping one in unmodified makes it
+    /// engulf the camera. Measuring the model's real bounds at runtime keeps
+    /// this correct even if the asset's authored size changes later.
+    @MainActor
+    static func normalizeMarker(_ marker: Entity, targetHeight: Float = 0.4) {
+        let bounds = marker.visualBounds(relativeTo: marker)
+        let height = bounds.extents.y
+        guard height > 0 else { return }
+        let scale = targetHeight / height
+        marker.scale = SIMD3<Float>(repeating: scale)
+        // After scaling, shift up so the lowest point sits at the anchor (y = 0).
+        marker.position.y = -bounds.min.y * scale
     }
 }
