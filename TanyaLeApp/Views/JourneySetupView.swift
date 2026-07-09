@@ -61,6 +61,7 @@ struct JourneySetupView: View {
                     }
                 }
             }
+            .dismissKeyboardOnTap()
             .navigationTitle("Create Journey")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -83,7 +84,12 @@ struct JourneySetupView: View {
                 locationManager.requestPermission()
             }
             .sheet(item: $newJourney) { journey in
-                SetStartPointView(journey: journey)
+                SetStartPointView(journey: journey, onFlowFinished: {
+                    // Dismissing this screen (the landing page's sheet) tears
+                    // down every sheet/cover above it in one go, landing the
+                    // maker back on the landing page.
+                    dismiss()
+                })
             }
         }
     }

@@ -10,7 +10,8 @@ import CoreLocation
 
 /// Represents a complete AR journey created by a maker.
 /// Contains metadata, starting point coordinates, and associated checkpoints.
-struct Journey: Identifiable, Codable {
+// Hashable so a Journey can drive `navigationDestination(item:)`.
+struct Journey: Identifiable, Codable, Hashable {
     var id: UUID
     var name: String
     var description: String

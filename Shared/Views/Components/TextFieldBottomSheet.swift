@@ -67,6 +67,7 @@ struct TextFieldBottomSheet: View {
             }
         }
         .padding(24)
+        .dismissKeyboardOnTap()
         .presentationBackground(.ultraThinMaterial)
         .presentationDetents([.medium, .large])
     }
