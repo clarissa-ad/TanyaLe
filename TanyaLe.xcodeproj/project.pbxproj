@@ -10,92 +10,92 @@
 		98374BE52FF759EB005D18E1 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 98374BC12FF759EB005D18E1 /* README.md */; };
 		AA07A9432FFE0B7400CCB838 /* TanyaleAppClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = AA07A9372FFE0B7300CCB838 /* TanyaleAppClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AA5E76462FFEC265009F664A /* (null) in Sources */ = {isa = PBXBuildFile; };
-		AABFC61F2FFF4B250079F1FF /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC5FA2FFF4B250079F1FF /* LocationManager.swift */; };
-		AABFC6202FFF4B250079F1FF /* MockPhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC60A2FFF4B250079F1FF /* MockPhotoService.swift */; };
-		AABFC6212FFF4B250079F1FF /* WalkableAspirationSceneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC5FC2FFF4B250079F1FF /* WalkableAspirationSceneController.swift */; };
-		AABFC6222FFF4B250079F1FF /* MCQBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6132FFF4B250079F1FF /* MCQBoardEntity.swift */; };
-		AABFC6232FFF4B250079F1FF /* TutorialPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6162FFF4B250079F1FF /* TutorialPopup.swift */; };
-		AABFC6242FFF4B250079F1FF /* Checkpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC5FE2FFF4B250079F1FF /* Checkpoint.swift */; };
-		AABFC6252FFF4B250079F1FF /* MockDatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6092FFF4B250079F1FF /* MockDatabaseService.swift */; };
-		AABFC6262FFF4B250079F1FF /* ARSurveyBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC60D2FFF4B250079F1FF /* ARSurveyBoard.swift */; };
-		AABFC6272FFF4B250079F1FF /* WalkableAspiration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC5FF2FFF4B250079F1FF /* WalkableAspiration.swift */; };
-		AABFC6282FFF4B250079F1FF /* AppClipRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6192FFF4B250079F1FF /* AppClipRootView.swift */; };
-		AABFC6292FFF4B250079F1FF /* TextFieldBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6152FFF4B250079F1FF /* TextFieldBottomSheet.swift */; };
-		AABFC62A2FFF4B250079F1FF /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC61C2FFF4B250079F1FF /* WelcomeView.swift */; };
-		AABFC62B2FFF4B250079F1FF /* ARWalkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC61A2FFF4B250079F1FF /* ARWalkView.swift */; };
-		AABFC62C2FFF4B250079F1FF /* ARMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC60C2FFF4B250079F1FF /* ARMinimapView.swift */; };
-		AABFC62D2FFF4B250079F1FF /* RelativeARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC61B2FFF4B250079F1FF /* RelativeARViewContainer.swift */; };
-		AABFC62E2FFF4B250079F1FF /* EmojiCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6112FFF4B250079F1FF /* EmojiCelebrationView.swift */; };
-		AABFC62F2FFF4B250079F1FF /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6122FFF4B250079F1FF /* ImagePicker.swift */; };
-		AABFC6302FFF4B250079F1FF /* WalkableAspirationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6172FFF4B250079F1FF /* WalkableAspirationButton.swift */; };
-		AABFC6312FFF4B250079F1FF /* CheckpointBoardLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC60F2FFF4B250079F1FF /* CheckpointBoardLoader.swift */; };
-		AABFC6322FFF4B250079F1FF /* CheckpointFormContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6102FFF4B250079F1FF /* CheckpointFormContent.swift */; };
-		AABFC6332FFF4B250079F1FF /* MessageBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6142FFF4B250079F1FF /* MessageBoardEntity.swift */; };
-		AABFC6342FFF4B250079F1FF /* WalkableAspirationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC5FB2FFF4B250079F1FF /* WalkableAspirationManager.swift */; };
-		AABFC6352FFF4B250079F1FF /* BrandTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC60E2FFF4B250079F1FF /* BrandTheme.swift */; };
-		AABFC6362FFF4B250079F1FF /* appicon.png in Resources */ = {isa = PBXBuildFile; fileRef = AABFC6022FFF4B250079F1FF /* appicon.png */; };
-		AABFC6372FFF4B250079F1FF /* appclipicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = AABFC6012FFF4B250079F1FF /* appclipicon_tanyale.icon */; };
-		AABFC6382FFF4B250079F1FF /* appicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = AABFC6032FFF4B250079F1FF /* appicon_tanyale.icon */; };
-		AABFC6392FFF4B250079F1FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AABFC6042FFF4B250079F1FF /* Assets.xcassets */; };
-		AABFC63A2FFF4B250079F1FF /* tanyale_map_illustrationx2.svg in Resources */ = {isa = PBXBuildFile; fileRef = AABFC6062FFF4B250079F1FF /* tanyale_map_illustrationx2.svg */; };
-		AABFC63B2FFF4B250079F1FF /* tanyale_map_illustrationx3.svg in Resources */ = {isa = PBXBuildFile; fileRef = AABFC6072FFF4B250079F1FF /* tanyale_map_illustrationx3.svg */; };
-		AABFC63C2FFF4B250079F1FF /* Lele_Checkpoint.usdz in Resources */ = {isa = PBXBuildFile; fileRef = AABFC6052FFF4B250079F1FF /* Lele_Checkpoint.usdz */; };
-		AABFC63D2FFF4B250079F1FF /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC5FA2FFF4B250079F1FF /* LocationManager.swift */; };
-		AABFC63E2FFF4B250079F1FF /* MockPhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC60A2FFF4B250079F1FF /* MockPhotoService.swift */; };
-		AABFC63F2FFF4B250079F1FF /* WalkableAspirationSceneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC5FC2FFF4B250079F1FF /* WalkableAspirationSceneController.swift */; };
-		AABFC6402FFF4B250079F1FF /* MCQBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6132FFF4B250079F1FF /* MCQBoardEntity.swift */; };
-		AABFC6412FFF4B250079F1FF /* TutorialPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6162FFF4B250079F1FF /* TutorialPopup.swift */; };
-		AABFC6422FFF4B250079F1FF /* Checkpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC5FE2FFF4B250079F1FF /* Checkpoint.swift */; };
-		AABFC6432FFF4B250079F1FF /* MockDatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6092FFF4B250079F1FF /* MockDatabaseService.swift */; };
-		AABFC6442FFF4B250079F1FF /* ARSurveyBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC60D2FFF4B250079F1FF /* ARSurveyBoard.swift */; };
-		AABFC6452FFF4B250079F1FF /* WalkableAspiration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC5FF2FFF4B250079F1FF /* WalkableAspiration.swift */; };
-		AABFC6462FFF4B250079F1FF /* AppClipRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6192FFF4B250079F1FF /* AppClipRootView.swift */; };
-		AABFC6472FFF4B250079F1FF /* TextFieldBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6152FFF4B250079F1FF /* TextFieldBottomSheet.swift */; };
-		AABFC6482FFF4B250079F1FF /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC61C2FFF4B250079F1FF /* WelcomeView.swift */; };
-		AABFC6492FFF4B250079F1FF /* ARWalkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC61A2FFF4B250079F1FF /* ARWalkView.swift */; };
-		AABFC64A2FFF4B250079F1FF /* ARMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC60C2FFF4B250079F1FF /* ARMinimapView.swift */; };
-		AABFC64B2FFF4B250079F1FF /* RelativeARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC61B2FFF4B250079F1FF /* RelativeARViewContainer.swift */; };
-		AABFC64C2FFF4B250079F1FF /* EmojiCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6112FFF4B250079F1FF /* EmojiCelebrationView.swift */; };
-		AABFC64D2FFF4B250079F1FF /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6122FFF4B250079F1FF /* ImagePicker.swift */; };
-		AABFC64E2FFF4B250079F1FF /* WalkableAspirationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6172FFF4B250079F1FF /* WalkableAspirationButton.swift */; };
-		AABFC64F2FFF4B250079F1FF /* CheckpointBoardLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC60F2FFF4B250079F1FF /* CheckpointBoardLoader.swift */; };
-		AABFC6502FFF4B250079F1FF /* CheckpointFormContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6102FFF4B250079F1FF /* CheckpointFormContent.swift */; };
-		AABFC6512FFF4B250079F1FF /* MessageBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6142FFF4B250079F1FF /* MessageBoardEntity.swift */; };
-		AABFC6522FFF4B250079F1FF /* WalkableAspirationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC5FB2FFF4B250079F1FF /* WalkableAspirationManager.swift */; };
-		AABFC6532FFF4B250079F1FF /* BrandTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC60E2FFF4B250079F1FF /* BrandTheme.swift */; };
-		AABFC6542FFF4B250079F1FF /* appicon.png in Resources */ = {isa = PBXBuildFile; fileRef = AABFC6022FFF4B250079F1FF /* appicon.png */; };
-		AABFC6552FFF4B250079F1FF /* appclipicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = AABFC6012FFF4B250079F1FF /* appclipicon_tanyale.icon */; };
-		AABFC6562FFF4B250079F1FF /* appicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = AABFC6032FFF4B250079F1FF /* appicon_tanyale.icon */; };
-		AABFC6572FFF4B250079F1FF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AABFC6042FFF4B250079F1FF /* Assets.xcassets */; };
-		AABFC6582FFF4B250079F1FF /* tanyale_map_illustrationx2.svg in Resources */ = {isa = PBXBuildFile; fileRef = AABFC6062FFF4B250079F1FF /* tanyale_map_illustrationx2.svg */; };
-		AABFC6592FFF4B250079F1FF /* tanyale_map_illustrationx3.svg in Resources */ = {isa = PBXBuildFile; fileRef = AABFC6072FFF4B250079F1FF /* tanyale_map_illustrationx3.svg */; };
-		AABFC65A2FFF4B250079F1FF /* Lele_Checkpoint.usdz in Resources */ = {isa = PBXBuildFile; fileRef = AABFC6052FFF4B250079F1FF /* Lele_Checkpoint.usdz */; };
-		AABFC6772FFF4B350079F1FF /* MakerResponsesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC66E2FFF4B350079F1FF /* MakerResponsesView.swift */; };
-		AABFC6782FFF4B350079F1FF /* JourneyLandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6692FFF4B350079F1FF /* JourneyLandingView.swift */; };
-		AABFC6792FFF4B350079F1FF /* Journey.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6662FFF4B350079F1FF /* Journey.swift */; };
-		AABFC67A2FFF4B350079F1FF /* SandboxDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6612FFF4B350079F1FF /* SandboxDashboardView.swift */; };
-		AABFC67B2FFF4B350079F1FF /* PhotoGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6702FFF4B350079F1FF /* PhotoGalleryView.swift */; };
-		AABFC67C2FFF4B350079F1FF /* RelativeUserARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6722FFF4B350079F1FF /* RelativeUserARView.swift */; };
-		AABFC67D2FFF4B350079F1FF /* PastJourneysListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC66F2FFF4B350079F1FF /* PastJourneysListView.swift */; };
-		AABFC67E2FFF4B350079F1FF /* WalkableAspirationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6622FFF4B350079F1FF /* WalkableAspirationView.swift */; };
-		AABFC67F2FFF4B350079F1FF /* JourneyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC66B2FFF4B350079F1FF /* JourneyService.swift */; };
-		AABFC6802FFF4B350079F1FF /* ARPlacementPrototypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6602FFF4B350079F1FF /* ARPlacementPrototypeView.swift */; };
-		AABFC6812FFF4B350079F1FF /* UserMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6742FFF4B350079F1FF /* UserMinimapView.swift */; };
-		AABFC6822FFF4B350079F1FF /* MakerMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC66D2FFF4B350079F1FF /* MakerMapView.swift */; };
-		AABFC6832FFF4B350079F1FF /* JourneyARPlacementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6672FFF4B350079F1FF /* JourneyARPlacementView.swift */; };
-		AABFC6842FFF4B350079F1FF /* CitizenARViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC65D2FFF4B350079F1FF /* CitizenARViewModel.swift */; };
-		AABFC6852FFF4B350079F1FF /* SetStartPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6732FFF4B350079F1FF /* SetStartPointView.swift */; };
-		AABFC6862FFF4B350079F1FF /* TanyaLeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC65B2FFF4B350079F1FF /* TanyaLeApp.swift */; };
-		AABFC6872FFF4B350079F1FF /* JourneyDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6682FFF4B350079F1FF /* JourneyDetailView.swift */; };
-		AABFC6882FFF4B350079F1FF /* JourneySetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC66C2FFF4B350079F1FF /* JourneySetupView.swift */; };
-		AABFC6892FFF4B350079F1FF /* JourneyPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC66A2FFF4B350079F1FF /* JourneyPreviewView.swift */; };
-		AABFC68A2FFF4B350079F1FF /* CheckpointEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6642FFF4B350079F1FF /* CheckpointEditView.swift */; };
-		AABFC68B2FFF4B350079F1FF /* MakerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC65E2FFF4B350079F1FF /* MakerViewModel.swift */; };
-		AABFC68C2FFF4B350079F1FF /* RelativeMakerARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6712FFF4B350079F1FF /* RelativeMakerARView.swift */; };
-		AABFC68D2FFF4B350079F1FF /* CheckpointListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6652FFF4B350079F1FF /* CheckpointListView.swift */; };
-		AABFC68E2FFF4B580079F1FF /* RelativeUserARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6722FFF4B350079F1FF /* RelativeUserARView.swift */; };
-		AABFC68F2FFF4B7B0079F1FF /* CitizenARViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC65D2FFF4B350079F1FF /* CitizenARViewModel.swift */; };
-		AABFC6902FFF4BA50079F1FF /* PhotoGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABFC6702FFF4B350079F1FF /* PhotoGalleryView.swift */; };
+		DB9289E82FFF5E310054B34A /* MockDatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D02FFF5E310054B34A /* MockDatabaseService.swift */; };
+		DB9289E92FFF5E310054B34A /* ARWalkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E22FFF5E310054B34A /* ARWalkView.swift */; };
+		DB9289EA2FFF5E310054B34A /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C12FFF5E310054B34A /* LocationManager.swift */; };
+		DB9289EB2FFF5E310054B34A /* BrandTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D52FFF5E310054B34A /* BrandTheme.swift */; };
+		DB9289EC2FFF5E310054B34A /* WalkableAspiration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C62FFF5E310054B34A /* WalkableAspiration.swift */; };
+		DB9289ED2FFF5E310054B34A /* MockPhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D12FFF5E310054B34A /* MockPhotoService.swift */; };
+		DB9289EE2FFF5E310054B34A /* ARMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D32FFF5E310054B34A /* ARMinimapView.swift */; };
+		DB9289EF2FFF5E310054B34A /* RelativeARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E32FFF5E310054B34A /* RelativeARViewContainer.swift */; };
+		DB9289F02FFF5E310054B34A /* RelativeUserARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E42FFF5E310054B34A /* RelativeUserARView.swift */; };
+		DB9289F12FFF5E310054B34A /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D92FFF5E310054B34A /* ImagePicker.swift */; };
+		DB9289F22FFF5E310054B34A /* AppClipRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E12FFF5E310054B34A /* AppClipRootView.swift */; };
+		DB9289F32FFF5E310054B34A /* ARSurveyBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D42FFF5E310054B34A /* ARSurveyBoard.swift */; };
+		DB9289F42FFF5E310054B34A /* EmojiCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D82FFF5E310054B34A /* EmojiCelebrationView.swift */; };
+		DB9289F52FFF5E310054B34A /* Checkpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C52FFF5E310054B34A /* Checkpoint.swift */; };
+		DB9289F62FFF5E310054B34A /* MessageBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DB2FFF5E310054B34A /* MessageBoardEntity.swift */; };
+		DB9289F72FFF5E310054B34A /* MCQBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DA2FFF5E310054B34A /* MCQBoardEntity.swift */; };
+		DB9289F82FFF5E310054B34A /* WalkableAspirationSceneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C32FFF5E310054B34A /* WalkableAspirationSceneController.swift */; };
+		DB9289F92FFF5E310054B34A /* WalkableAspirationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C22FFF5E310054B34A /* WalkableAspirationManager.swift */; };
+		DB9289FA2FFF5E310054B34A /* CitizenARViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C02FFF5E310054B34A /* CitizenARViewModel.swift */; };
+		DB9289FB2FFF5E310054B34A /* CheckpointFormContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D72FFF5E310054B34A /* CheckpointFormContent.swift */; };
+		DB9289FC2FFF5E310054B34A /* TutorialPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DE2FFF5E310054B34A /* TutorialPopup.swift */; };
+		DB9289FD2FFF5E310054B34A /* CheckpointBoardLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D62FFF5E310054B34A /* CheckpointBoardLoader.swift */; };
+		DB9289FE2FFF5E310054B34A /* TextFieldBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DD2FFF5E310054B34A /* TextFieldBottomSheet.swift */; };
+		DB9289FF2FFF5E310054B34A /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E52FFF5E310054B34A /* WelcomeView.swift */; };
+		DB928A002FFF5E310054B34A /* PhotoGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DC2FFF5E310054B34A /* PhotoGalleryView.swift */; };
+		DB928A012FFF5E310054B34A /* WalkableAspirationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DF2FFF5E310054B34A /* WalkableAspirationButton.swift */; };
+		DB928A022FFF5E310054B34A /* appclipicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = DB9289C82FFF5E310054B34A /* appclipicon_tanyale.icon */; };
+		DB928A032FFF5E310054B34A /* tanyale_map_illustrationx2.svg in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CD2FFF5E310054B34A /* tanyale_map_illustrationx2.svg */; };
+		DB928A042FFF5E310054B34A /* Lele_Checkpoint.usdz in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CC2FFF5E310054B34A /* Lele_Checkpoint.usdz */; };
+		DB928A052FFF5E310054B34A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CB2FFF5E310054B34A /* Assets.xcassets */; };
+		DB928A062FFF5E310054B34A /* tanyale_map_illustrationx3.svg in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CE2FFF5E310054B34A /* tanyale_map_illustrationx3.svg */; };
+		DB928A072FFF5E310054B34A /* appicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CA2FFF5E310054B34A /* appicon_tanyale.icon */; };
+		DB928A082FFF5E310054B34A /* appicon.png in Resources */ = {isa = PBXBuildFile; fileRef = DB9289C92FFF5E310054B34A /* appicon.png */; };
+		DB928A092FFF5E310054B34A /* appclipicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = DB9289C82FFF5E310054B34A /* appclipicon_tanyale.icon */; };
+		DB928A0A2FFF5E310054B34A /* tanyale_map_illustrationx2.svg in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CD2FFF5E310054B34A /* tanyale_map_illustrationx2.svg */; };
+		DB928A0B2FFF5E310054B34A /* Lele_Checkpoint.usdz in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CC2FFF5E310054B34A /* Lele_Checkpoint.usdz */; };
+		DB928A0C2FFF5E310054B34A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CB2FFF5E310054B34A /* Assets.xcassets */; };
+		DB928A0D2FFF5E310054B34A /* tanyale_map_illustrationx3.svg in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CE2FFF5E310054B34A /* tanyale_map_illustrationx3.svg */; };
+		DB928A0E2FFF5E310054B34A /* appicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CA2FFF5E310054B34A /* appicon_tanyale.icon */; };
+		DB928A0F2FFF5E310054B34A /* appicon.png in Resources */ = {isa = PBXBuildFile; fileRef = DB9289C92FFF5E310054B34A /* appicon.png */; };
+		DB928A102FFF5E310054B34A /* MockDatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D02FFF5E310054B34A /* MockDatabaseService.swift */; };
+		DB928A112FFF5E310054B34A /* ARWalkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E22FFF5E310054B34A /* ARWalkView.swift */; };
+		DB928A122FFF5E310054B34A /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C12FFF5E310054B34A /* LocationManager.swift */; };
+		DB928A132FFF5E310054B34A /* BrandTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D52FFF5E310054B34A /* BrandTheme.swift */; };
+		DB928A142FFF5E310054B34A /* WalkableAspiration.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C62FFF5E310054B34A /* WalkableAspiration.swift */; };
+		DB928A152FFF5E310054B34A /* MockPhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D12FFF5E310054B34A /* MockPhotoService.swift */; };
+		DB928A162FFF5E310054B34A /* ARMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D32FFF5E310054B34A /* ARMinimapView.swift */; };
+		DB928A172FFF5E310054B34A /* RelativeARViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E32FFF5E310054B34A /* RelativeARViewContainer.swift */; };
+		DB928A182FFF5E310054B34A /* RelativeUserARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E42FFF5E310054B34A /* RelativeUserARView.swift */; };
+		DB928A192FFF5E310054B34A /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D92FFF5E310054B34A /* ImagePicker.swift */; };
+		DB928A1A2FFF5E310054B34A /* AppClipRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E12FFF5E310054B34A /* AppClipRootView.swift */; };
+		DB928A1B2FFF5E310054B34A /* ARSurveyBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D42FFF5E310054B34A /* ARSurveyBoard.swift */; };
+		DB928A1C2FFF5E310054B34A /* EmojiCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D82FFF5E310054B34A /* EmojiCelebrationView.swift */; };
+		DB928A1D2FFF5E310054B34A /* Checkpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C52FFF5E310054B34A /* Checkpoint.swift */; };
+		DB928A1E2FFF5E310054B34A /* MessageBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DB2FFF5E310054B34A /* MessageBoardEntity.swift */; };
+		DB928A1F2FFF5E310054B34A /* MCQBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DA2FFF5E310054B34A /* MCQBoardEntity.swift */; };
+		DB928A202FFF5E310054B34A /* WalkableAspirationSceneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C32FFF5E310054B34A /* WalkableAspirationSceneController.swift */; };
+		DB928A212FFF5E310054B34A /* WalkableAspirationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C22FFF5E310054B34A /* WalkableAspirationManager.swift */; };
+		DB928A222FFF5E310054B34A /* CitizenARViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C02FFF5E310054B34A /* CitizenARViewModel.swift */; };
+		DB928A232FFF5E310054B34A /* CheckpointFormContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D72FFF5E310054B34A /* CheckpointFormContent.swift */; };
+		DB928A242FFF5E310054B34A /* TutorialPopup.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DE2FFF5E310054B34A /* TutorialPopup.swift */; };
+		DB928A252FFF5E310054B34A /* CheckpointBoardLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D62FFF5E310054B34A /* CheckpointBoardLoader.swift */; };
+		DB928A262FFF5E310054B34A /* TextFieldBottomSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DD2FFF5E310054B34A /* TextFieldBottomSheet.swift */; };
+		DB928A272FFF5E310054B34A /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289E52FFF5E310054B34A /* WelcomeView.swift */; };
+		DB928A282FFF5E310054B34A /* PhotoGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DC2FFF5E310054B34A /* PhotoGalleryView.swift */; };
+		DB928A292FFF5E310054B34A /* WalkableAspirationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289DF2FFF5E310054B34A /* WalkableAspirationButton.swift */; };
+		DB928A432FFF5E740054B34A /* JourneySetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A3A2FFF5E740054B34A /* JourneySetupView.swift */; };
+		DB928A442FFF5E740054B34A /* CheckpointListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A332FFF5E740054B34A /* CheckpointListView.swift */; };
+		DB928A452FFF5E740054B34A /* JourneyDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A362FFF5E740054B34A /* JourneyDetailView.swift */; };
+		DB928A462FFF5E740054B34A /* UserMinimapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A402FFF5E740054B34A /* UserMinimapView.swift */; };
+		DB928A472FFF5E740054B34A /* MakerMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A3B2FFF5E740054B34A /* MakerMapView.swift */; };
+		DB928A482FFF5E740054B34A /* RelativeMakerARView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A3E2FFF5E740054B34A /* RelativeMakerARView.swift */; };
+		DB928A492FFF5E740054B34A /* MakerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A2C2FFF5E740054B34A /* MakerViewModel.swift */; };
+		DB928A4A2FFF5E740054B34A /* SetStartPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A3F2FFF5E740054B34A /* SetStartPointView.swift */; };
+		DB928A4B2FFF5E740054B34A /* PastJourneysListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A3D2FFF5E740054B34A /* PastJourneysListView.swift */; };
+		DB928A4C2FFF5E740054B34A /* WalkableAspirationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A302FFF5E740054B34A /* WalkableAspirationView.swift */; };
+		DB928A4D2FFF5E740054B34A /* SandboxDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A2F2FFF5E740054B34A /* SandboxDashboardView.swift */; };
+		DB928A4E2FFF5E740054B34A /* CheckpointEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A322FFF5E740054B34A /* CheckpointEditView.swift */; };
+		DB928A4F2FFF5E740054B34A /* JourneyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A392FFF5E740054B34A /* JourneyService.swift */; };
+		DB928A502FFF5E740054B34A /* TanyaLeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A2A2FFF5E740054B34A /* TanyaLeApp.swift */; };
+		DB928A512FFF5E740054B34A /* Journey.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A342FFF5E740054B34A /* Journey.swift */; };
+		DB928A522FFF5E740054B34A /* ARPlacementPrototypeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A2E2FFF5E740054B34A /* ARPlacementPrototypeView.swift */; };
+		DB928A532FFF5E740054B34A /* JourneyPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A382FFF5E740054B34A /* JourneyPreviewView.swift */; };
+		DB928A542FFF5E740054B34A /* JourneyLandingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A372FFF5E740054B34A /* JourneyLandingView.swift */; };
+		DB928A552FFF5E740054B34A /* MakerResponsesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A3C2FFF5E740054B34A /* MakerResponsesView.swift */; };
+		DB928A562FFF5E740054B34A /* JourneyARPlacementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB928A352FFF5E740054B34A /* JourneyARPlacementView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -126,59 +126,59 @@
 		98374BC12FF759EB005D18E1 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		987379372FF61D8900739D44 /* TanyaLe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TanyaLe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA07A9372FFE0B7300CCB838 /* TanyaleAppClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TanyaleAppClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		AABFC5FA2FFF4B250079F1FF /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		AABFC5FB2FFF4B250079F1FF /* WalkableAspirationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationManager.swift; sourceTree = "<group>"; };
-		AABFC5FC2FFF4B250079F1FF /* WalkableAspirationSceneController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationSceneController.swift; sourceTree = "<group>"; };
-		AABFC5FE2FFF4B250079F1FF /* Checkpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkpoint.swift; sourceTree = "<group>"; };
-		AABFC5FF2FFF4B250079F1FF /* WalkableAspiration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspiration.swift; sourceTree = "<group>"; };
-		AABFC6012FFF4B250079F1FF /* appclipicon_tanyale.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = appclipicon_tanyale.icon; sourceTree = "<group>"; };
-		AABFC6022FFF4B250079F1FF /* appicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appicon.png; sourceTree = "<group>"; };
-		AABFC6032FFF4B250079F1FF /* appicon_tanyale.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = appicon_tanyale.icon; sourceTree = "<group>"; };
-		AABFC6042FFF4B250079F1FF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		AABFC6052FFF4B250079F1FF /* Lele_Checkpoint.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = Lele_Checkpoint.usdz; sourceTree = "<group>"; };
-		AABFC6062FFF4B250079F1FF /* tanyale_map_illustrationx2.svg */ = {isa = PBXFileReference; lastKnownFileType = text; path = tanyale_map_illustrationx2.svg; sourceTree = "<group>"; };
-		AABFC6072FFF4B250079F1FF /* tanyale_map_illustrationx3.svg */ = {isa = PBXFileReference; lastKnownFileType = text; path = tanyale_map_illustrationx3.svg; sourceTree = "<group>"; };
-		AABFC6092FFF4B250079F1FF /* MockDatabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDatabaseService.swift; sourceTree = "<group>"; };
-		AABFC60A2FFF4B250079F1FF /* MockPhotoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPhotoService.swift; sourceTree = "<group>"; };
-		AABFC60C2FFF4B250079F1FF /* ARMinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARMinimapView.swift; sourceTree = "<group>"; };
-		AABFC60D2FFF4B250079F1FF /* ARSurveyBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSurveyBoard.swift; sourceTree = "<group>"; };
-		AABFC60E2FFF4B250079F1FF /* BrandTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandTheme.swift; sourceTree = "<group>"; };
-		AABFC60F2FFF4B250079F1FF /* CheckpointBoardLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointBoardLoader.swift; sourceTree = "<group>"; };
-		AABFC6102FFF4B250079F1FF /* CheckpointFormContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointFormContent.swift; sourceTree = "<group>"; };
-		AABFC6112FFF4B250079F1FF /* EmojiCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCelebrationView.swift; sourceTree = "<group>"; };
-		AABFC6122FFF4B250079F1FF /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
-		AABFC6132FFF4B250079F1FF /* MCQBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCQBoardEntity.swift; sourceTree = "<group>"; };
-		AABFC6142FFF4B250079F1FF /* MessageBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBoardEntity.swift; sourceTree = "<group>"; };
-		AABFC6152FFF4B250079F1FF /* TextFieldBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldBottomSheet.swift; sourceTree = "<group>"; };
-		AABFC6162FFF4B250079F1FF /* TutorialPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialPopup.swift; sourceTree = "<group>"; };
-		AABFC6172FFF4B250079F1FF /* WalkableAspirationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationButton.swift; sourceTree = "<group>"; };
-		AABFC6192FFF4B250079F1FF /* AppClipRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipRootView.swift; sourceTree = "<group>"; };
-		AABFC61A2FFF4B250079F1FF /* ARWalkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARWalkView.swift; sourceTree = "<group>"; };
-		AABFC61B2FFF4B250079F1FF /* RelativeARViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeARViewContainer.swift; sourceTree = "<group>"; };
-		AABFC61C2FFF4B250079F1FF /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
-		AABFC65B2FFF4B350079F1FF /* TanyaLeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TanyaLeApp.swift; sourceTree = "<group>"; };
-		AABFC65D2FFF4B350079F1FF /* CitizenARViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitizenARViewModel.swift; sourceTree = "<group>"; };
-		AABFC65E2FFF4B350079F1FF /* MakerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakerViewModel.swift; sourceTree = "<group>"; };
-		AABFC6602FFF4B350079F1FF /* ARPlacementPrototypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPlacementPrototypeView.swift; sourceTree = "<group>"; };
-		AABFC6612FFF4B350079F1FF /* SandboxDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxDashboardView.swift; sourceTree = "<group>"; };
-		AABFC6622FFF4B350079F1FF /* WalkableAspirationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationView.swift; sourceTree = "<group>"; };
-		AABFC6642FFF4B350079F1FF /* CheckpointEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointEditView.swift; sourceTree = "<group>"; };
-		AABFC6652FFF4B350079F1FF /* CheckpointListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointListView.swift; sourceTree = "<group>"; };
-		AABFC6662FFF4B350079F1FF /* Journey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Journey.swift; sourceTree = "<group>"; };
-		AABFC6672FFF4B350079F1FF /* JourneyARPlacementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyARPlacementView.swift; sourceTree = "<group>"; };
-		AABFC6682FFF4B350079F1FF /* JourneyDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyDetailView.swift; sourceTree = "<group>"; };
-		AABFC6692FFF4B350079F1FF /* JourneyLandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyLandingView.swift; sourceTree = "<group>"; };
-		AABFC66A2FFF4B350079F1FF /* JourneyPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyPreviewView.swift; sourceTree = "<group>"; };
-		AABFC66B2FFF4B350079F1FF /* JourneyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyService.swift; sourceTree = "<group>"; };
-		AABFC66C2FFF4B350079F1FF /* JourneySetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneySetupView.swift; sourceTree = "<group>"; };
-		AABFC66D2FFF4B350079F1FF /* MakerMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakerMapView.swift; sourceTree = "<group>"; };
-		AABFC66E2FFF4B350079F1FF /* MakerResponsesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakerResponsesView.swift; sourceTree = "<group>"; };
-		AABFC66F2FFF4B350079F1FF /* PastJourneysListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastJourneysListView.swift; sourceTree = "<group>"; };
-		AABFC6702FFF4B350079F1FF /* PhotoGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGalleryView.swift; sourceTree = "<group>"; };
-		AABFC6712FFF4B350079F1FF /* RelativeMakerARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeMakerARView.swift; sourceTree = "<group>"; };
-		AABFC6722FFF4B350079F1FF /* RelativeUserARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeUserARView.swift; sourceTree = "<group>"; };
-		AABFC6732FFF4B350079F1FF /* SetStartPointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetStartPointView.swift; sourceTree = "<group>"; };
-		AABFC6742FFF4B350079F1FF /* UserMinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMinimapView.swift; sourceTree = "<group>"; };
+		DB9289C02FFF5E310054B34A /* CitizenARViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CitizenARViewModel.swift; sourceTree = "<group>"; };
+		DB9289C12FFF5E310054B34A /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		DB9289C22FFF5E310054B34A /* WalkableAspirationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationManager.swift; sourceTree = "<group>"; };
+		DB9289C32FFF5E310054B34A /* WalkableAspirationSceneController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationSceneController.swift; sourceTree = "<group>"; };
+		DB9289C52FFF5E310054B34A /* Checkpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkpoint.swift; sourceTree = "<group>"; };
+		DB9289C62FFF5E310054B34A /* WalkableAspiration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspiration.swift; sourceTree = "<group>"; };
+		DB9289C82FFF5E310054B34A /* appclipicon_tanyale.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = appclipicon_tanyale.icon; sourceTree = "<group>"; };
+		DB9289C92FFF5E310054B34A /* appicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appicon.png; sourceTree = "<group>"; };
+		DB9289CA2FFF5E310054B34A /* appicon_tanyale.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = appicon_tanyale.icon; sourceTree = "<group>"; };
+		DB9289CB2FFF5E310054B34A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DB9289CC2FFF5E310054B34A /* Lele_Checkpoint.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = Lele_Checkpoint.usdz; sourceTree = "<group>"; };
+		DB9289CD2FFF5E310054B34A /* tanyale_map_illustrationx2.svg */ = {isa = PBXFileReference; lastKnownFileType = text; path = tanyale_map_illustrationx2.svg; sourceTree = "<group>"; };
+		DB9289CE2FFF5E310054B34A /* tanyale_map_illustrationx3.svg */ = {isa = PBXFileReference; lastKnownFileType = text; path = tanyale_map_illustrationx3.svg; sourceTree = "<group>"; };
+		DB9289D02FFF5E310054B34A /* MockDatabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDatabaseService.swift; sourceTree = "<group>"; };
+		DB9289D12FFF5E310054B34A /* MockPhotoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPhotoService.swift; sourceTree = "<group>"; };
+		DB9289D32FFF5E310054B34A /* ARMinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARMinimapView.swift; sourceTree = "<group>"; };
+		DB9289D42FFF5E310054B34A /* ARSurveyBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARSurveyBoard.swift; sourceTree = "<group>"; };
+		DB9289D52FFF5E310054B34A /* BrandTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandTheme.swift; sourceTree = "<group>"; };
+		DB9289D62FFF5E310054B34A /* CheckpointBoardLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointBoardLoader.swift; sourceTree = "<group>"; };
+		DB9289D72FFF5E310054B34A /* CheckpointFormContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointFormContent.swift; sourceTree = "<group>"; };
+		DB9289D82FFF5E310054B34A /* EmojiCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCelebrationView.swift; sourceTree = "<group>"; };
+		DB9289D92FFF5E310054B34A /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
+		DB9289DA2FFF5E310054B34A /* MCQBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCQBoardEntity.swift; sourceTree = "<group>"; };
+		DB9289DB2FFF5E310054B34A /* MessageBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBoardEntity.swift; sourceTree = "<group>"; };
+		DB9289DC2FFF5E310054B34A /* PhotoGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGalleryView.swift; sourceTree = "<group>"; };
+		DB9289DD2FFF5E310054B34A /* TextFieldBottomSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldBottomSheet.swift; sourceTree = "<group>"; };
+		DB9289DE2FFF5E310054B34A /* TutorialPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialPopup.swift; sourceTree = "<group>"; };
+		DB9289DF2FFF5E310054B34A /* WalkableAspirationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationButton.swift; sourceTree = "<group>"; };
+		DB9289E12FFF5E310054B34A /* AppClipRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipRootView.swift; sourceTree = "<group>"; };
+		DB9289E22FFF5E310054B34A /* ARWalkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARWalkView.swift; sourceTree = "<group>"; };
+		DB9289E32FFF5E310054B34A /* RelativeARViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeARViewContainer.swift; sourceTree = "<group>"; };
+		DB9289E42FFF5E310054B34A /* RelativeUserARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeUserARView.swift; sourceTree = "<group>"; };
+		DB9289E52FFF5E310054B34A /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		DB928A2A2FFF5E740054B34A /* TanyaLeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TanyaLeApp.swift; sourceTree = "<group>"; };
+		DB928A2C2FFF5E740054B34A /* MakerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakerViewModel.swift; sourceTree = "<group>"; };
+		DB928A2E2FFF5E740054B34A /* ARPlacementPrototypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPlacementPrototypeView.swift; sourceTree = "<group>"; };
+		DB928A2F2FFF5E740054B34A /* SandboxDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxDashboardView.swift; sourceTree = "<group>"; };
+		DB928A302FFF5E740054B34A /* WalkableAspirationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspirationView.swift; sourceTree = "<group>"; };
+		DB928A322FFF5E740054B34A /* CheckpointEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointEditView.swift; sourceTree = "<group>"; };
+		DB928A332FFF5E740054B34A /* CheckpointListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointListView.swift; sourceTree = "<group>"; };
+		DB928A342FFF5E740054B34A /* Journey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Journey.swift; sourceTree = "<group>"; };
+		DB928A352FFF5E740054B34A /* JourneyARPlacementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyARPlacementView.swift; sourceTree = "<group>"; };
+		DB928A362FFF5E740054B34A /* JourneyDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyDetailView.swift; sourceTree = "<group>"; };
+		DB928A372FFF5E740054B34A /* JourneyLandingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyLandingView.swift; sourceTree = "<group>"; };
+		DB928A382FFF5E740054B34A /* JourneyPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyPreviewView.swift; sourceTree = "<group>"; };
+		DB928A392FFF5E740054B34A /* JourneyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneyService.swift; sourceTree = "<group>"; };
+		DB928A3A2FFF5E740054B34A /* JourneySetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JourneySetupView.swift; sourceTree = "<group>"; };
+		DB928A3B2FFF5E740054B34A /* MakerMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakerMapView.swift; sourceTree = "<group>"; };
+		DB928A3C2FFF5E740054B34A /* MakerResponsesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakerResponsesView.swift; sourceTree = "<group>"; };
+		DB928A3D2FFF5E740054B34A /* PastJourneysListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastJourneysListView.swift; sourceTree = "<group>"; };
+		DB928A3E2FFF5E740054B34A /* RelativeMakerARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeMakerARView.swift; sourceTree = "<group>"; };
+		DB928A3F2FFF5E740054B34A /* SetStartPointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetStartPointView.swift; sourceTree = "<group>"; };
+		DB928A402FFF5E740054B34A /* UserMinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMinimapView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -223,10 +223,11 @@
 		9873792E2FF61D8900739D44 = {
 			isa = PBXGroup;
 			children = (
+				DB928A422FFF5E740054B34A /* TanyaLeApp */,
 				98374BC12FF759EB005D18E1 /* README.md */,
 				AA07A9382FFE0B7300CCB838 /* TanyaleAppClip */,
 				987379382FF61D8900739D44 /* Products */,
-				AABFC61E2FFF4B250079F1FF /* Shared */,
+				DB9289E72FFF5E310054B34A /* Shared */,
 			);
 			sourceTree = "<group>";
 		};
@@ -239,150 +240,149 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		AABFC5FD2FFF4B250079F1FF /* Manager */ = {
+		DB9289C42FFF5E310054B34A /* Manager */ = {
 			isa = PBXGroup;
 			children = (
-				AABFC5FA2FFF4B250079F1FF /* LocationManager.swift */,
-				AABFC5FB2FFF4B250079F1FF /* WalkableAspirationManager.swift */,
-				AABFC5FC2FFF4B250079F1FF /* WalkableAspirationSceneController.swift */,
-				AABFC65D2FFF4B350079F1FF /* CitizenARViewModel.swift */,
+				DB9289C02FFF5E310054B34A /* CitizenARViewModel.swift */,
+				DB9289C12FFF5E310054B34A /* LocationManager.swift */,
+				DB9289C22FFF5E310054B34A /* WalkableAspirationManager.swift */,
+				DB9289C32FFF5E310054B34A /* WalkableAspirationSceneController.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
 		};
-		AABFC6002FFF4B250079F1FF /* Models */ = {
+		DB9289C72FFF5E310054B34A /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				AABFC5FE2FFF4B250079F1FF /* Checkpoint.swift */,
-				AABFC5FF2FFF4B250079F1FF /* WalkableAspiration.swift */,
+				DB9289C52FFF5E310054B34A /* Checkpoint.swift */,
+				DB9289C62FFF5E310054B34A /* WalkableAspiration.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
 		};
-		AABFC6082FFF4B250079F1FF /* Resources */ = {
+		DB9289CF2FFF5E310054B34A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				AABFC6012FFF4B250079F1FF /* appclipicon_tanyale.icon */,
-				AABFC6022FFF4B250079F1FF /* appicon.png */,
-				AABFC6032FFF4B250079F1FF /* appicon_tanyale.icon */,
-				AABFC6042FFF4B250079F1FF /* Assets.xcassets */,
-				AABFC6052FFF4B250079F1FF /* Lele_Checkpoint.usdz */,
-				AABFC6062FFF4B250079F1FF /* tanyale_map_illustrationx2.svg */,
-				AABFC6072FFF4B250079F1FF /* tanyale_map_illustrationx3.svg */,
+				DB9289C82FFF5E310054B34A /* appclipicon_tanyale.icon */,
+				DB9289C92FFF5E310054B34A /* appicon.png */,
+				DB9289CA2FFF5E310054B34A /* appicon_tanyale.icon */,
+				DB9289CB2FFF5E310054B34A /* Assets.xcassets */,
+				DB9289CC2FFF5E310054B34A /* Lele_Checkpoint.usdz */,
+				DB9289CD2FFF5E310054B34A /* tanyale_map_illustrationx2.svg */,
+				DB9289CE2FFF5E310054B34A /* tanyale_map_illustrationx3.svg */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		AABFC60B2FFF4B250079F1FF /* Services */ = {
+		DB9289D22FFF5E310054B34A /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				AABFC6092FFF4B250079F1FF /* MockDatabaseService.swift */,
-				AABFC60A2FFF4B250079F1FF /* MockPhotoService.swift */,
+				DB9289D02FFF5E310054B34A /* MockDatabaseService.swift */,
+				DB9289D12FFF5E310054B34A /* MockPhotoService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
 		};
-		AABFC6182FFF4B250079F1FF /* Components */ = {
+		DB9289E02FFF5E310054B34A /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				AABFC60C2FFF4B250079F1FF /* ARMinimapView.swift */,
-				AABFC60D2FFF4B250079F1FF /* ARSurveyBoard.swift */,
-				AABFC60E2FFF4B250079F1FF /* BrandTheme.swift */,
-				AABFC60F2FFF4B250079F1FF /* CheckpointBoardLoader.swift */,
-				AABFC6102FFF4B250079F1FF /* CheckpointFormContent.swift */,
-				AABFC6112FFF4B250079F1FF /* EmojiCelebrationView.swift */,
-				AABFC6122FFF4B250079F1FF /* ImagePicker.swift */,
-				AABFC6132FFF4B250079F1FF /* MCQBoardEntity.swift */,
-				AABFC6142FFF4B250079F1FF /* MessageBoardEntity.swift */,
-				AABFC6152FFF4B250079F1FF /* TextFieldBottomSheet.swift */,
-				AABFC6162FFF4B250079F1FF /* TutorialPopup.swift */,
-				AABFC6702FFF4B350079F1FF /* PhotoGalleryView.swift */,
-				AABFC6172FFF4B250079F1FF /* WalkableAspirationButton.swift */,
+				DB9289D32FFF5E310054B34A /* ARMinimapView.swift */,
+				DB9289D42FFF5E310054B34A /* ARSurveyBoard.swift */,
+				DB9289D52FFF5E310054B34A /* BrandTheme.swift */,
+				DB9289D62FFF5E310054B34A /* CheckpointBoardLoader.swift */,
+				DB9289D72FFF5E310054B34A /* CheckpointFormContent.swift */,
+				DB9289D82FFF5E310054B34A /* EmojiCelebrationView.swift */,
+				DB9289D92FFF5E310054B34A /* ImagePicker.swift */,
+				DB9289DA2FFF5E310054B34A /* MCQBoardEntity.swift */,
+				DB9289DB2FFF5E310054B34A /* MessageBoardEntity.swift */,
+				DB9289DC2FFF5E310054B34A /* PhotoGalleryView.swift */,
+				DB9289DD2FFF5E310054B34A /* TextFieldBottomSheet.swift */,
+				DB9289DE2FFF5E310054B34A /* TutorialPopup.swift */,
+				DB9289DF2FFF5E310054B34A /* WalkableAspirationButton.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
 		};
-		AABFC61D2FFF4B250079F1FF /* Views */ = {
+		DB9289E62FFF5E310054B34A /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				AABFC6182FFF4B250079F1FF /* Components */,
-				AABFC6192FFF4B250079F1FF /* AppClipRootView.swift */,
-				AABFC6722FFF4B350079F1FF /* RelativeUserARView.swift */,
-				AABFC61A2FFF4B250079F1FF /* ARWalkView.swift */,
-				AABFC61B2FFF4B250079F1FF /* RelativeARViewContainer.swift */,
-				AABFC61C2FFF4B250079F1FF /* WelcomeView.swift */,
-				AABFC6762FFF4B350079F1FF /* TanyaLeApp */,
+				DB9289E02FFF5E310054B34A /* Components */,
+				DB9289E12FFF5E310054B34A /* AppClipRootView.swift */,
+				DB9289E22FFF5E310054B34A /* ARWalkView.swift */,
+				DB9289E32FFF5E310054B34A /* RelativeARViewContainer.swift */,
+				DB9289E42FFF5E310054B34A /* RelativeUserARView.swift */,
+				DB9289E52FFF5E310054B34A /* WelcomeView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
 		};
-		AABFC61E2FFF4B250079F1FF /* Shared */ = {
+		DB9289E72FFF5E310054B34A /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				AABFC5FD2FFF4B250079F1FF /* Manager */,
-				AABFC6002FFF4B250079F1FF /* Models */,
-				AABFC6082FFF4B250079F1FF /* Resources */,
-				AABFC60B2FFF4B250079F1FF /* Services */,
-				AABFC61D2FFF4B250079F1FF /* Views */,
+				DB9289C42FFF5E310054B34A /* Manager */,
+				DB9289C72FFF5E310054B34A /* Models */,
+				DB9289CF2FFF5E310054B34A /* Resources */,
+				DB9289D22FFF5E310054B34A /* Services */,
+				DB9289E62FFF5E310054B34A /* Views */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
 		};
-		AABFC65C2FFF4B350079F1FF /* App */ = {
+		DB928A2B2FFF5E740054B34A /* App */ = {
 			isa = PBXGroup;
 			children = (
-				AABFC65B2FFF4B350079F1FF /* TanyaLeApp.swift */,
+				DB928A2A2FFF5E740054B34A /* TanyaLeApp.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
 		};
-		AABFC65F2FFF4B350079F1FF /* ViewModels */ = {
+		DB928A2D2FFF5E740054B34A /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
-				AABFC65E2FFF4B350079F1FF /* MakerViewModel.swift */,
+				DB928A2C2FFF5E740054B34A /* MakerViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		AABFC6632FFF4B350079F1FF /* Prototypes */ = {
+		DB928A312FFF5E740054B34A /* Prototypes */ = {
 			isa = PBXGroup;
 			children = (
-				AABFC6602FFF4B350079F1FF /* ARPlacementPrototypeView.swift */,
-				AABFC6612FFF4B350079F1FF /* SandboxDashboardView.swift */,
-				AABFC6622FFF4B350079F1FF /* WalkableAspirationView.swift */,
+				DB928A2E2FFF5E740054B34A /* ARPlacementPrototypeView.swift */,
+				DB928A2F2FFF5E740054B34A /* SandboxDashboardView.swift */,
+				DB928A302FFF5E740054B34A /* WalkableAspirationView.swift */,
 			);
 			path = Prototypes;
 			sourceTree = "<group>";
 		};
-		AABFC6752FFF4B350079F1FF /* Views */ = {
+		DB928A412FFF5E740054B34A /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				AABFC6632FFF4B350079F1FF /* Prototypes */,
-				AABFC6642FFF4B350079F1FF /* CheckpointEditView.swift */,
-				AABFC6652FFF4B350079F1FF /* CheckpointListView.swift */,
-				AABFC6662FFF4B350079F1FF /* Journey.swift */,
-				AABFC6672FFF4B350079F1FF /* JourneyARPlacementView.swift */,
-				AABFC6682FFF4B350079F1FF /* JourneyDetailView.swift */,
-				AABFC6692FFF4B350079F1FF /* JourneyLandingView.swift */,
-				AABFC66A2FFF4B350079F1FF /* JourneyPreviewView.swift */,
-				AABFC66B2FFF4B350079F1FF /* JourneyService.swift */,
-				AABFC66C2FFF4B350079F1FF /* JourneySetupView.swift */,
-				AABFC66D2FFF4B350079F1FF /* MakerMapView.swift */,
-				AABFC66E2FFF4B350079F1FF /* MakerResponsesView.swift */,
-				AABFC66F2FFF4B350079F1FF /* PastJourneysListView.swift */,
-				AABFC6712FFF4B350079F1FF /* RelativeMakerARView.swift */,
-				AABFC6732FFF4B350079F1FF /* SetStartPointView.swift */,
-				AABFC6742FFF4B350079F1FF /* UserMinimapView.swift */,
+				DB928A312FFF5E740054B34A /* Prototypes */,
+				DB928A322FFF5E740054B34A /* CheckpointEditView.swift */,
+				DB928A332FFF5E740054B34A /* CheckpointListView.swift */,
+				DB928A342FFF5E740054B34A /* Journey.swift */,
+				DB928A352FFF5E740054B34A /* JourneyARPlacementView.swift */,
+				DB928A362FFF5E740054B34A /* JourneyDetailView.swift */,
+				DB928A372FFF5E740054B34A /* JourneyLandingView.swift */,
+				DB928A382FFF5E740054B34A /* JourneyPreviewView.swift */,
+				DB928A392FFF5E740054B34A /* JourneyService.swift */,
+				DB928A3A2FFF5E740054B34A /* JourneySetupView.swift */,
+				DB928A3B2FFF5E740054B34A /* MakerMapView.swift */,
+				DB928A3C2FFF5E740054B34A /* MakerResponsesView.swift */,
+				DB928A3D2FFF5E740054B34A /* PastJourneysListView.swift */,
+				DB928A3E2FFF5E740054B34A /* RelativeMakerARView.swift */,
+				DB928A3F2FFF5E740054B34A /* SetStartPointView.swift */,
+				DB928A402FFF5E740054B34A /* UserMinimapView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
 		};
-		AABFC6762FFF4B350079F1FF /* TanyaLeApp */ = {
+		DB928A422FFF5E740054B34A /* TanyaLeApp */ = {
 			isa = PBXGroup;
 			children = (
-				AABFC65C2FFF4B350079F1FF /* App */,
-				AABFC65F2FFF4B350079F1FF /* ViewModels */,
-				AABFC6752FFF4B350079F1FF /* Views */,
+				DB928A2B2FFF5E740054B34A /* App */,
+				DB928A2D2FFF5E740054B34A /* ViewModels */,
+				DB928A412FFF5E740054B34A /* Views */,
 			);
 			path = TanyaLeApp;
 			sourceTree = "<group>";
@@ -476,13 +476,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AABFC6362FFF4B250079F1FF /* appicon.png in Resources */,
-				AABFC6372FFF4B250079F1FF /* appclipicon_tanyale.icon in Resources */,
-				AABFC6382FFF4B250079F1FF /* appicon_tanyale.icon in Resources */,
-				AABFC6392FFF4B250079F1FF /* Assets.xcassets in Resources */,
-				AABFC63A2FFF4B250079F1FF /* tanyale_map_illustrationx2.svg in Resources */,
-				AABFC63B2FFF4B250079F1FF /* tanyale_map_illustrationx3.svg in Resources */,
-				AABFC63C2FFF4B250079F1FF /* Lele_Checkpoint.usdz in Resources */,
+				DB928A022FFF5E310054B34A /* appclipicon_tanyale.icon in Resources */,
+				DB928A032FFF5E310054B34A /* tanyale_map_illustrationx2.svg in Resources */,
+				DB928A042FFF5E310054B34A /* Lele_Checkpoint.usdz in Resources */,
+				DB928A052FFF5E310054B34A /* Assets.xcassets in Resources */,
+				DB928A062FFF5E310054B34A /* tanyale_map_illustrationx3.svg in Resources */,
+				DB928A072FFF5E310054B34A /* appicon_tanyale.icon in Resources */,
+				DB928A082FFF5E310054B34A /* appicon.png in Resources */,
 				98374BE52FF759EB005D18E1 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -491,13 +491,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AABFC6542FFF4B250079F1FF /* appicon.png in Resources */,
-				AABFC6552FFF4B250079F1FF /* appclipicon_tanyale.icon in Resources */,
-				AABFC6562FFF4B250079F1FF /* appicon_tanyale.icon in Resources */,
-				AABFC6572FFF4B250079F1FF /* Assets.xcassets in Resources */,
-				AABFC6582FFF4B250079F1FF /* tanyale_map_illustrationx2.svg in Resources */,
-				AABFC6592FFF4B250079F1FF /* tanyale_map_illustrationx3.svg in Resources */,
-				AABFC65A2FFF4B250079F1FF /* Lele_Checkpoint.usdz in Resources */,
+				DB928A092FFF5E310054B34A /* appclipicon_tanyale.icon in Resources */,
+				DB928A0A2FFF5E310054B34A /* tanyale_map_illustrationx2.svg in Resources */,
+				DB928A0B2FFF5E310054B34A /* Lele_Checkpoint.usdz in Resources */,
+				DB928A0C2FFF5E310054B34A /* Assets.xcassets in Resources */,
+				DB928A0D2FFF5E310054B34A /* tanyale_map_illustrationx3.svg in Resources */,
+				DB928A0E2FFF5E310054B34A /* appicon_tanyale.icon in Resources */,
+				DB928A0F2FFF5E310054B34A /* appicon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -508,52 +508,52 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AABFC61F2FFF4B250079F1FF /* LocationManager.swift in Sources */,
-				AABFC6202FFF4B250079F1FF /* MockPhotoService.swift in Sources */,
-				AABFC6212FFF4B250079F1FF /* WalkableAspirationSceneController.swift in Sources */,
-				AABFC6222FFF4B250079F1FF /* MCQBoardEntity.swift in Sources */,
-				AABFC6232FFF4B250079F1FF /* TutorialPopup.swift in Sources */,
-				AABFC6242FFF4B250079F1FF /* Checkpoint.swift in Sources */,
-				AABFC6252FFF4B250079F1FF /* MockDatabaseService.swift in Sources */,
-				AABFC6262FFF4B250079F1FF /* ARSurveyBoard.swift in Sources */,
-				AABFC6772FFF4B350079F1FF /* MakerResponsesView.swift in Sources */,
-				AABFC6782FFF4B350079F1FF /* JourneyLandingView.swift in Sources */,
-				AABFC6792FFF4B350079F1FF /* Journey.swift in Sources */,
-				AABFC67A2FFF4B350079F1FF /* SandboxDashboardView.swift in Sources */,
-				AABFC67B2FFF4B350079F1FF /* PhotoGalleryView.swift in Sources */,
-				AABFC67C2FFF4B350079F1FF /* RelativeUserARView.swift in Sources */,
-				AABFC67D2FFF4B350079F1FF /* PastJourneysListView.swift in Sources */,
-				AABFC67E2FFF4B350079F1FF /* WalkableAspirationView.swift in Sources */,
-				AABFC67F2FFF4B350079F1FF /* JourneyService.swift in Sources */,
-				AABFC6802FFF4B350079F1FF /* ARPlacementPrototypeView.swift in Sources */,
-				AABFC6812FFF4B350079F1FF /* UserMinimapView.swift in Sources */,
-				AABFC6822FFF4B350079F1FF /* MakerMapView.swift in Sources */,
-				AABFC6832FFF4B350079F1FF /* JourneyARPlacementView.swift in Sources */,
-				AABFC6842FFF4B350079F1FF /* CitizenARViewModel.swift in Sources */,
-				AABFC6852FFF4B350079F1FF /* SetStartPointView.swift in Sources */,
-				AABFC6862FFF4B350079F1FF /* TanyaLeApp.swift in Sources */,
-				AABFC6872FFF4B350079F1FF /* JourneyDetailView.swift in Sources */,
-				AABFC6882FFF4B350079F1FF /* JourneySetupView.swift in Sources */,
-				AABFC6892FFF4B350079F1FF /* JourneyPreviewView.swift in Sources */,
-				AABFC68A2FFF4B350079F1FF /* CheckpointEditView.swift in Sources */,
-				AABFC68B2FFF4B350079F1FF /* MakerViewModel.swift in Sources */,
-				AABFC68C2FFF4B350079F1FF /* RelativeMakerARView.swift in Sources */,
-				AABFC68D2FFF4B350079F1FF /* CheckpointListView.swift in Sources */,
-				AABFC6272FFF4B250079F1FF /* WalkableAspiration.swift in Sources */,
-				AABFC6282FFF4B250079F1FF /* AppClipRootView.swift in Sources */,
-				AABFC6292FFF4B250079F1FF /* TextFieldBottomSheet.swift in Sources */,
-				AABFC62A2FFF4B250079F1FF /* WelcomeView.swift in Sources */,
-				AABFC62B2FFF4B250079F1FF /* ARWalkView.swift in Sources */,
-				AABFC62C2FFF4B250079F1FF /* ARMinimapView.swift in Sources */,
-				AABFC62D2FFF4B250079F1FF /* RelativeARViewContainer.swift in Sources */,
-				AABFC62E2FFF4B250079F1FF /* EmojiCelebrationView.swift in Sources */,
-				AABFC62F2FFF4B250079F1FF /* ImagePicker.swift in Sources */,
-				AABFC6302FFF4B250079F1FF /* WalkableAspirationButton.swift in Sources */,
-				AABFC6312FFF4B250079F1FF /* CheckpointBoardLoader.swift in Sources */,
-				AABFC6322FFF4B250079F1FF /* CheckpointFormContent.swift in Sources */,
-				AABFC6332FFF4B250079F1FF /* MessageBoardEntity.swift in Sources */,
-				AABFC6342FFF4B250079F1FF /* WalkableAspirationManager.swift in Sources */,
-				AABFC6352FFF4B250079F1FF /* BrandTheme.swift in Sources */,
+				DB9289E82FFF5E310054B34A /* MockDatabaseService.swift in Sources */,
+				DB9289E92FFF5E310054B34A /* ARWalkView.swift in Sources */,
+				DB9289EA2FFF5E310054B34A /* LocationManager.swift in Sources */,
+				DB9289EB2FFF5E310054B34A /* BrandTheme.swift in Sources */,
+				DB9289EC2FFF5E310054B34A /* WalkableAspiration.swift in Sources */,
+				DB9289ED2FFF5E310054B34A /* MockPhotoService.swift in Sources */,
+				DB9289EE2FFF5E310054B34A /* ARMinimapView.swift in Sources */,
+				DB9289EF2FFF5E310054B34A /* RelativeARViewContainer.swift in Sources */,
+				DB9289F02FFF5E310054B34A /* RelativeUserARView.swift in Sources */,
+				DB9289F12FFF5E310054B34A /* ImagePicker.swift in Sources */,
+				DB9289F22FFF5E310054B34A /* AppClipRootView.swift in Sources */,
+				DB9289F32FFF5E310054B34A /* ARSurveyBoard.swift in Sources */,
+				DB9289F42FFF5E310054B34A /* EmojiCelebrationView.swift in Sources */,
+				DB9289F52FFF5E310054B34A /* Checkpoint.swift in Sources */,
+				DB9289F62FFF5E310054B34A /* MessageBoardEntity.swift in Sources */,
+				DB9289F72FFF5E310054B34A /* MCQBoardEntity.swift in Sources */,
+				DB9289F82FFF5E310054B34A /* WalkableAspirationSceneController.swift in Sources */,
+				DB9289F92FFF5E310054B34A /* WalkableAspirationManager.swift in Sources */,
+				DB9289FA2FFF5E310054B34A /* CitizenARViewModel.swift in Sources */,
+				DB928A432FFF5E740054B34A /* JourneySetupView.swift in Sources */,
+				DB928A442FFF5E740054B34A /* CheckpointListView.swift in Sources */,
+				DB928A452FFF5E740054B34A /* JourneyDetailView.swift in Sources */,
+				DB928A462FFF5E740054B34A /* UserMinimapView.swift in Sources */,
+				DB928A472FFF5E740054B34A /* MakerMapView.swift in Sources */,
+				DB928A482FFF5E740054B34A /* RelativeMakerARView.swift in Sources */,
+				DB928A492FFF5E740054B34A /* MakerViewModel.swift in Sources */,
+				DB928A4A2FFF5E740054B34A /* SetStartPointView.swift in Sources */,
+				DB928A4B2FFF5E740054B34A /* PastJourneysListView.swift in Sources */,
+				DB928A4C2FFF5E740054B34A /* WalkableAspirationView.swift in Sources */,
+				DB928A4D2FFF5E740054B34A /* SandboxDashboardView.swift in Sources */,
+				DB928A4E2FFF5E740054B34A /* CheckpointEditView.swift in Sources */,
+				DB928A4F2FFF5E740054B34A /* JourneyService.swift in Sources */,
+				DB928A502FFF5E740054B34A /* TanyaLeApp.swift in Sources */,
+				DB928A512FFF5E740054B34A /* Journey.swift in Sources */,
+				DB928A522FFF5E740054B34A /* ARPlacementPrototypeView.swift in Sources */,
+				DB928A532FFF5E740054B34A /* JourneyPreviewView.swift in Sources */,
+				DB928A542FFF5E740054B34A /* JourneyLandingView.swift in Sources */,
+				DB928A552FFF5E740054B34A /* MakerResponsesView.swift in Sources */,
+				DB928A562FFF5E740054B34A /* JourneyARPlacementView.swift in Sources */,
+				DB9289FB2FFF5E310054B34A /* CheckpointFormContent.swift in Sources */,
+				DB9289FC2FFF5E310054B34A /* TutorialPopup.swift in Sources */,
+				DB9289FD2FFF5E310054B34A /* CheckpointBoardLoader.swift in Sources */,
+				DB9289FE2FFF5E310054B34A /* TextFieldBottomSheet.swift in Sources */,
+				DB9289FF2FFF5E310054B34A /* WelcomeView.swift in Sources */,
+				DB928A002FFF5E310054B34A /* PhotoGalleryView.swift in Sources */,
+				DB928A012FFF5E310054B34A /* WalkableAspirationButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -562,32 +562,32 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA5E76462FFEC265009F664A /* (null) in Sources */,
-				AABFC63D2FFF4B250079F1FF /* LocationManager.swift in Sources */,
-				AABFC63E2FFF4B250079F1FF /* MockPhotoService.swift in Sources */,
-				AABFC63F2FFF4B250079F1FF /* WalkableAspirationSceneController.swift in Sources */,
-				AABFC6402FFF4B250079F1FF /* MCQBoardEntity.swift in Sources */,
-				AABFC6412FFF4B250079F1FF /* TutorialPopup.swift in Sources */,
-				AABFC6422FFF4B250079F1FF /* Checkpoint.swift in Sources */,
-				AABFC6432FFF4B250079F1FF /* MockDatabaseService.swift in Sources */,
-				AABFC6442FFF4B250079F1FF /* ARSurveyBoard.swift in Sources */,
-				AABFC6452FFF4B250079F1FF /* WalkableAspiration.swift in Sources */,
-				AABFC6462FFF4B250079F1FF /* AppClipRootView.swift in Sources */,
-				AABFC6472FFF4B250079F1FF /* TextFieldBottomSheet.swift in Sources */,
-				AABFC6482FFF4B250079F1FF /* WelcomeView.swift in Sources */,
-				AABFC6492FFF4B250079F1FF /* ARWalkView.swift in Sources */,
-				AABFC64A2FFF4B250079F1FF /* ARMinimapView.swift in Sources */,
-				AABFC64B2FFF4B250079F1FF /* RelativeARViewContainer.swift in Sources */,
-				AABFC64C2FFF4B250079F1FF /* EmojiCelebrationView.swift in Sources */,
-				AABFC64D2FFF4B250079F1FF /* ImagePicker.swift in Sources */,
-				AABFC64E2FFF4B250079F1FF /* WalkableAspirationButton.swift in Sources */,
-				AABFC64F2FFF4B250079F1FF /* CheckpointBoardLoader.swift in Sources */,
-				AABFC6502FFF4B250079F1FF /* CheckpointFormContent.swift in Sources */,
-				AABFC6902FFF4BA50079F1FF /* PhotoGalleryView.swift in Sources */,
-				AABFC68E2FFF4B580079F1FF /* RelativeUserARView.swift in Sources */,
-				AABFC68F2FFF4B7B0079F1FF /* CitizenARViewModel.swift in Sources */,
-				AABFC6512FFF4B250079F1FF /* MessageBoardEntity.swift in Sources */,
-				AABFC6522FFF4B250079F1FF /* WalkableAspirationManager.swift in Sources */,
-				AABFC6532FFF4B250079F1FF /* BrandTheme.swift in Sources */,
+				DB928A102FFF5E310054B34A /* MockDatabaseService.swift in Sources */,
+				DB928A112FFF5E310054B34A /* ARWalkView.swift in Sources */,
+				DB928A122FFF5E310054B34A /* LocationManager.swift in Sources */,
+				DB928A132FFF5E310054B34A /* BrandTheme.swift in Sources */,
+				DB928A142FFF5E310054B34A /* WalkableAspiration.swift in Sources */,
+				DB928A152FFF5E310054B34A /* MockPhotoService.swift in Sources */,
+				DB928A162FFF5E310054B34A /* ARMinimapView.swift in Sources */,
+				DB928A172FFF5E310054B34A /* RelativeARViewContainer.swift in Sources */,
+				DB928A182FFF5E310054B34A /* RelativeUserARView.swift in Sources */,
+				DB928A192FFF5E310054B34A /* ImagePicker.swift in Sources */,
+				DB928A1A2FFF5E310054B34A /* AppClipRootView.swift in Sources */,
+				DB928A1B2FFF5E310054B34A /* ARSurveyBoard.swift in Sources */,
+				DB928A1C2FFF5E310054B34A /* EmojiCelebrationView.swift in Sources */,
+				DB928A1D2FFF5E310054B34A /* Checkpoint.swift in Sources */,
+				DB928A1E2FFF5E310054B34A /* MessageBoardEntity.swift in Sources */,
+				DB928A1F2FFF5E310054B34A /* MCQBoardEntity.swift in Sources */,
+				DB928A202FFF5E310054B34A /* WalkableAspirationSceneController.swift in Sources */,
+				DB928A212FFF5E310054B34A /* WalkableAspirationManager.swift in Sources */,
+				DB928A222FFF5E310054B34A /* CitizenARViewModel.swift in Sources */,
+				DB928A232FFF5E310054B34A /* CheckpointFormContent.swift in Sources */,
+				DB928A242FFF5E310054B34A /* TutorialPopup.swift in Sources */,
+				DB928A252FFF5E310054B34A /* CheckpointBoardLoader.swift in Sources */,
+				DB928A262FFF5E310054B34A /* TextFieldBottomSheet.swift in Sources */,
+				DB928A272FFF5E310054B34A /* WelcomeView.swift in Sources */,
+				DB928A282FFF5E310054B34A /* PhotoGalleryView.swift in Sources */,
+				DB928A292FFF5E310054B34A /* WalkableAspirationButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
