@@ -26,7 +26,9 @@ enum CheckpointBoardLoader {
     static func load(
         into arContainer: RelativeUserARView.ARContainer,
         checkpoints: [Checkpoint],
-        onEmojiCelebration: @escaping (String) -> Void
+        onEmojiCelebration: @escaping (String) -> Void,
+        onPhotoboothTap: @escaping (Checkpoint) -> Void,
+        onGalleryTap: @escaping (Checkpoint) -> Void
     ) {
         guard let arView = arContainer.view else { return }
 
@@ -39,7 +41,7 @@ enum CheckpointBoardLoader {
             let boxEntity = ModelEntity(mesh: boxMesh, materials: [material])
             anchor.addChild(boxEntity)
 
-            if cp.hasMCQ || cp.hasEmojiSlider {
+            if cp.hasMCQ || cp.hasEmojiSlider || cp.interactionType == .photobooth {
                 // Interactive survey card floats above the marker box. It gets
                 // yawed toward the camera every frame, staying upright like a
                 // beacon, and answers are given by tapping the card itself.
@@ -50,6 +52,12 @@ enum CheckpointBoardLoader {
                     let controller: (any ARSurveyBoard)?
                     if cp.hasMCQ {
                         controller = await MCQBoardController.make(for: cp, onSubmit: saveAnswer)
+                    } else if cp.interactionType == .photobooth {
+                        controller = await PhotoboothBoardController.make(for: cp, onTapCamera: {
+                            onPhotoboothTap(cp)
+                        }, onTapGallery: {
+                            onGalleryTap(cp)
+                        })
                     } else {
                         controller = await EmojiSliderBoardController.make(for: cp) { answer, chosenEmoji in
                             saveAnswer(answer)

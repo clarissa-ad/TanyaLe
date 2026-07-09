@@ -179,30 +179,18 @@ struct RelativeUserARView: View {
                                     .foregroundStyle(.secondary)
                             }
                         } else if cp.interactionType == .photobooth {
-                            HStack {
-                                Button(action: {
-                                    activeCheckpoint = cp
-                                    showingImagePicker = true
-                                }) {
-                                    Label("Snap Photo", systemImage: "camera")
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background(Color.blue)
-                                        .foregroundStyle(.white)
-                                        .cornerRadius(10)
-                                }
-                                
-                                Button(action: {
-                                    activeCheckpoint = cp
-                                    showingGallery = true
-                                }) {
-                                    Label("Gallery", systemImage: "photo.on.rectangle")
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background(Color.purple)
-                                        .foregroundStyle(.white)
-                                        .cornerRadius(10)
-                                }
+                            // The 2D "Snap Photo" button has been replaced by the 3D board interaction.
+                            // Keeping the Gallery button in the HUD as requested for testing.
+                            Button(action: {
+                                activeCheckpoint = cp
+                                showingGallery = true
+                            }) {
+                                Label("Gallery", systemImage: "photo.on.rectangle")
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.purple)
+                                    .foregroundStyle(.white)
+                                    .cornerRadius(10)
                             }
                         } else if cp.interactionType == .emojiSlider {
                             Label("Emoji slider needs a question configured", systemImage: "face.smiling")
@@ -324,7 +312,15 @@ struct RelativeUserARView: View {
         CheckpointBoardLoader.load(
             into: arContainer,
             checkpoints: db.checkpoints,
-            onEmojiCelebration: showEmojiCelebration
+            onEmojiCelebration: showEmojiCelebration,
+            onPhotoboothTap: { cp in
+                activeCheckpoint = cp
+                showingImagePicker = true
+            },
+            onGalleryTap: { cp in
+                activeCheckpoint = cp
+                showingGallery = true
+            }
         )
     }
 }

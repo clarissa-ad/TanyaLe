@@ -167,7 +167,9 @@ struct ARWalkView: View {
                     CheckpointBoardLoader.load(
                         into: arContainer,
                         checkpoints: db.checkpoints,
-                        onEmojiCelebration: showEmojiCelebration
+                        onEmojiCelebration: showEmojiCelebration,
+                        onPhotoboothTap: { _ in },
+                        onGalleryTap: { _ in }
                     )
                     viewModel.startTracking(arContainer: arContainer)
                     return
