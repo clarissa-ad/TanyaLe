@@ -12,7 +12,7 @@ import Combine
 
 struct WalkableAspirationView: View {
     @State private var manager = WalkableAspirationManager()
-    @State private var locationManager = LocationManager()
+    private var locationManager = LocationManager.shared
     @State private var showSheet = false
 
     // Owns the ARView and everything in the AR scene; insulated from SwiftUI re-renders.

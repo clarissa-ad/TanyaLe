@@ -10,7 +10,7 @@ import MapKit
 
 /// A self-contained floating minimap overlay: a checkpoint map with a custom AR
 /// blue dot, plus show/hide and recenter controls. It owns its own display
-/// state (`mapState`, `mapRegion`); callers only feed it data.
+/// state (`mapState`, `mapPosition`); callers only feed it data.
 ///
 /// Trailing-aligned so it sits flush against whatever edge the parent places it
 /// on (e.g. top-right). Defaults to `.hidden` — only the "show map" button shows
@@ -27,55 +27,47 @@ struct ARMinimapView: View {
         case hidden, expanded
     }
 
+    /// Fixed minimap zoom level (max zoom).
+    private let minimapSpan = MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001)
+
     @State private var mapState: MapState = .hidden
-    @State private var mapRegion = MKCoordinateRegion(
+    @State private var mapPosition = MapCameraPosition.region(MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666),
-        span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001) // Max zoom
-    )
+        span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001)
+    ))
 
     var body: some View {
         VStack(alignment: .trailing) {
             if mapState != .hidden {
-                Map(coordinateRegion: $mapRegion, annotationItems: checkpoints) { cp in
-                    MapAnnotation(coordinate: cp.coordinate) {
-                        Circle()
-                            .fill(Color.green)
-                            .frame(width: 15, height: 15)
-                            .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                Map(position: $mapPosition) {
+                    ForEach(checkpoints) { cp in
+                        Annotation("", coordinate: cp.coordinate) {
+                            Circle()
+                                .fill(Color.green)
+                                .frame(width: 15, height: 15)
+                                .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                        }
+                    }
+
+                    // Custom AR blue dot for indoor tracking — a real map
+                    // annotation, so it stays put when the map is panned.
+                    if let userLoc = userLocation {
+                        Annotation("", coordinate: userLoc) {
+                            Circle()
+                                .fill(Color.blue)
+                                .frame(width: 15, height: 15)
+                                .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                                .shadow(radius: 2)
+                        }
                     }
                 }
                 .frame(width: 300, height: 400)
                 .cornerRadius(15)
                 .shadow(radius: 5)
-                .overlay(
-                    // Custom AR Blue Dot for Indoor Tracking
-                    Group {
-                        if let userLoc = userLocation {
-                            GeometryReader { proxy in
-                                let mapCenter = mapRegion.center
-                                let span = mapRegion.span
-
-                                // Convert coordinates to screen points based on region
-                                // This is a rough estimation for the minimap preview
-                                let xOffset = (userLoc.longitude - mapCenter.longitude) / span.longitudeDelta * Double(proxy.size.width)
-                                let yOffset = (mapCenter.latitude - userLoc.latitude) / span.latitudeDelta * Double(proxy.size.height)
-
-                                Circle()
-                                    .fill(Color.blue)
-                                    .frame(width: 15, height: 15)
-                                    .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                                    .shadow(radius: 2)
-                                    .position(x: proxy.size.width / 2 + CGFloat(xOffset),
-                                              y: proxy.size.height / 2 + CGFloat(yOffset))
-                                    .animation(.linear(duration: 0.2), value: userLoc.latitude)
-                            }
-                        }
-                    }
-                )
                 .onAppear {
                     // Snap to origin when map appears
                     if let origin {
-                        mapRegion.center = origin
+                        mapPosition = .region(MKCoordinateRegion(center: origin, span: minimapSpan))
                     }
                 }
             }
@@ -86,7 +78,7 @@ struct ARMinimapView: View {
                     Button(action: {
                         if let userLoc = userLocation {
                             withAnimation {
-                                mapRegion.center = userLoc
+                                mapPosition = .region(MKCoordinateRegion(center: userLoc, span: minimapSpan))
                             }
                         }
                     }) {
@@ -96,6 +88,7 @@ struct ARMinimapView: View {
                             .font(.system(size: 20, weight: .semibold))
                             .foregroundColor(.blue)
                             .clipShape(Circle())
+                            .foregroundStyle(.blue)
                     }
                 }
 

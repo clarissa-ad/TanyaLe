@@ -5,8 +5,12 @@ import ARKit
 import CoreLocation
 
 struct RelativeMakerARView: View {
+    // Journey integration
+    @State var journey: Journey
+    @Environment(\.dismiss) private var dismiss
+    
     @State private var viewModel = MakerViewModel()
-    @State private var locationManager = LocationManager()
+    var locationManager = LocationManager.shared
     
     @State private var isOriginSet = false
     @State private var showingAddSheet = false
@@ -18,6 +22,9 @@ struct RelativeMakerARView: View {
     @State private var tempEmojiLeft: String = ""
     @State private var tempEmojiRight: String = ""
     @State private var pendingTransform: SIMD3<Float>?
+    
+    var journeyService = JourneyService.shared
+    var db = MockDatabaseService.shared
     
     class ARContainer {
         var view: ARView?
@@ -39,9 +46,9 @@ struct RelativeMakerARView: View {
                 Spacer()
                 
                 if !isOriginSet {
-                    // Step 1: Simulate scanning the App Clip
+                    // Step 1: Set AR origin at the start point
                     VStack(spacing: 15) {
-                        Text("Stand at the physical App Clip location and tap below to calibrate.")
+                        Text("Point your camera at the starting point location and tap below to set the AR origin.")
                             .multilineTextAlignment(.center)
                             .padding()
                             .background(Color.black.opacity(0.7))
@@ -49,37 +56,9 @@ struct RelativeMakerARView: View {
                             .cornerRadius(10)
                         
                         Button(action: {
-                            if let arView = arContainer.view {
-                                let screenCenter = CGPoint(x: arView.bounds.midX, y: arView.bounds.midY)
-                                
-                                // Only the position is used for the origin — keeping the
-                                // rotation would tilt the world's axes (wall hits, tilted
-                                // camera) and break the shared gravity/heading alignment.
-                                // 1. Try to shoot a raycast to find a physical origin anchor (e.g. on the wall/floor)
-                                if let query = arView.makeRaycastQuery(from: screenCenter, allowing: .estimatedPlane, alignment: .any),
-                                   let result = arView.session.raycast(query).first {
-
-                                    var originTransform = matrix_identity_float4x4
-                                    originTransform.columns.3 = result.worldTransform.columns.3
-                                    arView.session.setWorldOrigin(relativeTransform: originTransform)
-                                    isOriginSet = true
-
-                                } else if let currentTransform = arView.session.currentFrame?.camera.transform {
-                                    // 2. Fallback to Camera if pointing at empty sky
-                                    var originTransform = matrix_identity_float4x4
-                                    originTransform.columns.3 = currentTransform.columns.3
-                                    arView.session.setWorldOrigin(relativeTransform: originTransform)
-                                    isOriginSet = true
-                                }
-                                
-                                if isOriginSet {
-                                    // Lock the Origin GPS!
-                                    let loc = locationManager.userLocation?.coordinate ?? CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666)
-                                    MockDatabaseService.shared.surveyOrigin = loc
-                                }
-                            }
+                            setAROrigin()
                         }) {
-                            Text("Scan App Clip (Set Origin)")
+                            Text("Set AR Origin Here")
                                 .fontWeight(.bold)
                                 .frame(maxWidth: .infinity)
                                 .padding()
@@ -93,28 +72,7 @@ struct RelativeMakerARView: View {
                 } else {
                     // Step 2: Walk around and aim with crosshair to drop checkpoints
                     Button(action: {
-                        if let arView = arContainer.view {
-                            let screenCenter = CGPoint(x: arView.bounds.midX, y: arView.bounds.midY)
-                            
-                            // 1. Try to shoot a raycast at the physical world
-                            if let query = arView.makeRaycastQuery(from: screenCenter, allowing: .estimatedPlane, alignment: .any),
-                               let result = arView.session.raycast(query).first {
-                                
-                                // Successful Raycast! Snap exactly to the physical object
-                                let transform = result.worldTransform
-                                pendingTransform = SIMD3<Float>(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
-                                showingAddSheet = true
-                                
-                            } else if let cameraTransform = arView.session.currentFrame?.camera.transform {
-                                // 2. Fallback: If aiming at empty space, drop 1.5m floating in front
-                                var translation = matrix_identity_float4x4
-                                translation.columns.3.z = -1.5
-                                let newTransform = matrix_multiply(cameraTransform, translation)
-                                
-                                pendingTransform = SIMD3<Float>(newTransform.columns.3.x, newTransform.columns.3.y, newTransform.columns.3.z)
-                                showingAddSheet = true
-                            }
-                        }
+                        aimToPlaceCheckpoint()
                     }) {
                         HStack {
                             Image(systemName: "cube.transparent")
@@ -135,13 +93,21 @@ struct RelativeMakerARView: View {
         .onAppear {
             locationManager.requestPermission()
         }
-        .navigationTitle("Maker (Relative AR)")
+        .navigationTitle(journey.name)
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarItems(trailing: NavigationLink(destination: CheckpointListView()) {
-            Image(systemName: "list.bullet")
-                .font(.title2)
-                .foregroundStyle(.blue)
-        })
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Done") {
+                    dismiss()
+                }
+            }
+            
+            ToolbarItem(placement: .primaryAction) {
+                NavigationLink(destination: CheckpointListView()) {
+                    Image(systemName: "list.bullet")
+                }
+            }
+        }
         .sheet(isPresented: $showingAddSheet) {
             NavigationView {
                 Form {
@@ -194,7 +160,7 @@ struct RelativeMakerARView: View {
         }
         
         // Save to DB
-        viewModel.addCheckpointAt(
+        let checkpoint = viewModel.addCheckpointAt(
             transform: position,
             title: tempTitle,
             description: tempDesc,
@@ -205,6 +171,9 @@ struct RelativeMakerARView: View {
             emojiRight: tempEmojiRight
         )
         
+        // Associate checkpoint with journey
+        journeyService.addCheckpoint(checkpoint.id, to: journey.id)
+        
         // Reset sheet state
         tempTitle = ""
         tempDesc = ""
@@ -214,6 +183,79 @@ struct RelativeMakerARView: View {
         tempEmojiLeft = ""
         tempEmojiRight = ""
         showingAddSheet = false
+    }
+    
+    // MARK: - Journey Integration Helpers
+    
+    private func setAROrigin() {
+        guard let arView = arContainer.view else { return }
+        let screenCenter = CGPoint(x: arView.bounds.midX, y: arView.bounds.midY)
+        
+        // Only the position is used for the origin — keeping the
+        // rotation would tilt the world's axes (wall hits, tilted
+        // camera) and break the shared gravity/heading alignment.
+        // 1. Try to shoot a raycast to find a physical origin anchor (e.g. on the wall/floor)
+        if let query = arView.makeRaycastQuery(from: screenCenter, allowing: .estimatedPlane, alignment: .any),
+           let result = arView.session.raycast(query).first {
+
+            var originTransform = matrix_identity_float4x4
+            originTransform.columns.3 = result.worldTransform.columns.3
+            arView.session.setWorldOrigin(relativeTransform: originTransform)
+            
+            // Save AR origin to journey
+            journey.arOriginX = result.worldTransform.columns.3.x
+            journey.arOriginY = result.worldTransform.columns.3.y
+            journey.arOriginZ = result.worldTransform.columns.3.z
+            journeyService.updateJourney(journey)
+            
+            isOriginSet = true
+
+        } else if let currentTransform = arView.session.currentFrame?.camera.transform {
+            // 2. Fallback to Camera if pointing at empty sky
+            var originTransform = matrix_identity_float4x4
+            originTransform.columns.3 = currentTransform.columns.3
+            arView.session.setWorldOrigin(relativeTransform: originTransform)
+            
+            // Save AR origin to journey
+            journey.arOriginX = currentTransform.columns.3.x
+            journey.arOriginY = currentTransform.columns.3.y
+            journey.arOriginZ = currentTransform.columns.3.z
+            journeyService.updateJourney(journey)
+            
+            isOriginSet = true
+        }
+        
+        if isOriginSet {
+            // Also set the legacy DB origin for backward compatibility
+            db.surveyOrigin = CLLocationCoordinate2D(
+                latitude: journey.startLatitude,
+                longitude: journey.startLongitude
+            )
+        }
+    }
+    
+    private func aimToPlaceCheckpoint() {
+        guard let arView = arContainer.view else { return }
+        let screenCenter = CGPoint(x: arView.bounds.midX, y: arView.bounds.midY)
+        
+        // 1. Try to shoot a raycast at the physical world
+        if let query = arView.makeRaycastQuery(from: screenCenter, allowing: .estimatedPlane, alignment: .any),
+           let result = arView.session.raycast(query).first {
+            
+            // Successful Raycast! Snap exactly to the physical object
+            let transform = result.worldTransform
+            pendingTransform = SIMD3<Float>(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
+            showingAddSheet = true
+            
+        } else if let cameraTransform = arView.session.currentFrame?.camera.transform {
+            // 2. Fallback: If aiming at empty space, drop 1.5m floating in front
+            var translation = matrix_identity_float4x4
+            translation.columns.3.z = -1.5
+            let newTransform = matrix_multiply(cameraTransform, translation)
+            
+            pendingTransform = SIMD3<Float>(newTransform.columns.3.x, newTransform.columns.3.y, newTransform.columns.3.z)
+            showingAddSheet = true
+        }
     }
 }
 
@@ -258,5 +300,5 @@ struct RelativeMakerARViewContainer: UIViewRepresentable {
 }
 
 #Preview {
-    RelativeMakerARView()
+    RelativeMakerARView(journey: Journey(name: "Test Journey"))
 }

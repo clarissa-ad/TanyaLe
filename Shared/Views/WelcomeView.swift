@@ -13,15 +13,9 @@ struct WelcomeView: View {
     // MARK: - Design tokens (from Figma)
     private let background = Color(red: 0.965, green: 0.969, blue: 0.976)   // #F6F7F9
     private let primary700 = Color(red: 0.278, green: 0.0, blue: 0.6)        // #470099
-    private let primary500 = Color(red: 0.678, green: 0.0, blue: 1.0)        // #AD00FF
-    private let primary800 = Color(red: 0.408, green: 0.0, blue: 0.6)        // #680099
 
     private var brandGradient: LinearGradient {
-        LinearGradient(
-            colors: [primary500, primary800],
-            startPoint: .leading,
-            endPoint: .trailing
-        )
+        .brand()
     }
 
     var body: some View {
