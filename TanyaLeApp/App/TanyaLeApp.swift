@@ -15,15 +15,7 @@ struct RootView: View {
     @State private var showARWalk = false
 
     var body: some View {
-        NavigationStack {
-            WelcomeView {
-                showARWalk = true
-            }
-            .navigationDestination(isPresented: $showARWalk) {
-                ARWalkView()
-                    .navigationBarBackButtonHidden(true)
-            }
-        }
+        SandboxDashboardView()
     }
 }
 
