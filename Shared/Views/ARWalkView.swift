@@ -98,7 +98,6 @@ struct ARWalkView: View {
         .onDisappear {
             viewModel.stopTracking()
         }
-        .navigationTitle("Walk")
         .navigationBarTitleDisplayMode(.inline)
     }
 

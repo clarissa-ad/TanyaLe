@@ -42,7 +42,6 @@
 		AA5E76112FFEBB04009F664A /* AppClipRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5E76102FFEBB04009F664A /* AppClipRootView.swift */; };
 		AA5E76122FFEBB04009F664A /* AppClipRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5E76102FFEBB04009F664A /* AppClipRootView.swift */; };
 		AA5E762F2FFEC017009F664A /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25086E2FFB5E7C001CF21C /* WelcomeView.swift */; };
-		AA5E76302FFEC01F009F664A /* ARWalkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508742FFC07F8001CF21C /* ARWalkView.swift */; };
 		AA5E76382FFEC1F3009F664A /* WalkableAspirationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA25085A2FFA60D5001CF21C /* WalkableAspirationManager.swift */; };
 		AA5E76392FFEC1FB009F664A /* WalkableAspirationSceneController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508902FFA60D5001CF21C /* WalkableAspirationSceneController.swift */; };
 		AA5E763A2FFEC203009F664A /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98374C122FF76A8F005D18E1 /* LocationManager.swift */; };
@@ -66,7 +65,11 @@
 		AA5E764C2FFF2906009F664A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA2508722FFB6589001CF21C /* Assets.xcassets */; };
 		AA5E764E2FFF2914009F664A /* appicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = AA164A8F2FFC985400783485 /* appicon_tanyale.icon */; };
 		AA5E76502FFF2D37009F664A /* Lele_Checkpoint.usdz in Resources */ = {isa = PBXBuildFile; fileRef = AA5E764F2FFF2D37009F664A /* Lele_Checkpoint.usdz */; };
+		AA5E76512FFEC300009F664A /* TanyaLeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA5E76502FFEC300009F664A /* TanyaLeApp.swift */; };
 		AA5E76512FFF2D37009F664A /* Lele_Checkpoint.usdz in Resources */ = {isa = PBXBuildFile; fileRef = AA5E764F2FFF2D37009F664A /* Lele_Checkpoint.usdz */; };
+		AABFC5DD2FFF3F1E0079F1FF /* ARWalkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2508742FFC07F8001CF21C /* ARWalkView.swift */; };
+		AABFC5DF2FFF43440079F1FF /* appclipicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = AABFC5DE2FFF43440079F1FF /* appclipicon_tanyale.icon */; };
+		AABFC5E12FFF434B0079F1FF /* appicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = AABFC5E02FFF434B0079F1FF /* appicon_tanyale.icon */; };
 		DB9768932FF795DA008660F8 /* MCQBoardEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */; };
 		DBB0D2892FFA9E4200252738 /* EmojiCelebrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */; };
 		DBB0D28D2FFCAFAB00252738 /* CheckpointFormContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBB0D28C2FFCAFAB00252738 /* CheckpointFormContent.swift */; };
@@ -132,6 +135,9 @@
 		AA25D3C82FFCB87400B1256B /* TutorialPopup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialPopup.swift; sourceTree = "<group>"; };
 		AA5E76102FFEBB04009F664A /* AppClipRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppClipRootView.swift; sourceTree = "<group>"; };
 		AA5E764F2FFF2D37009F664A /* Lele_Checkpoint.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = Lele_Checkpoint.usdz; sourceTree = "<group>"; };
+		AA5E76502FFEC300009F664A /* TanyaLeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TanyaLeApp.swift; sourceTree = "<group>"; };
+		AABFC5DE2FFF43440079F1FF /* appclipicon_tanyale.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = appclipicon_tanyale.icon; sourceTree = "<group>"; };
+		AABFC5E02FFF434B0079F1FF /* appicon_tanyale.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; name = appicon_tanyale.icon; path = Shared/Resources/appicon_tanyale.icon; sourceTree = "<group>"; };
 		DB9768922FF795DA008660F8 /* MCQBoardEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MCQBoardEntity.swift; sourceTree = "<group>"; };
 		DBB0D2882FFA9E4200252738 /* EmojiCelebrationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiCelebrationView.swift; sourceTree = "<group>"; };
 		DBB0D28C2FFCAFAB00252738 /* CheckpointFormContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckpointFormContent.swift; sourceTree = "<group>"; };
@@ -200,6 +206,7 @@
 			children = (
 				AA5E764F2FFF2D37009F664A /* Lele_Checkpoint.usdz */,
 				AA164A8F2FFC985400783485 /* appicon_tanyale.icon */,
+				AABFC5DE2FFF43440079F1FF /* appclipicon_tanyale.icon */,
 				AA2508722FFB6589001CF21C /* Assets.xcassets */,
 			);
 			path = Resources;
@@ -258,6 +265,7 @@
 		98374C1D2FF76A8F005D18E1 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				AA5E76502FFEC300009F664A /* TanyaLeApp.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -265,6 +273,7 @@
 		98374C1E2FF76A8F005D18E1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				AABFC5E02FFF434B0079F1FF /* appicon_tanyale.icon */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -423,6 +432,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA5E76502FFF2D37009F664A /* Lele_Checkpoint.usdz in Resources */,
+				AABFC5E12FFF434B0079F1FF /* appicon_tanyale.icon in Resources */,
 				98374BE52FF759EB005D18E1 /* README.md in Resources */,
 				AA164A902FFC985400783485 /* appicon_tanyale.icon in Resources */,
 				AA2508732FFB6589001CF21C /* Assets.xcassets in Resources */,
@@ -433,6 +443,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AABFC5DF2FFF43440079F1FF /* appclipicon_tanyale.icon in Resources */,
 				AA5E76512FFF2D37009F664A /* Lele_Checkpoint.usdz in Resources */,
 				AA5E764C2FFF2906009F664A /* Assets.xcassets in Resources */,
 				AA5E764E2FFF2914009F664A /* appicon_tanyale.icon in Resources */,
@@ -475,6 +486,7 @@
 				98374C392FF76A8F005D18E1 /* UserMinimapView.swift in Sources */,
 				AA25086F2FFB5F39001CF21C /* WelcomeView.swift in Sources */,
 				AA5E76112FFEBB04009F664A /* AppClipRootView.swift in Sources */,
+				AA5E76512FFEC300009F664A /* TanyaLeApp.swift in Sources */,
 				AA25086B2FFB57AB001CF21C /* MessageBoardEntity.swift in Sources */,
 				AA2508612FFA68B2001CF21C /* TextFieldBottomSheet.swift in Sources */,
 				98374C3A2FF76A8F005D18E1 /* CheckpointListView.swift in Sources */,
@@ -485,8 +497,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AABFC5DD2FFF3F1E0079F1FF /* ARWalkView.swift in Sources */,
 				AA5E763B2FFEC209009F664A /* WalkableAspiration.swift in Sources */,
-				AA5E76302FFEC01F009F664A /* ARWalkView.swift in Sources */,
 				AA5E76402FFEC23E009F664A /* CheckpointFormContent.swift in Sources */,
 				AA5E763C2FFEC210009F664A /* Checkpoint.swift in Sources */,
 				AA5E762F2FFEC017009F664A /* WelcomeView.swift in Sources */,
@@ -714,7 +726,7 @@
 		AA07A9462FFE0B7400CCB838 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = appclipicon_tanyale;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TanyaleAppClip/TanyaleAppClip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -750,7 +762,7 @@
 		AA07A9472FFE0B7400CCB838 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = appclipicon_tanyale;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TanyaleAppClip/TanyaleAppClip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
