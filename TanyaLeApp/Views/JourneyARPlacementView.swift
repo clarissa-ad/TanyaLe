@@ -15,7 +15,12 @@ import RealityKit
 struct JourneyARPlacementView: View {
     @Environment(\.dismiss) private var dismiss
     @State var journey: Journey
-    
+    /// Called when the creation flow ends (published or saved as draft).
+    /// The presenter decides how far to unwind — e.g. the journey-creation
+    /// flow dismisses all the way back to the landing page, while resuming a
+    /// draft from the detail screen just closes this cover.
+    var onFlowFinished: () -> Void = {}
+
     @State private var viewModel = MakerViewModel()
     @State private var arContainer = RelativeUserARView.ARContainer()
     @State private var hasSetAROrigin = false
@@ -50,17 +55,18 @@ struct JourneyARPlacementView: View {
                             .padding()
                             .background(.ultraThinMaterial)
                             .cornerRadius(10)
-                    } else {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Aim & Tap to Place")
-                                .font(.headline)
-                            Text("\(checkpointService.checkpoints.filter { journey.checkpointIDs.contains($0.id) }.count) checkpoints")
-                                .font(.caption)
-                        }
-                        .padding()
-                        .background(.ultraThinMaterial)
-                        .cornerRadius(10)
                     }
+//                    else {
+//                        VStack(alignment: .leading, spacing: 4) {
+//                            Text("Aim & Tap to Place")
+//                                .font(.headline)
+//                            Text("\(checkpointService.checkpoints.filter { journey.checkpointIDs.contains($0.id) }.count) checkpoints")
+//                                .font(.caption)
+//                        }
+//                        .padding()
+//                        .background(.ultraThinMaterial)
+//                        .cornerRadius(10)
+//                    }
 
                     Spacer()
 
@@ -69,7 +75,7 @@ struct JourneyARPlacementView: View {
                         Button {
                             showCheckpointList = true
                         } label: {
-                            VStack {
+                            HStack {
                                 Image(systemName: "square.and.pencil")
                                     .font(.title2)
                                 Text("Edit")
@@ -103,7 +109,7 @@ struct JourneyARPlacementView: View {
                             .padding()
                             .background(
                                 LinearGradient(
-                                    colors: [.brandOrange, .brandPurple],
+                                    colors: [.brandPurple,.brandPurpleDark],
                                     startPoint: .leading,
                                     endPoint: .trailing
                                 )
@@ -121,8 +127,8 @@ struct JourneyARPlacementView: View {
                                 VStack {
                                     Image(systemName: "checkmark.circle")
                                         .font(.title2)
-                                    Text("Done")
-                                        .font(.caption)
+//                                    Text("Done")
+//                                        .font(.caption)
                                 }
                                 .padding()
                                 .background(.ultraThinMaterial)
@@ -157,8 +163,8 @@ struct JourneyARPlacementView: View {
             // Read the journey fresh from the service — checkpoints added via
             // the form sheet update the service copy, not our local @State.
             JourneyPreviewView(journey: journeyService.getJourney(by: journey.id) ?? journey) {
-                // Published: close the AR placement flow too.
-                dismiss()
+                // Published or drafted: let the presenter unwind the flow.
+                onFlowFinished()
             }
         }
     }
@@ -192,22 +198,26 @@ struct JourneyARPlacementView: View {
             cameraTransform.columns.3.z
         )
         
-        // Save AR origin to journey
-        journey.arOriginX = origin.x
-        journey.arOriginY = origin.y
-        journey.arOriginZ = origin.z
-        journeyService.updateJourney(journey)
-        
+        // Save the AR origin. Mutate the *service's* copy of the journey, not
+        // our local snapshot — writing the snapshot back would wipe checkpoint
+        // associations added since it was taken.
+        var fresh = journeyService.getJourney(by: journey.id) ?? journey
+        fresh.arOriginX = origin.x
+        fresh.arOriginY = origin.y
+        fresh.arOriginZ = origin.z
+        journeyService.updateJourney(fresh)
+        journey = fresh
+
         // Mark as set
         hasSetAROrigin = true
-        
+
         // Load existing checkpoints if any
         loadExistingCheckpoints()
     }
-    
+
     private func loadExistingCheckpoints() {
-        let existingCheckpoints = checkpointService.checkpoints.filter { 
-            journey.checkpointIDs.contains($0.id) 
+        let existingCheckpoints = checkpointService.checkpoints.filter {
+            journey.checkpointIDs.contains($0.id)
         }
         
         for checkpoint in existingCheckpoints {
@@ -273,9 +283,9 @@ struct JourneyARPlacementView: View {
     }
     
     private func finishPlacement() {
-        // Save the AR origin etc., then let the maker review everything
-        // (details + checkpoints) before publishing.
-        journeyService.updateJourney(journey)
+        // The service already holds the up-to-date journey (checkpoints are
+        // associated as they're saved); writing our local snapshot back here
+        // would erase them. Just open the pre-publish review.
         showPreview = true
     }
 }
@@ -285,7 +295,7 @@ struct JourneyARPlacementView: View {
 struct CheckpointFormSheet: View {
     @Environment(\.dismiss) private var dismiss
     let position: SIMD3<Float>
-    @State var journey: Journey
+    let journey: Journey
     let onSave: (Checkpoint) -> Void
     
     @State private var title = ""
@@ -312,6 +322,7 @@ struct CheckpointFormSheet: View {
                     emojiRight: $emojiRight
                 )
             }
+            .dismissKeyboardOnTap()
             .navigationTitle("New Checkpoint")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -351,14 +362,11 @@ struct CheckpointFormSheet: View {
         // Save to database
         checkpointService.saveCheckpoint(checkpoint)
         
-        // Associate with journey
+        // Associate with journey. The service is the single source of truth —
+        // readers must fetch the journey by ID rather than trusting local
+        // value-type copies, which go stale.
         journeyService.addCheckpoint(checkpoint.id, to: journey.id)
-        
-        // Update local journey
-        if !journey.checkpointIDs.contains(checkpoint.id) {
-            journey.checkpointIDs.append(checkpoint.id)
-        }
-        
+
         // Callback to add to scene
         onSave(checkpoint)
         
@@ -370,13 +378,21 @@ struct CheckpointFormSheet: View {
 
 struct JourneyCheckpointListView: View {
     @Environment(\.dismiss) private var dismiss
-    @State var journey: Journey
+    let journey: Journey
 
     var journeyService = JourneyService.shared
     var checkpointService = MockDatabaseService.shared
 
+    /// `Journey` is a value type, so the passed-in copy's `checkpointIDs` can
+    /// be stale (e.g. checkpoints added by the form sheet update the service,
+    /// not the caller's snapshot). Always re-read the association from the
+    /// service — @Observable also keeps this list live as checkpoints change.
+    private var currentJourney: Journey {
+        journeyService.getJourney(by: journey.id) ?? journey
+    }
+
     var checkpoints: [Checkpoint] {
-        checkpointService.checkpoints.filter { journey.checkpointIDs.contains($0.id) }
+        checkpointService.checkpoints.filter { currentJourney.checkpointIDs.contains($0.id) }
     }
 
     var body: some View {
@@ -413,12 +429,13 @@ struct JourneyCheckpointListView: View {
             let checkpoint = checkpoints[index]
             checkpointService.deleteCheckpoint(checkpoint.id)
             journeyService.removeCheckpoint(checkpoint.id, from: journey.id)
-            journey.checkpointIDs.removeAll { $0 == checkpoint.id }
         }
     }
 }
 
-/// One checkpoint row: title, description, and an interaction-type badge.
+/// One checkpoint row: title, description, and a summary of the configured
+/// interaction (question, option count, emoji pair) so edits are visible in
+/// the list immediately after saving.
 /// Shared by the edit list and the pre-publish preview.
 struct CheckpointRowView: View {
     let checkpoint: Checkpoint
@@ -435,14 +452,37 @@ struct CheckpointRowView: View {
                     .lineLimit(1)
             }
 
-            if checkpoint.interactionType != .none {
-                Text(checkpoint.interactionType.rawValue)
+            if !checkpoint.question.isEmpty,
+               checkpoint.interactionType == .mcq || checkpoint.interactionType == .emojiSlider {
+                Label(checkpoint.question, systemImage: "questionmark.bubble")
                     .font(.caption)
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 2)
-                    .background(Color.blue.opacity(0.1))
-                    .foregroundStyle(.blue)
-                    .cornerRadius(4)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
+            }
+
+            if checkpoint.interactionType != .none {
+                HStack(spacing: 8) {
+                    Text(checkpoint.interactionType.rawValue)
+                        .font(.caption)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(Color.blue.opacity(0.1))
+                        .foregroundStyle(.blue)
+                        .cornerRadius(4)
+
+                    switch checkpoint.interactionType {
+                    case .mcq:
+                        let count = checkpoint.surveyOptions.filter { !$0.isEmpty }.count
+                        Text("\(count) options")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    case .emojiSlider:
+                        Text("\(checkpoint.emojiLeft) ⟷ \(checkpoint.emojiRight)")
+                            .font(.caption)
+                    default:
+                        EmptyView()
+                    }
+                }
             }
         }
     }

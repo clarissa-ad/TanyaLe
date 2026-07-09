@@ -124,6 +124,7 @@ struct RelativeMakerARView: View {
                         emojiRight: $tempEmojiRight
                     )
                 }
+                .dismissKeyboardOnTap()
                 .navigationTitle("New Checkpoint")
                 .navigationBarItems(
                     leading: Button("Cancel") {

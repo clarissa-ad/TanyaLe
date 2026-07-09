@@ -14,6 +14,7 @@ struct JourneyDetailView: View {
     @State var journey: Journey
     @State private var showQRCode = false
     @State private var showEditCheckpoints = false
+    @State private var showARPlacement = false
     
     var journeyService = JourneyService.shared
     var checkpointService = MockDatabaseService.shared
@@ -80,6 +81,14 @@ struct JourneyDetailView: View {
             // Actions Section
             Section(header: Text("Actions")) {
                 if !journey.isPublished {
+                    // Drafts can be resumed: jump back into AR placement to
+                    // keep adding checkpoints where they left off.
+                    Button {
+                        showARPlacement = true
+                    } label: {
+                        Label("Continue Placing in AR", systemImage: "arkit")
+                    }
+
                     Button {
                         publishJourney()
                     } label: {
@@ -114,6 +123,19 @@ struct JourneyDetailView: View {
             NavigationView {
                 CheckpointListView(journey: journey)
             }
+        }
+        .fullScreenCover(isPresented: $showARPlacement, onDismiss: {
+            // Pick up checkpoints added during the AR session — our local
+            // journey is a value-type snapshot and doesn't update itself.
+            if let updated = journeyService.getJourney(by: journey.id) {
+                journey = updated
+            }
+        }) {
+            // Resumed from the detail screen: finishing just closes this
+            // cover and returns here (not to the landing page).
+            JourneyARPlacementView(journey: journey, onFlowFinished: {
+                showARPlacement = false
+            })
         }
     }
     

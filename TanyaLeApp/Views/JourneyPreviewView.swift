@@ -1,12 +1,18 @@
 import SwiftUI
 
 /// Pre-publish review shown when the maker taps "Done" in the AR placement
-/// view: journey details plus every checkpoint, with a final Publish button.
+/// view: journey details plus every checkpoint, with Publish and Save-as-Draft
+/// actions. Publishing pushes straight into the journey info screen (details,
+/// status, checkpoints, QR code).
 struct JourneyPreviewView: View {
     @Environment(\.dismiss) private var dismiss
     let journey: Journey
-    /// Called after publishing so the presenting AR screen can close too.
-    var onPublished: () -> Void = {}
+    /// Called when the flow is finished (published or saved as draft) so the
+    /// presenting AR screen can close too.
+    var onDone: () -> Void = {}
+
+    /// Set after publishing; pushes the journey info screen.
+    @State private var publishedJourney: Journey?
 
     var journeyService = JourneyService.shared
     var checkpointService = MockDatabaseService.shared
@@ -20,7 +26,7 @@ struct JourneyPreviewView: View {
     }
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             List {
                 Section(header: Text("Journey")) {
                     LabeledContent("Name", value: journey.name)
@@ -68,19 +74,37 @@ struct JourneyPreviewView: View {
                 }
 
                 Section(footer: publishFooter) {
-                    Button(action: publish) {
-                        Text("Publish Journey")
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .padding()
-                            .background(
-                                LinearGradient.brandPurpleButton()
-                                    .opacity(canPublish ? 1 : 0.4),
-                                in: Capsule()
-                            )
-                            .foregroundColor(.white)
+                    VStack(spacing: 12) {
+                        Button(action: publish) {
+                            Text("Publish Journey")
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(
+                                    LinearGradient.brandPurpleButton()
+                                        .opacity(canPublish ? 1 : 0.4),
+                                    in: Capsule()
+                                )
+                                .foregroundColor(.white)
+                        }
+                        .disabled(!canPublish)
+
+                        Button(action: saveAsDraft) {
+                            Text("Save as Draft")
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .padding()
+                                .background(Color.white, in: Capsule())
+                                .foregroundStyle(LinearGradient.brandPurpleButton())
+                                .overlay(
+                                    Capsule()
+                                        .stroke(LinearGradient.brandPurpleButton(), lineWidth: 2)
+                                )
+                        }
                     }
-                    .disabled(!canPublish)
+                    // .plain keeps the two buttons' hit areas separate — in a
+                    // List row, default-styled buttons all fire on a row tap.
+                    .buttonStyle(.plain)
                     .listRowBackground(Color.clear)
                     .listRowInsets(EdgeInsets())
                 }
@@ -89,25 +113,46 @@ struct JourneyPreviewView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Keep Editing") {
+                    Button("Back") {
                         dismiss()
                     }
                 }
+            }
+            .navigationDestination(item: $publishedJourney) { published in
+                // Journey info: details, published status, checkpoints, QR.
+                JourneyDetailView(journey: published)
+                    .navigationBarBackButtonHidden()
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Done") {
+                                dismiss()
+                                onDone()
+                            }
+                        }
+                    }
             }
         }
     }
 
     @ViewBuilder
     private var publishFooter: some View {
-        if !canPublish {
-            Text("A start point and at least one checkpoint are needed before publishing.")
+        if canPublish {
+            Text("Drafts are kept under My Journeys, so you can finish and publish later.")
+        } else {
+            Text("A start point and at least one checkpoint are needed before publishing. You can save it as a draft and finish it later from My Journeys.")
         }
     }
 
     private func publish() {
         journeyService.publishJourney(journey.id)
+        publishedJourney = journeyService.getJourney(by: journey.id)
+    }
+
+    /// The journey is already stored unpublished, so "saving" a draft just
+    /// closes the creation flow; it stays listed under My Journeys → Drafts.
+    private func saveAsDraft() {
         dismiss()
-        onPublished()
+        onDone()
     }
 }
 

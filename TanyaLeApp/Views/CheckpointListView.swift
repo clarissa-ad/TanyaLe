@@ -27,24 +27,7 @@ struct CheckpointListView: View {
             } else {
                 ForEach(checkpoints) { checkpoint in
                     NavigationLink(destination: CheckpointEditView(checkpoint: checkpoint)) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(checkpoint.title)
-                                .font(.headline)
-                            Text(checkpoint.taskDescription)
-                                .font(.subheadline)
-                                .foregroundStyle(.gray)
-                                .lineLimit(1)
-
-                            if checkpoint.interactionType != .none {
-                                Text(checkpoint.interactionType.rawValue)
-                                    .font(.caption)
-                                    .padding(.horizontal, 6)
-                                    .padding(.vertical, 2)
-                                    .background(Color.blue.opacity(0.1))
-                                    .foregroundStyle(.blue)
-                                    .cornerRadius(4)
-                            }
-                        }
+                        CheckpointRowView(checkpoint: checkpoint)
                     }
                 }
                 .onDelete(perform: deleteCheckpoint)
