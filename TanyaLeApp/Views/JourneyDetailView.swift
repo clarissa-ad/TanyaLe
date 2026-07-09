@@ -25,23 +25,28 @@ struct JourneyDetailView: View {
             // field, so the section hugs its content (separate rows each
             // reserve the standard row height, leaving airy gaps for short
             // values like Status).
-        Section(header: Text("Journey Info")) {
+            Section(header: Text("Journey Info")) {
                 LabeledContent("Name", value: journey.name)
 
                 LabeledContent("Created", value: journey.createdDate.formatted(date: .long, time: .omitted))
 
-                HStack {
+                LabeledContent {
+                        HStack(spacing: 6) {
+                            if journey.isPublished {
+                                Image(systemName: "checkmark.circle.fill")
+                                Text("Published")
+                            } else {
+                                Image(systemName: "pencil.circle")
+                                Text("Draft")
+                            }
+                        }
+                        // You can apply the color to the whole HStack at once!
+                        .foregroundStyle(journey.isPublished ? .green : .orange)
+                } label: {
                     Text("Status")
-                    Spacer()
-                    if journey.isPublished {
-                        Label("Published", systemImage: "checkmark.circle.fill")
-                            .foregroundStyle(.green)
-                    } else {
-                        Label("Draft", systemImage: "pencil.circle")
-                            .foregroundStyle(.orange)
-                    }
                 }
                 .padding(.vertical, 2)
+                
                 if !journey.description.isEmpty {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("Description")
