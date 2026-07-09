@@ -21,28 +21,33 @@ struct JourneyDetailView: View {
     
     var body: some View {
         List {
-            // Journey Info Section
-            Section(header: Text("Journey Info")) {
+            // Journey Info Section — one compact row instead of a row per
+            // field, so the section hugs its content (separate rows each
+            // reserve the standard row height, leaving airy gaps for short
+            // values like Status).
+        Section(header: Text("Journey Info")) {
                 LabeledContent("Name", value: journey.name)
-                
-                if !journey.description.isEmpty {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Description")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        Text(journey.description)
-                    }
-                }
-                
+
                 LabeledContent("Created", value: journey.createdDate.formatted(date: .long, time: .omitted))
-                
-                LabeledContent("Status") {
+
+                HStack {
+                    Text("Status")
+                    Spacer()
                     if journey.isPublished {
                         Label("Published", systemImage: "checkmark.circle.fill")
                             .foregroundStyle(.green)
                     } else {
                         Label("Draft", systemImage: "pencil.circle")
                             .foregroundStyle(.orange)
+                    }
+                }
+                .padding(.vertical, 2)
+                if !journey.description.isEmpty {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Description")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Text(journey.description)
                     }
                 }
             }
@@ -112,6 +117,7 @@ struct JourneyDetailView: View {
                 }
             }
         }
+        .listSectionSpacing(.compact)
         .navigationTitle(journey.name)
         .navigationBarTitleDisplayMode(.large)
         .sheet(isPresented: $showQRCode) {
