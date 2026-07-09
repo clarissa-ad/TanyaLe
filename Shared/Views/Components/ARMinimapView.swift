@@ -83,8 +83,10 @@ struct ARMinimapView: View {
                         }
                     }) {
                         Image(systemName: "location.fill")
-                            .padding(10)
+                            .frame(width: 50, height: 50)
                             .background(Color.white.opacity(0.9))
+                            .font(.system(size: 20, weight: .semibold))
+                            .foregroundColor(.blue)
                             .clipShape(Circle())
                             .foregroundStyle(.blue)
                     }
@@ -96,13 +98,12 @@ struct ARMinimapView: View {
                     }
                 }) {
                     Image(systemName: mapState == .hidden ? "map.fill" : "eye.slash.fill")
-                        .padding(10)
+                        .frame(width: 50, height: 50)
                         .background(Color.white.opacity(0.9))
+                        .font(.system(size: 20, weight: .semibold))
                         .clipShape(Circle())
                 }
             }
-            .padding(.top, 5)
         }
-        .padding()
     }
 }

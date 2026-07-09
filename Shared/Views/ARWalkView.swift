@@ -29,6 +29,8 @@ struct ARWalkView: View {
 
     /// When set, the bottom half of the screen fills with this emoji.
     @State private var celebrationEmoji: String?
+    /// Shows the first-run tutorial card when the screen loads.
+    @State private var showTutorial = true
 
     var body: some View {
         ZStack {
@@ -79,6 +81,15 @@ struct ARWalkView: View {
                     .transition(.opacity)
                     .zIndex(15)
             }
+
+            // First-run tutorial, dismissed by tapping "Find Lele".
+            if showTutorial {
+                TutorialPopup {
+                    withAnimation { showTutorial = false }
+                }
+                .transition(.opacity)
+                .zIndex(30)
+            }
         }
         .onAppear {
             locationManager.requestPermission()
@@ -89,7 +100,6 @@ struct ARWalkView: View {
             // Pause the AR session to save resources
             arContainer.view?.session.pause()
         }
-        .navigationTitle("Walk")
         .navigationBarTitleDisplayMode(.inline)
     }
 

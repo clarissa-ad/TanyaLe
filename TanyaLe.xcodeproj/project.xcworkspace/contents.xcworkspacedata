@@ -4,7 +4,4 @@
    <FileRef
       location = "self:">
    </FileRef>
-   <FileRef
-      location = "group:GPS_PERMISSIONS_SETUP.md">
-   </FileRef>
 </Workspace>
