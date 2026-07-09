@@ -2,7 +2,7 @@ import SwiftUI
 import MapKit
 
 struct UserMinimapView: View {
-    @State private var locationManager = LocationManager()
+    private var locationManager = LocationManager.shared
     private var db = MockDatabaseService.shared
     
     /// Default map zoom level.
