@@ -56,7 +56,7 @@ struct PastJourneysListView: View {
             }
             .navigationTitle("My Journeys")
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
+                ToolbarItem(placement: .confirmationAction) {
                     Button("Done") {
                         dismiss()
                     }

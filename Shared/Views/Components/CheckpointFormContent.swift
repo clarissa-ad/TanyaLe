@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct CheckpointFormContent: View {
     @Binding var title: String
@@ -72,8 +73,7 @@ struct CheckpointFormContent: View {
                 TextField("Question", text: $question)
 
                 HStack {
-                    TextField("Left", text: $emojiLeft)
-                        .multilineTextAlignment(.center)
+                    EmojiTextField(placeholder: "Left", text: $emojiLeft)
 
                     Button(action: {
                         let temp = emojiLeft
@@ -85,8 +85,7 @@ struct CheckpointFormContent: View {
                     }
                     .buttonStyle(.borderless)
 
-                    TextField("Right", text: $emojiRight)
-                        .multilineTextAlignment(.center)
+                    EmojiTextField(placeholder: "Right", text: $emojiRight)
                 }
             }
         }
@@ -123,6 +122,129 @@ struct CheckpointFormContent: View {
             ensureCapacity(6)
         } else {
             ensureCapacity(4)
+        }
+    }
+}
+
+// MARK: - Keyboard helpers
+
+extension View {
+    /// Lets the user dismiss the keyboard by tapping anywhere else on the
+    /// form, or by scrolling it.
+    ///
+    /// Implemented with a UIKit recognizer (`cancelsTouchesInView = false`)
+    /// instead of a SwiftUI gesture: a SwiftUI `simultaneousGesture` competes
+    /// with `Form` row selection and breaks Picker/NavigationLink rows,
+    /// whereas this recognizer only observes taps and never swallows them.
+    func dismissKeyboardOnTap() -> some View {
+        self
+            .scrollDismissesKeyboard(.immediately)
+            .background(KeyboardDismissTapInstaller())
+    }
+}
+
+/// Invisible helper that installs a keyboard-dismissing tap recognizer on the
+/// window while its host view is on screen, and removes it when it leaves.
+private struct KeyboardDismissTapInstaller: UIViewRepresentable {
+    func makeUIView(context: Context) -> InstallerView {
+        let view = InstallerView()
+        view.isUserInteractionEnabled = false
+        return view
+    }
+
+    func updateUIView(_ uiView: InstallerView, context: Context) {}
+
+    final class InstallerView: UIView, UIGestureRecognizerDelegate {
+        private var recognizer: UITapGestureRecognizer?
+
+        override func didMoveToWindow() {
+            super.didMoveToWindow()
+            // Detach from the previous window (screen dismissed / moved).
+            if let recognizer {
+                recognizer.view?.removeGestureRecognizer(recognizer)
+                self.recognizer = nil
+            }
+            guard let window else { return }
+            let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+            tap.cancelsTouchesInView = false // observe only — never eat the tap
+            tap.delegate = self
+            window.addGestureRecognizer(tap)
+            recognizer = tap
+        }
+
+        @objc private func dismissKeyboard() {
+            window?.endEditing(true)
+        }
+
+        // Play nice with every other gesture (scrolling, row selection, …).
+        func gestureRecognizer(
+            _ gestureRecognizer: UIGestureRecognizer,
+            shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+        ) -> Bool {
+            true
+        }
+
+        // Don't fire when tapping into a text input — let it take focus.
+        func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+            var view: UIView? = touch.view
+            while let current = view {
+                if current is UITextField || current is UITextView { return false }
+                view = current.superview
+            }
+            return true
+        }
+    }
+}
+
+// MARK: - Emoji text field
+
+/// A text field that opens the emoji keyboard directly when focused.
+///
+/// UIKit has no public emoji `UIKeyboardType`, but a responder can report the
+/// emoji input mode as its preferred one via `textInputMode` — the system
+/// then presents the emoji keyboard by default (the user can still switch
+/// keyboards with the globe key).
+struct EmojiTextField: UIViewRepresentable {
+    let placeholder: String
+    @Binding var text: String
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(text: $text)
+    }
+
+    func makeUIView(context: Context) -> EmojiUITextField {
+        let field = EmojiUITextField()
+        field.placeholder = placeholder
+        field.textAlignment = .center
+        field.addTarget(context.coordinator, action: #selector(Coordinator.textChanged(_:)), for: .editingChanged)
+        return field
+    }
+
+    func updateUIView(_ uiView: EmojiUITextField, context: Context) {
+        if uiView.text != text {
+            uiView.text = text
+        }
+    }
+
+    class Coordinator: NSObject {
+        private let text: Binding<String>
+
+        init(text: Binding<String>) {
+            self.text = text
+        }
+
+        @objc func textChanged(_ sender: UITextField) {
+            text.wrappedValue = sender.text ?? ""
+        }
+    }
+
+    class EmojiUITextField: UITextField {
+        // A non-nil identifier lets UIKit restore this field's input mode
+        // instead of the user's default keyboard.
+        override var textInputContextIdentifier: String? { "" }
+
+        override var textInputMode: UITextInputMode? {
+            UITextInputMode.activeInputModes.first { $0.primaryLanguage == "emoji" } ?? super.textInputMode
         }
     }
 }

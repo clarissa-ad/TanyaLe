@@ -14,6 +14,8 @@ struct SetStartPointView: View {
     @Environment(\.dismiss) private var dismiss
     @State var journey: Journey
     var locationManager: LocationManager = .shared
+    /// Forwarded to the AR placement flow; ends the whole creation flow.
+    var onFlowFinished: () -> Void = {}
     @State private var showARPlacement = false
     @State private var hasSetStartPoint = false
     
