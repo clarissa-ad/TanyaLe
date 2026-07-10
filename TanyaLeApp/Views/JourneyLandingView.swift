@@ -10,7 +10,6 @@ import SwiftUI
 /// Landing page for the maker flow.
 /// Shows app logo and two main actions: create a new journey or view past journeys.
 struct JourneyLandingView: View {
-    @State private var showCreateJourney = false
     @State private var showPastJourneys = false
     
     var body: some View {
@@ -45,9 +44,9 @@ struct JourneyLandingView: View {
                 
                 // Action Buttons
                 VStack(spacing: 20) {
-                    // Create New Journey Button
-                    Button {
-                        showCreateJourney = true
+                    // Create New Journey — pushed as a page, not a sheet.
+                    NavigationLink {
+                        JourneySetupView()
                     } label: {
                         HStack {
                             Text("Create New Journey")
@@ -82,9 +81,6 @@ struct JourneyLandingView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
-        .sheet(isPresented: $showCreateJourney) {
-            JourneySetupView()
-        }
         .sheet(isPresented: $showPastJourneys) {
             PastJourneysListView()
         }
