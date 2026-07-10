@@ -30,7 +30,13 @@ struct JourneyARPlacementView: View {
     @State private var newCheckpointPosition: SIMD3<Float>?
     @State private var showCheckpointList = false
     @State private var showPreview = false
-    
+    /// True while a Like/Dislike asset is previewed live in the scene, waiting
+    /// for Pak RT to drag-rotate it and confirm or cancel.
+    @State private var isConfirmingPlacement = false
+    /// The just-saved checkpoint whose asset is being rotated. Already stored
+    /// at rotation 0 — confirm writes back its `assetRotationY`.
+    @State private var pendingCheckpoint: Checkpoint?
+
     var journeyService = JourneyService.shared
     var checkpointService = MockDatabaseService.shared
     
@@ -65,7 +71,7 @@ struct JourneyARPlacementView: View {
                     Spacer()
                     
                     // Edit checkpoints (top right)
-                    if hasSetAROrigin {
+                    if hasSetAROrigin && !isConfirmingPlacement {
                         Button {
                             showCheckpointList = true
                         } label: {
@@ -87,7 +93,9 @@ struct JourneyARPlacementView: View {
                 Spacer()
                 
                 // Bottom Controls
-                if hasSetAROrigin {
+                if isConfirmingPlacement {
+                    placementConfirmPanel
+                } else if hasSetAROrigin {
                     ZStack {
                         // Tap to place button (centered)
                         Button {
@@ -96,7 +104,7 @@ struct JourneyARPlacementView: View {
                             VStack {
                                 Image(systemName: "plus.circle.fill")
                                     .font(.system(size: 50))
-                                Text("Place Checkpoint")
+                                Text("Place Checkpoint 3")
                                     .font(.caption)
                             }
                             .foregroundColor(.white)
@@ -150,7 +158,7 @@ struct JourneyARPlacementView: View {
                     position: position,
                     journey: journey,
                     onSave: { checkpoint in
-                        renderCheckpoints([checkpoint])
+                        beginPlacementOrRender(checkpoint)
                     }
                 )
             }
@@ -287,6 +295,115 @@ struct JourneyARPlacementView: View {
         // associated as they're saved); writing our local snapshot back here
         // would erase them. Just open the pre-publish review.
         showPreview = true
+    }
+
+    // MARK: - Like/Dislike asset rotation
+
+    /// After a checkpoint is saved: for a Like/Dislike checkpoint with a
+    /// placeable asset, start the drag-to-rotate preview; otherwise render it
+    /// straight away.
+    private func beginPlacementOrRender(_ checkpoint: Checkpoint) {
+        if checkpoint.interactionType == .likedislike,
+           let assetId = checkpoint.selectedAssetId,
+           AssetPlacementConfig.config(forAssetId: assetId) != nil,
+           let arView = arContainer.view {
+            beginAssetPlacementPreview(checkpoint: checkpoint, assetId: assetId, in: arView)
+        } else {
+            renderCheckpoints([checkpoint])
+        }
+    }
+
+    /// Drops the asset alone into the scene and switches on the confirm/cancel
+    /// panel. Pak RT drags to spin it — the rotation itself is handled by the
+    /// shared `AssetPlacementController` via the container's pan gesture; this
+    /// view only orchestrates the preview lifecycle. Nothing is finalized until
+    /// `confirmPlacement()`.
+    private func beginAssetPlacementPreview(checkpoint: Checkpoint, assetId: String, in arView: ARView) {
+        let position = SIMD3<Float>(checkpoint.relativeX, checkpoint.relativeY, checkpoint.relativeZ)
+        let anchor = AnchorEntity(world: position)
+        arView.scene.addAnchor(anchor)
+        arContainer.pendingPlacementAnchor = anchor
+        pendingCheckpoint = checkpoint
+
+        Task { @MainActor in
+            do {
+                arContainer.activePlacement = try await AssetPlacementController.make(assetId: assetId, anchor: anchor)
+                isConfirmingPlacement = true
+            } catch {
+                // Model failed to load — don't strand the flow. Drop the empty
+                // anchor and just render the checkpoint at its default rotation.
+                print("AssetPlacementController failed to load \(assetId): \(error)")
+                endPlacementPreview()
+                renderCheckpoints([checkpoint])
+            }
+        }
+    }
+
+    /// Writes the dragged rotation onto the checkpoint and renders the final
+    /// asset + vote card in its place.
+    private func confirmPlacement() {
+        guard var checkpoint = pendingCheckpoint else { return }
+        checkpoint.assetRotationY = arContainer.activePlacement?.rotationY ?? 0
+        checkpointService.updateCheckpoint(checkpoint)
+        endPlacementPreview()
+        renderCheckpoints([checkpoint])
+    }
+
+    /// Keeps the checkpoint at its default rotation (it's already saved) and
+    /// renders it as-is.
+    private func cancelPlacement() {
+        let checkpoint = pendingCheckpoint
+        endPlacementPreview()
+        if let checkpoint { renderCheckpoints([checkpoint]) }
+    }
+
+    /// Tears down the live preview: removes the preview-only asset anchor and
+    /// clears the placement state.
+    private func endPlacementPreview() {
+        arContainer.pendingPlacementAnchor?.removeFromParent()
+        arContainer.pendingPlacementAnchor = nil
+        arContainer.activePlacement = nil
+        isConfirmingPlacement = false
+        pendingCheckpoint = nil
+    }
+
+    private var placementConfirmPanel: some View {
+        VStack(spacing: 12) {
+            Text("Geser untuk memutar aset")
+                .font(.footnote)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(.ultraThinMaterial)
+                .cornerRadius(20)
+
+            HStack(spacing: 16) {
+                Button(action: cancelPlacement) {
+                    Image(systemName: "xmark")
+                        .font(.title2)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(12)
+                }
+
+                Button(action: confirmPlacement) {
+                    HStack {
+                        Image(systemName: "checkmark")
+                        Text("Confirm").fontWeight(.bold)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(
+                        LinearGradient(colors: [.brandPurple, .brandPurpleDark],
+                                       startPoint: .leading, endPoint: .trailing)
+                    )
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+                }
+            }
+        }
+        .padding()
+        .padding(.bottom, 30)
     }
 }
 
