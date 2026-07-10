@@ -13,11 +13,16 @@ struct CheckpointFormContent: View {
     @Binding var showingImagePicker: Bool
     @Binding var selectedAssetId: String?
     @Binding var showingAssetPicker: Bool
-
+    
     // Tracks whether the extra 2 slots (5 & 6) are visible.
     @State private var showExtraOptions = false
     @State private var newOption: String = ""
-
+    
+    private var selectedAsset: Asset3D? {
+        guard let selectedAssetId else { return nil }
+        return MockAssetService.shared.asset(withId: selectedAssetId)
+    }
+    
     var body: some View {
         Section(header: Text("Checkpoint Details")) {
             TextField("Title", text: $title)
@@ -25,7 +30,7 @@ struct CheckpointFormContent: View {
         Section(header: Text("Checkpoint Description")) {
             TextField("Description (optional)", text: $taskDescription)
         }
-
+        
         Section(
             header: Text("Interaction"),
             footer: Text("Choose what the citizen does when they reach this checkpoint. A plain checkpoint just needs to be visited.")
@@ -36,19 +41,19 @@ struct CheckpointFormContent: View {
                 }
             }
         }
-
+        
         if interactionType == .mcq {
             Section(
                 header: Text("Multiple Choice Question"),
                 footer: Text("Options 1 and 2 are required. Tap \"Add More Answers\" to unlock two extra slots (6 max).")
             ) {
                 TextField("Question", text: $question)
-
+                
                 optionField(at: 0, placeholder: "Option 1 (required)")
                 optionField(at: 1, placeholder: "Option 2 (required)")
                 optionField(at: 2, placeholder: "Option 3 (optional)")
                 optionField(at: 3, placeholder: "Option 4 (optional)")
-
+                
                 if showExtraOptions {
                     optionField(at: 4, placeholder: "Option 5 (optional)")
                     optionField(at: 5, placeholder: "Option 6 (optional)")
@@ -97,10 +102,10 @@ struct CheckpointFormContent: View {
                 footer: Text("The citizen slides between the two emoji to answer the question. Use the arrows to swap sides.")
             ) {
                 TextField("Question", text: $question)
-
+                
                 HStack {
                     EmojiTextField(placeholder: "Left", text: $emojiLeft)
-
+                    
                     Button(action: {
                         let temp = emojiLeft
                         emojiLeft = emojiRight
@@ -110,20 +115,45 @@ struct CheckpointFormContent: View {
                             .foregroundColor(.blue)
                     }
                     .buttonStyle(.borderless)
-
+                    
                     EmojiTextField(placeholder: "Right", text: $emojiRight)
                 }
             }
         }
+        else if interactionType == .likedislike {
+            Section(header: Text("Like & Dislike"), footer: Text("The citizen sees this 3D item in AR and votes whether they like it.")) {
+                Button {
+                    showingAssetPicker = true
+                } label: {
+                    HStack {
+                        if let selectedAsset {
+                            AssetThumbnailImage(asset: selectedAsset, iconSize: 20)
+                                .frame(width: 28, height: 28)
+                            Text(selectedAsset.name)
+                                .foregroundStyle(.primary)
+                        } else {
+                            Text("Select an Item")
+                                .foregroundStyle(.primary)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .foregroundStyle(.secondary)
+                            .font(.caption)
+                    }
+                }
+                
+                TextField("Custom Question", text: $question)
+            }
+        }
     }
-
+    
     // MARK: - Helpers
-
+    
     @ViewBuilder
     private func optionField(at index: Int, placeholder: String) -> some View {
         TextField(placeholder, text: optionBinding(at: index))
     }
-
+    
     private func optionBinding(at index: Int) -> Binding<String> {
         Binding(
             get: { index < surveyOptions.count ? surveyOptions[index] : "" },
@@ -133,13 +163,13 @@ struct CheckpointFormContent: View {
             }
         )
     }
-
+    
     private func ensureCapacity(_ count: Int) {
         while surveyOptions.count < count {
             surveyOptions.append("")
         }
     }
-
+    
     /// Pads the options array to 4 slots and restores the "show extra" state
     /// if a checkpoint was loaded with more than 4 options already saved.
     private func setupMCQSlots() {
@@ -177,12 +207,12 @@ private struct KeyboardDismissTapInstaller: UIViewRepresentable {
         view.isUserInteractionEnabled = false
         return view
     }
-
+    
     func updateUIView(_ uiView: InstallerView, context: Context) {}
-
+    
     final class InstallerView: UIView, UIGestureRecognizerDelegate {
         private var recognizer: UITapGestureRecognizer?
-
+        
         override func didMoveToWindow() {
             super.didMoveToWindow()
             // Detach from the previous window (screen dismissed / moved).
@@ -197,11 +227,11 @@ private struct KeyboardDismissTapInstaller: UIViewRepresentable {
             window.addGestureRecognizer(tap)
             recognizer = tap
         }
-
+        
         @objc private func dismissKeyboard() {
             window?.endEditing(true)
         }
-
+        
         // Play nice with every other gesture (scrolling, row selection, …).
         func gestureRecognizer(
             _ gestureRecognizer: UIGestureRecognizer,
@@ -209,7 +239,7 @@ private struct KeyboardDismissTapInstaller: UIViewRepresentable {
         ) -> Bool {
             true
         }
-
+        
         // Don't fire when tapping into a text input — let it take focus.
         func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
             var view: UIView? = touch.view
@@ -233,11 +263,11 @@ private struct KeyboardDismissTapInstaller: UIViewRepresentable {
 struct EmojiTextField: UIViewRepresentable {
     let placeholder: String
     @Binding var text: String
-
+    
     func makeCoordinator() -> Coordinator {
         Coordinator(text: $text)
     }
-
+    
     func makeUIView(context: Context) -> EmojiUITextField {
         let field = EmojiUITextField()
         field.placeholder = placeholder
@@ -245,30 +275,30 @@ struct EmojiTextField: UIViewRepresentable {
         field.addTarget(context.coordinator, action: #selector(Coordinator.textChanged(_:)), for: .editingChanged)
         return field
     }
-
+    
     func updateUIView(_ uiView: EmojiUITextField, context: Context) {
         if uiView.text != text {
             uiView.text = text
         }
     }
-
+    
     class Coordinator: NSObject {
         private let text: Binding<String>
-
+        
         init(text: Binding<String>) {
             self.text = text
         }
-
+        
         @objc func textChanged(_ sender: UITextField) {
             text.wrappedValue = sender.text ?? ""
         }
     }
-
+    
     class EmojiUITextField: UITextField {
         // A non-nil identifier lets UIKit restore this field's input mode
         // instead of the user's default keyboard.
         override var textInputContextIdentifier: String? { "" }
-
+        
         override var textInputMode: UITextInputMode? {
             UITextInputMode.activeInputModes.first { $0.primaryLanguage == "emoji" } ?? super.textInputMode
         }
