@@ -7,6 +7,29 @@ import UIKit
 
 // MARK: - Main View
 
+// Shared mutable bridge between SwiftUI and the UIViewRepresentable.
+// IMPORTANT: must be @State so the SAME ARContainer object persists across
+// all re-renders (SwiftUI creates a new struct value on each body call;
+// @State keeps the underlying storage alive).
+class ARContainer {
+    var view: ARView?
+    /// Camera-space anchor — always attached to the camera, immune to setWorldOrigin
+    var cameraAnchor: AnchorEntity?
+    /// Child entity of cameraAnchor that holds the ring visuals, positioned in camera space
+    var reticleGroup: Entity?
+    var updateSubscription: Combine.Cancellable?
+    /// The anchor holding the reticle group
+    var worldAnchor: AnchorEntity?
+    /// World-space hit position — nil when NOT on a real surface (used by buttons)
+    var reticlePosition: SIMD3<Float>?
+    /// True when the reticle is resting on a detected surface
+    var isOnSurface: Bool = false
+    /// Called on the main thread whenever surface tracking state changes
+    var onTrackingChanged: ((Bool) -> Void)?
+    /// Called on the main thread when user taps the screen
+    var onTap: (() -> Void)?
+}
+
 struct RelativeMakerARView: View {
     // Journey integration
     @State var journey: Journey
@@ -32,29 +55,6 @@ struct RelativeMakerARView: View {
 
     var journeyService = JourneyService.shared
     var db = MockDatabaseService.shared
-
-    // Shared mutable bridge between SwiftUI and the UIViewRepresentable.
-    // IMPORTANT: must be @State so the SAME ARContainer object persists across
-    // all re-renders (SwiftUI creates a new struct value on each body call;
-    // @State keeps the underlying storage alive).
-    class ARContainer {
-        var view: ARView?
-        /// Camera-space anchor — always attached to the camera, immune to setWorldOrigin
-        var cameraAnchor: AnchorEntity?
-        /// Child entity of cameraAnchor that holds the ring visuals, positioned in camera space
-        var reticleGroup: Entity?
-        var updateSubscription: Combine.Cancellable?
-        /// The anchor holding the reticle group
-        var worldAnchor: AnchorEntity?
-        /// World-space hit position — nil when NOT on a real surface (used by buttons)
-        var reticlePosition: SIMD3<Float>?
-        /// True when the reticle is resting on a detected surface
-        var isOnSurface: Bool = false
-        /// Called on the main thread whenever surface tracking state changes
-        var onTrackingChanged: ((Bool) -> Void)?
-        /// Called on the main thread when user taps the screen
-        var onTap: (() -> Void)?
-    }
     @State private var arContainer = ARContainer()
 
     // MARK: Body
@@ -314,13 +314,13 @@ struct RelativeMakerARView: View {
 // MARK: - ARView UIViewRepresentable
 
 struct RelativeMakerARViewContainer: UIViewRepresentable {
-    let arContainer: RelativeMakerARView.ARContainer
+    let arContainer: ARContainer
 
     func makeCoordinator() -> Coordinator { Coordinator(arContainer: arContainer) }
 
     class Coordinator: NSObject {
-        let arContainer: RelativeMakerARView.ARContainer
-        init(arContainer: RelativeMakerARView.ARContainer) {
+        let arContainer: ARContainer
+        init(arContainer: ARContainer) {
             self.arContainer = arContainer
         }
         /// UIKit tap gesture — fires onTap callback on main thread
