@@ -11,6 +11,10 @@ import SwiftUI
 /// Shows app logo and two main actions: create a new journey or view past journeys.
 struct JourneyLandingView: View {
     @State private var showPastJourneys = false
+    /// Pushes the creation flow. State-driven (not a view NavigationLink) so
+    /// that finishing the flow anywhere can pop the whole subtree back to
+    /// this page with a single atomic state change.
+    @State private var showCreateJourney = false
     
     var body: some View {
         ZStack {
@@ -45,8 +49,8 @@ struct JourneyLandingView: View {
                 // Action Buttons
                 VStack(spacing: 20) {
                     // Create New Journey — pushed as a page, not a sheet.
-                    NavigationLink {
-                        JourneySetupView()
+                    Button {
+                        showCreateJourney = true
                     } label: {
                         HStack {
                             Text("Create New Journey")
@@ -81,6 +85,13 @@ struct JourneyLandingView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(isPresented: $showCreateJourney) {
+            JourneySetupView(onFlowFinished: {
+                // Publishing or saving a draft anywhere in the flow lands
+                // back here: one state change pops the whole subtree.
+                showCreateJourney = false
+            })
+        }
         .sheet(isPresented: $showPastJourneys) {
             PastJourneysListView()
         }

@@ -13,6 +13,10 @@ import CoreLocation
 /// holding the survey title + optional description and a Create button.
 struct JourneySetupView: View {
     @Environment(\.dismiss) private var dismiss
+    /// Ends the whole creation flow: the landing page pops this page (and
+    /// everything pushed above it) with a single state change.
+    var onFlowFinished: () -> Void = {}
+
     @State private var journeyName: String = ""
     @State private var journeyDescription: String = ""
     /// The journey just created; non-nil pushes the set-start-point page.
@@ -21,7 +25,9 @@ struct JourneySetupView: View {
     @State private var newJourney: Journey?
 
     // Shared app-wide GPS source — already warm if any earlier screen used it.
-    private var locationManager = LocationManager.shared
+    // Not `private`: a private stored property would make the memberwise
+    // initializer private too, hiding init(onFlowFinished:) from callers.
+    var locationManager = LocationManager.shared
 
     var journeyService = JourneyService.shared
 
@@ -57,12 +63,8 @@ struct JourneySetupView: View {
             locationManager.requestPermission()
         }
         .navigationDestination(item: $newJourney) { journey in
-            SetStartPointView(journey: journey, onFlowFinished: {
-                // Close the whole creation flow: pop the start-point page and
-                // this page, landing the maker back on the landing page.
-                newJourney = nil
-                dismiss()
-            })
+            // The landing page pops the whole subtree in one state change.
+            SetStartPointView(journey: journey, onFlowFinished: onFlowFinished)
         }
     }
 

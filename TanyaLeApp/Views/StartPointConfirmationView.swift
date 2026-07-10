@@ -63,7 +63,17 @@ struct StartPointConfirmationView: View {
         }
         .toolbar(.hidden, for: .navigationBar)
         .fullScreenCover(isPresented: $showARPlacement) {
-            JourneyARPlacementView(journey: journey, onFlowFinished: onFlowFinished)
+            JourneyARPlacementView(journey: journey, onFlowFinished: {
+                // Dismiss this cover first — popping the navigation pages
+                // underneath is invisible while the AR screen is still up.
+                showARPlacement = false
+                // Let the cover's dismissal animation finish before popping
+                // the stack; overlapping transitions get silently dropped.
+                Task { @MainActor in
+                    try? await Task.sleep(for: .milliseconds(450))
+                    onFlowFinished()
+                }
+            })
         }
     }
 
