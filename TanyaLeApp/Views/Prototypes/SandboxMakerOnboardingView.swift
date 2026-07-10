@@ -30,46 +30,50 @@ struct SandboxMakerOnboardingView: View {
                     ForEach(0..<3) { index in
                         Circle()
                             .fill(currentPage == index ? primary500 : Color.gray.opacity(0.3))
-                            .frame(width: 8, height: 8)
+                            .frame(width: currentPage == index ? 24 : 8, height: 8)
+                            .animation(.spring(response: 0.4, dampingFraction: 0.7), value: currentPage)
                     }
                 }
                 
                 // Buttons
-                if currentPage == 2 {
-                    Button(action: { dismiss() }) {
-                        Text("Get Started")
-                            .font(.headline)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(primary500)
-                            .clipShape(Capsule())
-                    }
-                } else {
-                    HStack {
-                        if currentPage == 1 {
-                            Button("Skip") { dismiss() }
-                            .foregroundColor(.gray)
-                            .font(.headline)
-                        } else {
-                            Spacer().frame(width: 40)
-                        }
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                            withAnimation { currentPage += 1 }
-                        }) {
-                            Text("Next")
+                ZStack {
+                    if currentPage == 2 {
+                        Button(action: { dismiss() }) {
+                            Text("Get Started")
                                 .font(.headline)
                                 .foregroundColor(.white)
-                                .padding(.horizontal, 32)
-                                .padding(.vertical, 12)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 56)
                                 .background(primary500)
                                 .clipShape(Capsule())
                         }
+                        .transition(.opacity.combined(with: .scale(scale: 0.95)))
+                    } else {
+                        HStack {
+                            Button("Skip") { dismiss() }
+                                .foregroundColor(.gray)
+                                .font(.headline)
+                                .padding(.leading, 8)
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                withAnimation { currentPage += 1 }
+                            }) {
+                                Text("Next")
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                                    .padding(.horizontal, 32)
+                                    .frame(height: 56)
+                                    .background(primary500)
+                                    .clipShape(Capsule())
+                            }
+                        }
+                        .transition(.opacity.combined(with: .scale(scale: 0.95)))
                     }
                 }
+                .frame(height: 56)
+                .animation(.easeInOut(duration: 0.3), value: currentPage)
             }
             .padding(.horizontal, 24)
             .padding(.bottom, 24)

@@ -6,14 +6,14 @@ struct OnboardingPageThree: View {
     
     var body: some View {
         VStack(spacing: 24) {
-            Spacer()
+            Color.clear.frame(height: 40)
             
             // Header
             VStack(spacing: 16) {
                 CircleNumber(number: 3, color: primary)
                 
                 Text("Launch, Share,\nand Get Insights")
-                    .font(.title)
+                    .font(.largeTitle)
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(gradient)

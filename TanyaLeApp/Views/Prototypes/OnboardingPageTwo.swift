@@ -6,14 +6,14 @@ struct OnboardingPageTwo: View {
     
     var body: some View {
         VStack(spacing: 24) {
-            Spacer()
+            Color.clear.frame(height: 40)
             
             // Header
             VStack(spacing: 16) {
                 CircleNumber(number: 2, color: primary)
                 
                 Text("Build Your Survey\nin 3 Simple Steps")
-                    .font(.title)
+                    .font(.largeTitle)
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(gradient)

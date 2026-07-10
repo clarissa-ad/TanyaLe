@@ -6,7 +6,7 @@ struct OnboardingPageOne: View {
     
     var body: some View {
         VStack(spacing: 24) {
-            Spacer()
+            Color.clear.frame(height: 40)
             
             // Header
             VStack(spacing: 16) {
