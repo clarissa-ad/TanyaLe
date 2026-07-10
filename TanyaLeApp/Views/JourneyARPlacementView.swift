@@ -20,9 +20,11 @@ struct JourneyARPlacementView: View {
     /// flow dismisses all the way back to the landing page, while resuming a
     /// draft from the detail screen just closes this cover.
     var onFlowFinished: () -> Void = {}
-
+    
     @State private var viewModel = MakerViewModel()
-    @State private var arContainer = RelativeUserARView.ARContainer()
+    // Uses the maker-side ARContainer so we get the 3D surface reticle
+    // (reticleGroup + per-frame raycast) from RelativeMakerARViewContainer.
+    @State private var arContainer = ARContainer()
     @State private var hasSetAROrigin = false
     @State private var showCheckpointForm = false
     @State private var newCheckpointPosition: SIMD3<Float>?
@@ -34,18 +36,10 @@ struct JourneyARPlacementView: View {
     
     var body: some View {
         ZStack {
-            // AR Camera View
-            RelativeARViewContainer(arContainer: arContainer)
+            // AR Camera View — includes the 3D surface reticle
+            RelativeMakerARViewContainer(arContainer: arContainer)
                 .edgesIgnoringSafeArea(.all)
-            
-            // Crosshair (only show after AR origin is set)
-            if hasSetAROrigin {
-                Image(systemName: "plus")
-                    .font(.system(size: 40, weight: .light))
-                    .foregroundColor(.white)
-                    .shadow(color: .black.opacity(0.5), radius: 2)
-            }
-            
+
             // Top bar: instructions on the left, Edit Checkpoints on the right
             VStack {
                 HStack(alignment: .top) {
@@ -56,20 +50,20 @@ struct JourneyARPlacementView: View {
                             .background(.ultraThinMaterial)
                             .cornerRadius(10)
                     }
-//                    else {
-//                        VStack(alignment: .leading, spacing: 4) {
-//                            Text("Aim & Tap to Place")
-//                                .font(.headline)
-//                            Text("\(checkpointService.checkpoints.filter { journey.checkpointIDs.contains($0.id) }.count) checkpoints")
-//                                .font(.caption)
-//                        }
-//                        .padding()
-//                        .background(.ultraThinMaterial)
-//                        .cornerRadius(10)
-//                    }
-
+                    //                    else {
+                    //                        VStack(alignment: .leading, spacing: 4) {
+                    //                            Text("Aim & Tap to Place")
+                    //                                .font(.headline)
+                    //                            Text("\(checkpointService.checkpoints.filter { journey.checkpointIDs.contains($0.id) }.count) checkpoints")
+                    //                                .font(.caption)
+                    //                        }
+                    //                        .padding()
+                    //                        .background(.ultraThinMaterial)
+                    //                        .cornerRadius(10)
+                    //                    }
+                    
                     Spacer()
-
+                    
                     // Edit checkpoints (top right)
                     if hasSetAROrigin {
                         Button {
@@ -89,9 +83,9 @@ struct JourneyARPlacementView: View {
                 }
                 .padding(.horizontal)
                 .padding(.top, 60)
-
+                
                 Spacer()
-
+                
                 // Bottom Controls
                 if hasSetAROrigin {
                     ZStack {
@@ -116,19 +110,19 @@ struct JourneyARPlacementView: View {
                             )
                             .cornerRadius(12)
                         }
-
+                        
                         // Done button (trailing)
                         HStack {
                             Spacer()
-
+                            
                             Button {
                                 finishPlacement()
                             } label: {
                                 VStack {
                                     Image(systemName: "checkmark.circle")
                                         .font(.title2)
-//                                    Text("Done")
-//                                        .font(.caption)
+                                    //                                    Text("Done")
+                                    //                                        .font(.caption)
                                 }
                                 .padding()
                                 .background(.ultraThinMaterial)
@@ -144,6 +138,11 @@ struct JourneyARPlacementView: View {
         .navigationBarHidden(true)
         .onAppear {
             setupARSession()
+            // Tap-to-reset: hides the reticle until the next surface hit
+            arContainer.onTap = {
+                arContainer.reticleGroup?.isEnabled = false
+                arContainer.isOnSurface = false
+            }
         }
         .sheet(isPresented: $showCheckpointForm) {
             if let position = newCheckpointPosition {
@@ -172,14 +171,9 @@ struct JourneyARPlacementView: View {
     // MARK: - AR Setup
     
     private func setupARSession() {
-        guard let arView = arContainer.view else { return }
-        
-        let config = ARWorldTrackingConfiguration()
-        config.planeDetection = [.horizontal]
-        config.worldAlignment = .gravityAndHeading
-        arView.session.run(config, options: [.resetTracking, .removeExistingAnchors])
-        
-        // Wait a moment for AR to initialize, then set origin
+        // RelativeMakerARViewContainer already configures and runs the AR
+        // session (plane detection, coaching overlay, reticle update loop),
+        // so we only need to set the origin once tracking has warmed up.
         Task { @MainActor in
             try? await Task.sleep(for: .seconds(1))
             setAROrigin()
@@ -207,14 +201,14 @@ struct JourneyARPlacementView: View {
         fresh.arOriginZ = origin.z
         journeyService.updateJourney(fresh)
         journey = fresh
-
+        
         // Mark as set
         hasSetAROrigin = true
-
+        
         // Load existing checkpoints if any
         loadExistingCheckpoints()
     }
-
+    
     private func loadExistingCheckpoints() {
         let existingCheckpoints = checkpointService.checkpoints.filter {
             journey.checkpointIDs.contains($0.id)
@@ -229,34 +223,29 @@ struct JourneyARPlacementView: View {
     
     private func placeCheckpoint() {
         guard let arView = arContainer.view else { return }
-        
-        // Raycast from center of screen
-        let screenCenter = CGPoint(x: arView.bounds.midX, y: arView.bounds.midY)
-        
-        // Try raycast first
-        if let result = arView.raycast(from: screenCenter, allowing: .estimatedPlane, alignment: .any).first {
-            newCheckpointPosition = SIMD3<Float>(
-                result.worldTransform.columns.3.x,
-                result.worldTransform.columns.3.y,
-                result.worldTransform.columns.3.z
-            )
+
+        // Prefer the reticle's confirmed surface hit so the checkpoint lands
+        // exactly where the reticle is shown.
+        if let reticlePosition = arContainer.reticlePosition {
+            newCheckpointPosition = reticlePosition
             showCheckpointForm = true
         } else {
-            // Fallback: Place 2m in front of camera
+            // Fallback: place 1.5m in front of the camera — the same distance
+            // the reticle floats at while no surface is detected.
             guard let frame = arView.session.currentFrame else { return }
             let transform = frame.camera.transform
             let forward = SIMD3<Float>(
                 -transform.columns.2.x,
-                -transform.columns.2.y,
-                -transform.columns.2.z
+                 -transform.columns.2.y,
+                 -transform.columns.2.z
             )
             let cameraPos = SIMD3<Float>(
                 transform.columns.3.x,
                 transform.columns.3.y,
                 transform.columns.3.z
             )
-            
-            newCheckpointPosition = cameraPos + (normalize(forward) * 2.0)
+
+            newCheckpointPosition = cameraPos + (normalize(forward) * 1.5)
             showCheckpointForm = true
         }
     }
@@ -366,7 +355,7 @@ struct CheckpointFormSheet: View {
         // readers must fetch the journey by ID rather than trusting local
         // value-type copies, which go stale.
         journeyService.addCheckpoint(checkpoint.id, to: journey.id)
-
+        
         // Callback to add to scene
         onSave(checkpoint)
         
@@ -379,10 +368,10 @@ struct CheckpointFormSheet: View {
 struct JourneyCheckpointListView: View {
     @Environment(\.dismiss) private var dismiss
     let journey: Journey
-
+    
     var journeyService = JourneyService.shared
     var checkpointService = MockDatabaseService.shared
-
+    
     /// `Journey` is a value type, so the passed-in copy's `checkpointIDs` can
     /// be stale (e.g. checkpoints added by the form sheet update the service,
     /// not the caller's snapshot). Always re-read the association from the
@@ -390,11 +379,11 @@ struct JourneyCheckpointListView: View {
     private var currentJourney: Journey {
         journeyService.getJourney(by: journey.id) ?? journey
     }
-
+    
     var checkpoints: [Checkpoint] {
         checkpointService.checkpoints.filter { currentJourney.checkpointIDs.contains($0.id) }
     }
-
+    
     var body: some View {
         NavigationView {
             List {
@@ -423,7 +412,7 @@ struct JourneyCheckpointListView: View {
             }
         }
     }
-
+    
     private func deleteCheckpoints(at offsets: IndexSet) {
         for index in offsets {
             let checkpoint = checkpoints[index]
@@ -439,19 +428,19 @@ struct JourneyCheckpointListView: View {
 /// Shared by the edit list and the pre-publish preview.
 struct CheckpointRowView: View {
     let checkpoint: Checkpoint
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(checkpoint.title)
                 .font(.headline)
-
+            
             if !checkpoint.taskDescription.isEmpty {
                 Text(checkpoint.taskDescription)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
             }
-
+            
             if !checkpoint.question.isEmpty,
                checkpoint.interactionType == .mcq || checkpoint.interactionType == .emojiSlider {
                 Label(checkpoint.question, systemImage: "questionmark.bubble")
@@ -459,7 +448,7 @@ struct CheckpointRowView: View {
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
             }
-
+            
             if checkpoint.interactionType != .none {
                 HStack(spacing: 8) {
                     Text(checkpoint.interactionType.rawValue)
@@ -469,7 +458,7 @@ struct CheckpointRowView: View {
                         .background(Color.blue.opacity(0.1))
                         .foregroundStyle(.blue)
                         .cornerRadius(4)
-
+                    
                     switch checkpoint.interactionType {
                     case .mcq:
                         let count = checkpoint.surveyOptions.filter { !$0.isEmpty }.count
