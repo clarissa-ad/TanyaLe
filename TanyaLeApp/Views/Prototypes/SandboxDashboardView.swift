@@ -38,6 +38,9 @@ struct SandboxDashboardView: View {
                 }
                 
                 Section(header: Text("UI Prototypes")) {
+                    NavigationLink(destination: SandboxMakerOnboardingView()) {
+                        Label("Maker Onboarding Prototype", systemImage: "sparkles")
+                    }
                     NavigationLink(destination: WelcomeView()){
                         Label("Main Flow Citizen", systemImage: "hand.thumbsup")
                     }
