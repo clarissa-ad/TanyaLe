@@ -314,10 +314,10 @@ struct CheckpointFormSheet: View {
                     surveyOptions: $surveyOptions,
                     emojiLeft: $emojiLeft,
                     emojiRight: $emojiRight,
+                    promptPhotoID: $promptPhotoID,
+                    showingImagePicker: $showingImagePicker,
                     selectedAssetId: $selectedAssetId,
                     showingAssetPicker: $showingAssetPicker
-                    promptPhotoID: $promptPhotoID,
-                    showingImagePicker: $showingImagePicker
                 )
             }
             .dismissKeyboardOnTap()
@@ -353,8 +353,8 @@ struct CheckpointFormSheet: View {
             surveyOptions: surveyOptions.isEmpty ? [] : surveyOptions,
             emojiLeft: emojiLeft.isEmpty ? "😡" : emojiLeft,
             emojiRight: emojiRight.isEmpty ? "😍" : emojiRight,
-            selectedAssetId: selectedAssetId,
             promptPhotoID: promptPhotoID,
+            selectedAssetId: selectedAssetId,
             latitude: 0, // GPS will be calculated relative to journey start
             longitude: 0,
             relativeX: position.x,

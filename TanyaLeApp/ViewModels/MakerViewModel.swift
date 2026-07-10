@@ -43,9 +43,10 @@ class MakerViewModel {
             surveyOptions: surveyOptions,
             emojiLeft: emojiLeft.isEmpty ? "😡" : String(emojiLeft.prefix(1)),
             emojiRight: emojiRight.isEmpty ? "😍" : String(emojiRight.prefix(1)),
+            promptPhotoID: promptPhotoID,
             selectedAssetId: selectedAssetId,
             assetRotationY: assetRotationY,
-            promptPhotoID: promptPhotoID,
+            
             latitude: finalLat,
             longitude: finalLon,
             relativeX: transform.x,

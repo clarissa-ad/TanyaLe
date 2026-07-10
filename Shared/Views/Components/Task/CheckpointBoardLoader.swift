@@ -32,7 +32,7 @@ enum CheckpointBoardLoader {
         into arContainer: RelativeUserARView.ARContainer,
         checkpoints: [Checkpoint],
         onEmojiCelebration: @escaping (String) -> Void,
-        onShowAssetDetail: @escaping (String) -> Void = { _ in }
+        onShowAssetDetail: @escaping (String) -> Void = { _ in },
         onPhotoboothTap: @escaping (Checkpoint) -> Void,
         onGalleryTap: @escaping (Checkpoint) -> Void
     ) {

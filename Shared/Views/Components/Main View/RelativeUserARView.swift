@@ -20,20 +20,20 @@ struct RelativeUserARView: View {
     // Photobooth state
     @State private var showingImagePicker = false
     @State private var showingGallery = false
-    
+
     // Photo Preview States
     @State private var capturedPhotoForPreview: UIImage?
     @State private var showingPhotoPreview = false
     @State private var selectedImage: UIImage?
     @State private var activeCheckpoint: Checkpoint?
-    
+
     /// Fixed minimap zoom level (max zoom).
     private let minimapSpan = MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001)
     @State private var mapPosition = MapCameraPosition.region(MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666),
         span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001)
     ))
-    
+
     class ARContainer {
         var view: ARView?
         var arrowEntity: Entity?
@@ -41,7 +41,7 @@ struct RelativeUserARView: View {
         var faceCameraEntities: [Entity] = []
         /// Keeps track of anchors by Checkpoint ID so we can dynamically add items to them
         var checkpointAnchors: [UUID: AnchorEntity] = [:]
-        
+
         var updateSubscription: Cancellable?
         // Interactive survey cards, so taps can be routed to them.
         var boardControllers: [any ARSurveyBoard] = []
@@ -49,13 +49,13 @@ struct RelativeUserARView: View {
         var beaconAnchor: AnchorEntity?
     }
     private let arContainer = ARContainer()
-    
+
     var body: some View {
         ZStack {
             // The AR Camera is safely insulated from SwiftUI re-renders!
             RelativeUserARViewContainer(arContainer: arContainer)
                 .ignoresSafeArea()
-            
+
             // Aiming Crosshair
             Image(systemName: "plus")
                 .font(.system(size: 30, weight: .light))
@@ -69,7 +69,7 @@ struct RelativeUserARView: View {
                     .transition(.opacity)
                     .zIndex(15)
             }
-            
+
             // Top Right Minimap Preview
             VStack {
                 HStack {
@@ -86,7 +86,7 @@ struct RelativeUserARView: View {
                 Spacer()
             }
             .zIndex(10)
-            
+
             VStack {
                 // HUD for Proximity Tracking
                 if viewModel.isOriginSet, let dist = viewModel.nearestDistance, let cp = viewModel.nearestCheckpoint {
@@ -107,9 +107,9 @@ struct RelativeUserARView: View {
                         .cornerRadius(10)
                         .padding(.top, 40)
                 }
-                
+
                 Spacer()
-                
+
                 if !viewModel.isOriginSet {
                     startGateOverlay
                         .padding(20)
@@ -167,6 +167,7 @@ struct RelativeUserARView: View {
                                         .cornerRadius(10)
                                 }
 
+                                // Keeping the Gallery button in the HUD as requested for testing.
                                 Button(action: {
                                     activeCheckpoint = cp
                                     showingGallery = true
@@ -178,18 +179,6 @@ struct RelativeUserARView: View {
                                         .foregroundStyle(.white)
                                         .cornerRadius(10)
                                 }
-                            // The 2D "Snap Photo" button has been replaced by the 3D board interaction.
-                            // Keeping the Gallery button in the HUD as requested for testing.
-                            Button(action: {
-                                activeCheckpoint = cp
-                                showingGallery = true
-                            }) {
-                                Label("Gallery", systemImage: "photo.on.rectangle")
-                                    .frame(maxWidth: .infinity)
-                                    .padding()
-                                    .background(Color.purple)
-                                    .foregroundStyle(.white)
-                                    .cornerRadius(10)
                             }
                         } else if cp.interactionType == .emojiSlider {
                             Label("Emoji slider needs a question configured", systemImage: "face.smiling")
@@ -249,14 +238,14 @@ struct RelativeUserARView: View {
                         }
                     },
                     onExploreMore: {
-                         // Finalize the capture
+                        // Finalize the capture
                         MockPhotoService.shared.savePhoto(image: image, forCheckpoint: cp.id)
-                        
+
                         // Dynamically add the new photo into the 3D scene!
                         if let anchor = arContainer.checkpointAnchors[cp.id] {
                             // Find out how many photos already exist to position it correctly
                             let photosCount = MockPhotoService.shared.fetchPhotos(forCheckpoint: cp.id).count
-                            
+
                             Task { @MainActor in
                                 if let entity = CheckpointBoardLoader.createPhotoEntity(from: image) {
                                     // Place the floating photos beside the board (starting to the right)
@@ -268,7 +257,7 @@ struct RelativeUserARView: View {
                                 }
                             }
                         }
-                        
+
                         capturedPhotoForPreview = nil
                         showingPhotoPreview = false
                     }
@@ -290,6 +279,9 @@ struct RelativeUserARView: View {
                             Image(systemName: "xmark.circle.fill")
                                 .foregroundStyle(.secondary)
                         })
+                }
+            }
+        }
         .onChange(of: showingImagePicker) { _, isShowing in
             if isShowing {
                 arContainer.view?.session.pause()
@@ -305,7 +297,6 @@ struct RelativeUserARView: View {
             // distance while the user stands still inside the circle.
             locationManager.improveAccuracy()
         }
-
         .onDisappear {
             viewModel.stopTracking()
             viewModel.cancelStartGate(arContainer: arContainer)
@@ -467,7 +458,7 @@ struct RelativeUserARView: View {
             into: arContainer,
             checkpoints: db.checkpoints,
             onEmojiCelebration: showEmojiCelebration,
-            onShowAssetDetail: showAssetDetail
+            onShowAssetDetail: showAssetDetail,
             onPhotoboothTap: { cp in
                 activeCheckpoint = cp
                 showingImagePicker = true
@@ -549,7 +540,7 @@ struct RelativeUserARViewContainer: UIViewRepresentable {
         let panRecognizer = UIPanGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handlePan(_:)))
         panRecognizer.maximumNumberOfTouches = 1
         arView.addGestureRecognizer(panRecognizer)
-        
+
         let config = ARWorldTrackingConfiguration()
         config.planeDetection = [.horizontal, .vertical]
         config.worldAlignment = .gravityAndHeading // Locks Z-axis to True North

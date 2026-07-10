@@ -11,6 +11,8 @@ struct CheckpointFormContent: View {
     @Binding var emojiRight: String
     @Binding var promptPhotoID: String?
     @Binding var showingImagePicker: Bool
+    @Binding var selectedAssetId: String?
+    @Binding var showingAssetPicker: Bool
 
     // Tracks whether the extra 2 slots (5 & 6) are visible.
     @State private var showExtraOptions = false

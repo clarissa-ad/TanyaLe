@@ -31,6 +31,7 @@ struct CheckpointReachedCard: View {
         case .mcq:         return "hand.tap"
         case .emojiSlider: return "hand.draw"
         case .photobooth:  return "camera"
+        case .likedislike: return "hand.thumbsup"
         case .none:        return "hand.tap"
         }
     }

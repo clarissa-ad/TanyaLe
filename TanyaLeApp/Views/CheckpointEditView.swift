@@ -44,10 +44,10 @@ struct CheckpointEditView: View {
                 surveyOptions: $surveyOptions,
                 emojiLeft: $emojiLeft,
                 emojiRight: $emojiRight,
+                promptPhotoID: $promptPhotoID,
+                showingImagePicker: $showingImagePicker,
                 selectedAssetId: $selectedAssetId,
                 showingAssetPicker: $showingAssetPicker
-                promptPhotoID: $promptPhotoID,
-                showingImagePicker: $showingImagePicker
             )
 
             if interactionType == .photobooth, let cp = db.checkpoints.first(where: { $0.id == checkpointId }) {
@@ -67,12 +67,10 @@ struct CheckpointEditView: View {
                     saveChanges()
                 }
             }
-        })
+        }
         .sheet(isPresented: $showingAssetPicker) {
             AssetPickerView(selectedAssetId: $selectedAssetId)
         }
-        }
-
         .sheet(isPresented: $showingImagePicker) {
             ImagePicker(sourceType: .photoLibrary, selectedImage: $selectedPromptPhoto) {
                 if let image = selectedPromptPhoto {
@@ -82,9 +80,9 @@ struct CheckpointEditView: View {
                 }
             }
         }
-
     }
-    
+
+
     private func saveChanges() {
         if let index = db.checkpoints.firstIndex(where: { $0.id == checkpointId }) {
             var updated = db.checkpoints[index]

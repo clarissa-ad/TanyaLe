@@ -135,19 +135,6 @@ struct ARWalkView: View {
 
     // MARK: - Subviews
 
-    /// A 2D arrow (replacing the old 3D cone entity) rotated to point at the
-    /// nearest checkpoint from the camera's point of view.
-    private var navigatorArrow: some View {
-        Image("arrow_navigator")
-            .resizable()
-            .scaledToFit()
-            .frame(width: 120)
-            .rotationEffect(.radians(viewModel.arrowHeading ?? 0))
-            .padding(.bottom, 60)
-            .animation(.easeInOut(duration: 0.2), value: viewModel.arrowHeading)
-            .allowsHitTesting(false)
-    }
-
     /// Popup shown when a checkpoint is within reach. Survey answers happen on
     /// the floating AR card itself; this just mirrors the current status.
     @ViewBuilder
@@ -226,7 +213,7 @@ struct ARWalkView: View {
                         into: arContainer,
                         checkpoints: db.checkpoints,
                         onEmojiCelebration: showEmojiCelebration,
-                        onShowAssetDetail: showAssetDetail
+                        onShowAssetDetail: showAssetDetail,
                         onPhotoboothTap: { _ in },
                         onGalleryTap: { _ in }
                     )
