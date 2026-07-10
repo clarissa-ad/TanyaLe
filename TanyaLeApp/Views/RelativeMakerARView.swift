@@ -11,8 +11,13 @@ import UIKit
 // IMPORTANT: must be @State so the SAME ARContainer object persists across
 // all re-renders (SwiftUI creates a new struct value on each body call;
 // @State keeps the underlying storage alive).
-class ARContainer {
+class ARContainer: BoardHostContainer {
     var view: ARView?
+    /// Entities yawed toward the camera every frame (survey boards, labels)
+    /// so the maker can preview checkpoints exactly like the citizen view.
+    var faceCameraEntities: [Entity] = []
+    /// Interactive survey cards, so taps/drags can be routed to them.
+    var boardControllers: [any ARSurveyBoard] = []
     /// Camera-space anchor — always attached to the camera, immune to setWorldOrigin
     var cameraAnchor: AnchorEntity?
     /// Child entity of cameraAnchor that holds the ring visuals, positioned in camera space
@@ -470,25 +475,65 @@ struct RelativeMakerARViewContainer: UIViewRepresentable {
     
     func makeCoordinator() -> Coordinator { Coordinator(arContainer: arContainer) }
     
+    @MainActor
     class Coordinator: NSObject {
         let arContainer: ARContainer
+        /// The board currently being dragged (e.g. an emoji slider grab).
+        private weak var draggedBoard: (any ARSurveyBoard)?
+
         init(arContainer: ARContainer) {
             self.arContainer = arContainer
         }
-        /// UIKit tap gesture — fires onTap callback on main thread
+        /// UIKit tap gesture — routes to an interactive board first (so
+        /// previewed survey cards are tappable just like the citizen view),
+        /// otherwise fires the onTap callback (reticle reset).
         @objc func handleTap(_ gesture: UITapGestureRecognizer) {
-            DispatchQueue.main.async { self.arContainer.onTap?() }
+            if let arView = arContainer.view,
+               let hit = arView.hitTest(gesture.location(in: arView)).first {
+                let cameraPosition = arView.cameraTransform.translation
+                for controller in arContainer.boardControllers {
+                    if controller.handleTap(on: hit.entity, at: hit.position, cameraPosition: cameraPosition) {
+                        return
+                    }
+                }
+            }
+            arContainer.onTap?()
         }
-        
+
         @objc func handlePan(_ recognizer: UIPanGestureRecognizer) {
-            guard let activePlacement = arContainer.activePlacement else { return }
-            guard recognizer.state == .changed else { return }
-            
-            // Reading + resetting translation each `.changed` event gives a
-            // clean per-frame delta instead of an ever-growing total.
-            let translation = recognizer.translation(in: recognizer.view)
-            activePlacement.rotate(byScreenDeltaX: translation.x)
-            recognizer.setTranslation(.zero, in: recognizer.view)
+            // Asset placement rotation takes priority while a live preview is up.
+            if let activePlacement = arContainer.activePlacement {
+                guard recognizer.state == .changed else { return }
+                // Reading + resetting translation each `.changed` event gives a
+                // clean per-frame delta instead of an ever-growing total.
+                let translation = recognizer.translation(in: recognizer.view)
+                activePlacement.rotate(byScreenDeltaX: translation.x)
+                recognizer.setTranslation(.zero, in: recognizer.view)
+                return
+            }
+
+            // Otherwise route drags to interactive boards (e.g. emoji slider).
+            guard let arView = arContainer.view else { return }
+            let point = recognizer.location(in: arView)
+            switch recognizer.state {
+            case .began:
+                guard let hit = arView.hitTest(point).first else { return }
+                let cameraPosition = arView.cameraTransform.translation
+                for controller in arContainer.boardControllers {
+                    if controller.beginDrag(on: hit.entity, cameraPosition: cameraPosition) {
+                        draggedBoard = controller
+                        return
+                    }
+                }
+            case .changed:
+                guard let draggedBoard, let ray = arView.ray(through: point) else { return }
+                draggedBoard.updateDrag(rayOrigin: ray.origin, rayDirection: ray.direction)
+            case .ended, .cancelled, .failed:
+                draggedBoard?.endDrag()
+                draggedBoard = nil
+            default:
+                break
+            }
         }
     }
     
@@ -647,8 +692,14 @@ struct RelativeMakerARViewContainer: UIViewRepresentable {
                 container.isOnSurface = onSurface
                 DispatchQueue.main.async { container.onTrackingChanged?(onSurface) }
             }
+
+            // Yaw previewed survey boards / labels toward the camera every
+            // frame, same as the citizen view, so they stay upright & readable.
+            for entity in container.faceCameraEntities {
+                entity.yawToFace(cameraPosition: camPos)
+            }
         }
-        
+
         return arView
     }
     
@@ -662,6 +713,8 @@ struct RelativeMakerARViewContainer: UIViewRepresentable {
         c.pendingPlacementAnchor = nil
         c.updateSubscription?.cancel()
         c.updateSubscription = nil
+        c.faceCameraEntities = []
+        c.boardControllers   = []
         c.worldAnchor        = nil
         c.reticleGroup       = nil
         c.reticlePosition    = nil

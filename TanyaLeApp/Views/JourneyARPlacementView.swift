@@ -96,7 +96,7 @@ struct JourneyARPlacementView: View {
                             VStack {
                                 Image(systemName: "plus.circle.fill")
                                     .font(.system(size: 50))
-                                Text("Place Checkpoint 11")
+                                Text("Place Checkpoint")
                                     .font(.caption)
                             }
                             .foregroundColor(.white)
@@ -150,7 +150,7 @@ struct JourneyARPlacementView: View {
                     position: position,
                     journey: journey,
                     onSave: { checkpoint in
-                        addCheckpointToScene(checkpoint)
+                        renderCheckpoints([checkpoint])
                     }
                 )
             }
@@ -214,9 +214,7 @@ struct JourneyARPlacementView: View {
             journey.checkpointIDs.contains($0.id)
         }
         
-        for checkpoint in existingCheckpoints {
-            addCheckpointToScene(checkpoint)
-        }
+        renderCheckpoints(existingCheckpoints)
     }
     
     // MARK: - Checkpoint Placement
@@ -250,39 +248,24 @@ struct JourneyARPlacementView: View {
         }
     }
     
-    private func addCheckpointToScene(_ checkpoint: Checkpoint) {
-        guard let arView = arContainer.view else { return }
-
-        let position = SIMD3<Float>(
-            checkpoint.relativeX,
-            checkpoint.relativeY,
-            checkpoint.relativeZ
+    /// Renders checkpoints into the AR scene exactly like the citizen view —
+    /// the real placed 3D asset with an interactive Like/Dislike vote card,
+    /// MCQ / emoji-slider / photobooth boards for surveys, or the Lele marker
+    /// with a floating title otherwise. Uses the shared `CheckpointBoardLoader`
+    /// so Pak RT previews precisely what a citizen will see, faced-to-camera
+    /// and tappable. Callbacks are no-ops and `recordResponses: false` keeps
+    /// the preview from writing votes/answers into the store.
+    private func renderCheckpoints(_ checkpoints: [Checkpoint]) {
+        CheckpointBoardLoader.load(
+            into: arContainer,
+            checkpoints: checkpoints,
+            onEmojiCelebration: { _ in },
+            onShowAssetDetail: { _ in },
+            onPhotoboothTap: { _ in },
+            onGalleryTap: { _ in },
+            recordResponses: false,
+            submitEnabled: false
         )
-        let anchor = AnchorEntity(world: position)
-        arView.scene.addAnchor(anchor)
-
-        // Loading model .usdz itu async, jadi dibungkus Task. Urutan:
-        //   1. Like/Dislike + asset placeable -> tampilkan model 3D asli.
-        //   2. Selain itu -> tampilkan maskot Lele.
-        //   3. Kalau dua-duanya gagal -> box (fallback terakhir).
-        Task { @MainActor in
-            let marker: Entity
-            if checkpoint.interactionType == .likedislike,
-               let assetId = checkpoint.selectedAssetId,
-               let asset = try? await Asset3DLoader.load(assetId: assetId) {
-                asset.transform.rotation = simd_quatf(angle: checkpoint.assetRotationY, axis: [0, 1, 0])
-                marker = asset
-            } else if let url = Bundle.main.url(forResource: "Lele_Checkpoint", withExtension: "usdz"),
-                      let model = try? await Entity(contentsOf: url) {
-                CheckpointBoardLoader.normalizeMarker(model)
-                marker = model
-            } else {
-                print("CHECKPOINT MARKER FAIL: pakai box fallback")
-                let mesh = MeshResource.generateBox(size: 0.2)
-                marker = ModelEntity(mesh: mesh, materials: [SimpleMaterial(color: .red, isMetallic: false)])
-            }
-            anchor.addChild(marker)
-        }
     }
     
     private func finishPlacement() {

@@ -34,7 +34,7 @@ struct RelativeUserARView: View {
         span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001)
     ))
 
-    class ARContainer {
+    class ARContainer: BoardHostContainer {
         var view: ARView?
         var arrowEntity: Entity?
         // Entities that should keep facing the camera (question boards, labels).
