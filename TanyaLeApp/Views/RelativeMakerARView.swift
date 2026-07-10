@@ -8,8 +8,12 @@ import UIKit
 // MARK: - Main View
 
 struct RelativeMakerARView: View {
+    // Journey integration
+    @State var journey: Journey
+    @Environment(\.dismiss) private var dismiss
+
     @State private var viewModel       = MakerViewModel()
-    @State private var locationManager = LocationManager()
+    var locationManager                = LocationManager.shared
 
     @State private var isOriginSet     = false
     @State private var showingAddSheet = false
@@ -26,7 +30,13 @@ struct RelativeMakerARView: View {
     @State private var tempPromptPhotoID: String?                      = nil
     @State private var tempShowingImagePicker: Bool                    = false
 
-    // Shared mutable bridge between SwiftUI and the UIViewRepresentable
+    var journeyService = JourneyService.shared
+    var db = MockDatabaseService.shared
+
+    // Shared mutable bridge between SwiftUI and the UIViewRepresentable.
+    // IMPORTANT: must be @State so the SAME ARContainer object persists across
+    // all re-renders (SwiftUI creates a new struct value on each body call;
+    // @State keeps the underlying storage alive).
     class ARContainer {
         var view: ARView?
         /// Camera-space anchor — always attached to the camera, immune to setWorldOrigin
@@ -45,7 +55,7 @@ struct RelativeMakerARView: View {
         /// Called on the main thread when user taps the screen
         var onTap: (() -> Void)?
     }
-    private let arContainer = ARContainer()
+    @State private var arContainer = ARContainer()
 
     // MARK: Body
 
@@ -64,19 +74,28 @@ struct RelativeMakerARView: View {
             }
         }
         .onAppear {
+            // Scope the view model to this journey
+            viewModel.journeyID = journey.id
             locationManager.requestPermission()
             arContainer.onTrackingChanged = { tracking in
                 isTracking = tracking
             }
             arContainer.onTap = { resetReticle() }
         }
-        .navigationTitle("Maker (Relative AR)")
+        .navigationTitle(journey.name)
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarItems(trailing: NavigationLink(destination: CheckpointListView()) {
-            Image(systemName: "list.bullet")
-                .font(.title2)
-                .foregroundStyle(.blue)
-        })
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Done") { dismiss() }
+            }
+            ToolbarItem(placement: .primaryAction) {
+                NavigationLink(destination: CheckpointListView(journey: journey)) {
+                    Image(systemName: "list.bullet")
+                        .font(.title2)
+                        .foregroundStyle(.blue)
+                }
+            }
+        }
         .sheet(isPresented: $showingAddSheet) { addSheet }
     }
 
@@ -108,7 +127,20 @@ struct RelativeMakerARView: View {
 
     private var placementPanel: some View {
         VStack(spacing: 10) {
-            // Always-visible status label
+            // Checkpoint count badge
+            let count = viewModel.checkpoints.count
+            Label(
+                count == 0 ? "No checkpoints yet" : "\(count) checkpoint\(count == 1 ? "" : "s") placed",
+                systemImage: "mappin.circle.fill"
+            )
+            .font(.footnote)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .background(.ultraThinMaterial)
+            .foregroundStyle(count > 0 ? Color.green : Color.white)
+            .cornerRadius(20)
+
+            // Surface tracking status
             Label(
                 isTracking ? "Surface detected — aim and drop" : "Scanning… tap screen to reset",
                 systemImage: isTracking ? "scope" : "hand.tap"
@@ -132,9 +164,27 @@ struct RelativeMakerARView: View {
                 .foregroundStyle(.white)
                 .cornerRadius(15)
                 .padding(.horizontal, 20)
-                .padding(.bottom, 30)
             }
             .disabled(!isTracking)
+
+            // Finish button — shown once at least one checkpoint is placed
+            if count > 0 {
+                Button(action: { dismiss() }) {
+                    HStack {
+                        Image(systemName: "checkmark.circle.fill")
+                        Text("Finish Journey").fontWeight(.bold)
+                    }
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.green)
+                    .foregroundStyle(.white)
+                    .cornerRadius(15)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 30)
+                }
+            } else {
+                Spacer().frame(height: 30)
+            }
         }
     }
 
@@ -175,16 +225,26 @@ struct RelativeMakerARView: View {
     }
 
     private func setOrigin() {
-        guard let arView = arContainer.view,
-              let pos    = arContainer.reticlePosition else { return }
+        guard let arView = arContainer.view else { return }
+
+        // Prefer the confirmed surface hit; fall back to camera position
+        let pos: SIMD3<Float>
+        if let reticlePos = arContainer.reticlePosition {
+            pos = reticlePos
+        } else if let camTransform = arView.session.currentFrame?.camera.transform {
+            pos = SIMD3<Float>(camTransform.columns.3.x,
+                               camTransform.columns.3.y,
+                               camTransform.columns.3.z)
+        } else {
+            return
+        }
 
         var t = matrix_identity_float4x4
         t.columns.3 = SIMD4<Float>(pos.x, pos.y, pos.z, 1)
         arView.session.setWorldOrigin(relativeTransform: t)
         isOriginSet = true
-        
-        // Rebuild the anchor in the new coordinate system so our world-space 
-        // transforms (hitWorldPos) match 1:1 with the reticle's local space.
+
+        // Rebuild the anchor in the new coordinate system
         arContainer.worldAnchor?.removeFromParent()
         let newAnchor = AnchorEntity(world: .zero)
         if let group = arContainer.reticleGroup {
@@ -193,24 +253,40 @@ struct RelativeMakerARView: View {
         arView.scene.addAnchor(newAnchor)
         arContainer.worldAnchor = newAnchor
 
-        let loc = locationManager.userLocation?.coordinate
-            ?? CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666)
-        MockDatabaseService.shared.surveyOrigin = loc
+        // Save AR origin to journey
+        journey.arOriginX = pos.x
+        journey.arOriginY = pos.y
+        journey.arOriginZ = pos.z
+        journeyService.updateJourney(journey)
+
+        // Legacy DB origin for backward compatibility
+        db.surveyOrigin = CLLocationCoordinate2D(
+            latitude: journey.startLatitude,
+            longitude: journey.startLongitude
+        )
     }
 
     private func saveCheckpoint(at position: SIMD3<Float>) {
         guard let arView = arContainer.view else { return }
 
+        // Spawn the Lele checkpoint model visually
         let anchor = AnchorEntity(world: position)
-        let boxEntity = Entity()
-        boxEntity.components.set(ModelComponent(
-            mesh: MeshResource.generateBox(size: 0.15),
-            materials: [SimpleMaterial(color: .purple, isMetallic: true)] as [RealityKit.Material]
-        ))
-        anchor.addChild(boxEntity)
         arView.scene.addAnchor(anchor)
+        Task { @MainActor in
+            let marker: Entity
+            if let model = try? await Entity(named: "Lele_Checkpoint") {
+                marker = model
+                CheckpointBoardLoader.normalizeMarker(marker)
+            } else {
+                let boxMesh = MeshResource.generateBox(size: 0.15)
+                let material = SimpleMaterial(color: .purple, isMetallic: true)
+                marker = ModelEntity(mesh: boxMesh, materials: [material])
+            }
+            anchor.addChild(marker)
+        }
 
-        viewModel.addCheckpointAt(
+        // Save to DB — associates the checkpoint with the journey too
+        _ = viewModel.addCheckpointAt(
             transform: position,
             title: tempTitle,
             description: tempDesc,
@@ -222,16 +298,16 @@ struct RelativeMakerARView: View {
             promptPhotoID: tempPromptPhotoID
         )
 
-        tempTitle           = ""
-        tempDesc            = ""
-        tempInteractionType = .none
-        tempQuestion        = ""
-        tempSurveyOptions   = []
-        tempEmojiLeft       = "👎"
-        tempEmojiRight      = "👍"
-        tempPromptPhotoID   = nil
+        tempTitle              = ""
+        tempDesc               = ""
+        tempInteractionType    = .none
+        tempQuestion           = ""
+        tempSurveyOptions      = []
+        tempEmojiLeft          = "👎"
+        tempEmojiRight         = "👍"
+        tempPromptPhotoID      = nil
         tempShowingImagePicker = false
-        showingAddSheet     = false
+        showingAddSheet        = false
     }
 }
 
@@ -424,7 +500,7 @@ struct RelativeMakerARViewContainer: UIViewRepresentable {
 }
 
 #Preview {
-    RelativeMakerARView()
+    RelativeMakerARView(journey: Journey(name: "Test Journey"))
 }
 
 // MARK: - Reticle Texture Generator
