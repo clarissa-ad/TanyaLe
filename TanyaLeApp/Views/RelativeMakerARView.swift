@@ -18,6 +18,9 @@ class ARContainer: BoardHostContainer {
     var faceCameraEntities: [Entity] = []
     /// Interactive survey cards, so taps/drags can be routed to them.
     var boardControllers: [any ARSurveyBoard] = []
+    /// One anchor per rendered checkpoint, keyed by id — lets the preview
+    /// remove & rebuild a checkpoint after it's edited.
+    var checkpointAnchors: [UUID: AnchorEntity] = [:]
     /// Camera-space anchor — always attached to the camera, immune to setWorldOrigin
     var cameraAnchor: AnchorEntity?
     /// Child entity of cameraAnchor that holds the ring visuals, positioned in camera space
@@ -715,6 +718,7 @@ struct RelativeMakerARViewContainer: UIViewRepresentable {
         c.updateSubscription = nil
         c.faceCameraEntities = []
         c.boardControllers   = []
+        c.checkpointAnchors  = [:]
         c.worldAnchor        = nil
         c.reticleGroup       = nil
         c.reticlePosition    = nil

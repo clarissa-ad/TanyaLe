@@ -155,7 +155,7 @@ struct JourneyARPlacementView: View {
                 )
             }
         }
-        .sheet(isPresented: $showCheckpointList) {
+        .sheet(isPresented: $showCheckpointList, onDismiss: refreshCheckpoints) {
             JourneyCheckpointListView(journey: journey)
         }
         .sheet(isPresented: $showPreview) {
@@ -210,11 +210,25 @@ struct JourneyARPlacementView: View {
     }
     
     private func loadExistingCheckpoints() {
+        // Read the journey fresh from the service — the local @State copy's
+        // checkpointIDs go stale (checkpoints are associated on the service,
+        // not our value-type snapshot).
+        let fresh = journeyService.getJourney(by: journey.id) ?? journey
         let existingCheckpoints = checkpointService.checkpoints.filter {
-            journey.checkpointIDs.contains($0.id)
+            fresh.checkpointIDs.contains($0.id)
         }
-        
+
         renderCheckpoints(existingCheckpoints)
+    }
+
+    /// Rebuilds the whole AR scene from the current stored checkpoints. Called
+    /// after the edit sheet closes so edits/deletes show up — e.g. swapping a
+    /// Like/Dislike asset from tempat sampah to kandang ayam — instead of
+    /// leaving the stale marker from the first render.
+    private func refreshCheckpoints() {
+        guard hasSetAROrigin else { return }
+        CheckpointBoardLoader.clear(from: arContainer)
+        loadExistingCheckpoints()
     }
     
     // MARK: - Checkpoint Placement

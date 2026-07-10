@@ -19,6 +19,10 @@ protocol BoardHostContainer: AnyObject {
     var faceCameraEntities: [Entity] { get set }
     /// Interactive survey cards, so taps/drags can be routed to them.
     var boardControllers: [any ARSurveyBoard] { get set }
+    /// One anchor per rendered checkpoint, keyed by id — so a host can find
+    /// and remove a checkpoint's scene content (e.g. to re-render after an
+    /// edit) or attach to it later (e.g. photobooth photos).
+    var checkpointAnchors: [UUID: AnchorEntity] { get set }
 }
 
 /// Drops checkpoints into a shared AR scene: an interactive MCQ /
@@ -62,6 +66,9 @@ enum CheckpointBoardLoader {
             let position = SIMD3<Float>(cp.relativeX, cp.relativeY, cp.relativeZ)
             let anchor = AnchorEntity(world: position)
             arView.scene.addAnchor(anchor)
+            // Track the anchor so the host can remove/rebuild this checkpoint
+            // later (e.g. the maker re-rendering after an asset edit).
+            arContainer.checkpointAnchors[cp.id] = anchor
 
             let isSurvey = cp.hasMCQ || cp.hasEmojiSlider || cp.interactionType == .photobooth
 
@@ -232,6 +239,21 @@ enum CheckpointBoardLoader {
                 }
             }
         }
+    }
+
+    /// Removes every checkpoint this loader added to the scene and resets the
+    /// container's board tracking, so the host can re-render from scratch
+    /// (e.g. the maker after editing a checkpoint's asset). Safe to call on a
+    /// host whose only scene content is checkpoints — the reticle and other
+    /// non-checkpoint entities aren't tracked here, so they're left alone.
+    @MainActor
+    static func clear(from arContainer: any BoardHostContainer) {
+        for anchor in arContainer.checkpointAnchors.values {
+            anchor.removeFromParent()
+        }
+        arContainer.checkpointAnchors.removeAll()
+        arContainer.faceCameraEntities.removeAll()
+        arContainer.boardControllers.removeAll()
     }
 
     /// Scales a freshly-loaded marker entity to a sensible AR size and lifts it
