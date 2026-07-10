@@ -96,7 +96,7 @@ struct JourneyARPlacementView: View {
                             VStack {
                                 Image(systemName: "plus.circle.fill")
                                     .font(.system(size: 50))
-                                Text("Place Checkpoint")
+                                Text("Place Checkpoint 11")
                                     .font(.caption)
                             }
                             .foregroundColor(.white)
@@ -252,23 +252,37 @@ struct JourneyARPlacementView: View {
     
     private func addCheckpointToScene(_ checkpoint: Checkpoint) {
         guard let arView = arContainer.view else { return }
-        
-        // Create purple cube marker
-        let mesh = MeshResource.generateBox(size: 0.2)
-        let material = SimpleMaterial(color: .purple, isMetallic: false)
-        let entity = ModelEntity(mesh: mesh, materials: [material])
-        
-        // Position at checkpoint location
-        entity.position = SIMD3<Float>(
+
+        let position = SIMD3<Float>(
             checkpoint.relativeX,
             checkpoint.relativeY,
             checkpoint.relativeZ
         )
-        
-        // Add to scene
-        let anchor = AnchorEntity(world: entity.position)
-        anchor.addChild(entity)
+        let anchor = AnchorEntity(world: position)
         arView.scene.addAnchor(anchor)
+
+        // Loading model .usdz itu async, jadi dibungkus Task. Urutan:
+        //   1. Like/Dislike + asset placeable -> tampilkan model 3D asli.
+        //   2. Selain itu -> tampilkan maskot Lele.
+        //   3. Kalau dua-duanya gagal -> box (fallback terakhir).
+        Task { @MainActor in
+            let marker: Entity
+            if checkpoint.interactionType == .likedislike,
+               let assetId = checkpoint.selectedAssetId,
+               let asset = try? await Asset3DLoader.load(assetId: assetId) {
+                asset.transform.rotation = simd_quatf(angle: checkpoint.assetRotationY, axis: [0, 1, 0])
+                marker = asset
+            } else if let url = Bundle.main.url(forResource: "Lele_Checkpoint", withExtension: "usdz"),
+                      let model = try? await Entity(contentsOf: url) {
+                CheckpointBoardLoader.normalizeMarker(model)
+                marker = model
+            } else {
+                print("CHECKPOINT MARKER FAIL: pakai box fallback")
+                let mesh = MeshResource.generateBox(size: 0.2)
+                marker = ModelEntity(mesh: mesh, materials: [SimpleMaterial(color: .red, isMetallic: false)])
+            }
+            anchor.addChild(marker)
+        }
     }
     
     private func finishPlacement() {
