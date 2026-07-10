@@ -62,7 +62,8 @@ struct CheckpointEditView: View {
                     saveChanges()
                 }
             }
-        })
+        }
+
         .sheet(isPresented: $showingImagePicker) {
             ImagePicker(sourceType: .photoLibrary, selectedImage: $selectedPromptPhoto) {
                 if let image = selectedPromptPhoto {
