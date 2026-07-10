@@ -321,6 +321,9 @@ struct CheckpointFormSheet: View {
                     Button("Save") {
                         saveCheckpoint()
                     }
+                    .buttonStyle(.borderedProminent)
+                    .buttonBorderShape(.capsule)
+                    .tint(Color.brandPurple)
                     .disabled(title.isEmpty)
                 }
             }
