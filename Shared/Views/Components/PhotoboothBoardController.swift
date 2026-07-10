@@ -39,10 +39,7 @@ final class PhotoboothBoardController: ARSurveyBoard {
         var promptImagePiece: SurveyCard.RenderedPiece?
         if let pid = checkpoint.promptPhotoID, let img = MockPhotoService.shared.fetchPromptPhoto(id: pid) {
             promptImagePiece = await SurveyCard.renderPiece(PromptImageView(image: img))
-        } else {
-            promptImagePiece = await SurveyCard.renderPiece(PromptImageFallbackView())
         }
-        guard let imagePiece = promptImagePiece else { return false }
         
         guard let buttonsPiece = await SurveyCard.renderPiece(ButtonsRowView()) else { return false }
         
@@ -50,7 +47,9 @@ final class PhotoboothBoardController: ARSurveyBoard {
         
         // Calculate total height
         var contentHeight = questionPiece.sizePoints.height + SurveyCard.sectionSpacingPoints
-        contentHeight += imagePiece.sizePoints.height + SurveyCard.sectionSpacingPoints
+        if let ip = promptImagePiece {
+            contentHeight += ip.sizePoints.height + SurveyCard.sectionSpacingPoints
+        }
         contentHeight += buttonsPiece.sizePoints.height
         let cardHeight = contentHeight + SurveyCard.paddingPoints * 2
         
@@ -68,36 +67,40 @@ final class PhotoboothBoardController: ARSurveyBoard {
         cursor -= Float(questionPiece.sizePoints.height + SurveyCard.sectionSpacingPoints) * s
         
         // 2. Image (if present)
-        let imgEntity = SurveyCard.pieceEntity(imagePiece)
-        imgEntity.position = [0, cursor - Float(imagePiece.sizePoints.height) * s / 2, 0.002]
-        rootEntity.addChild(imgEntity)
-        cursor -= Float(imagePiece.sizePoints.height + SurveyCard.sectionSpacingPoints) * s
+        if let ip = promptImagePiece {
+            let imgEntity = SurveyCard.pieceEntity(ip)
+            imgEntity.position = [0, cursor - Float(ip.sizePoints.height) * s / 2, 0.002]
+            rootEntity.addChild(imgEntity)
+            cursor -= Float(ip.sizePoints.height + SurveyCard.sectionSpacingPoints) * s
+        }
         
         // 3. Buttons
         let btnsEntity = SurveyCard.pieceEntity(buttonsPiece)
-        btnsEntity.position = [0, cursor - Float(buttonsPiece.sizePoints.height) * s / 2, 0.002]
+        let buttonsCenterY = cursor - Float(buttonsPiece.sizePoints.height) * s / 2
+        btnsEntity.position = [0, buttonsCenterY, 0.002]
         rootEntity.addChild(btnsEntity)
         
-        // Split the collision into two boxes: top for camera (text + image), bottom for gallery
-        let boardHeightMeters = Float(cardHeight) * s
+        // Collision boxes: strictly covering the bottom button row, split 50/50 horizontally
+        let buttonsHeightMeters = Float(buttonsPiece.sizePoints.height) * s
+        let buttonWidthMeters = SurveyCard.boardWidthMeters / 2.0
         
         let mainHit = Entity()
         mainHit.components.set(CollisionComponent(shapes: [
-            .generateBox(width: SurveyCard.boardWidthMeters,
-                         height: boardHeightMeters * 0.65,
+            .generateBox(width: buttonWidthMeters,
+                         height: buttonsHeightMeters,
                          depth: 0.02)
         ]))
-        mainHit.position.y = boardHeightMeters * 0.175
+        mainHit.position = [-buttonWidthMeters / 2, buttonsCenterY, 0]
         rootEntity.addChild(mainHit)
         self.cameraHitEntity = mainHit
         
         let galleryHit = Entity()
         galleryHit.components.set(CollisionComponent(shapes: [
-            .generateBox(width: SurveyCard.boardWidthMeters,
-                         height: boardHeightMeters * 0.35,
+            .generateBox(width: buttonWidthMeters,
+                         height: buttonsHeightMeters,
                          depth: 0.02)
         ]))
-        galleryHit.position.y = -boardHeightMeters * 0.325
+        galleryHit.position = [buttonWidthMeters / 2, buttonsCenterY, 0]
         rootEntity.addChild(galleryHit)
         self.galleryHitEntity = galleryHit
         
@@ -175,20 +178,4 @@ private struct ButtonsRowView: View {
     }
 }
 
-private struct PromptImageFallbackView: View {
-    var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color(white: 0.95))
-            VStack(spacing: 8) {
-                Image(systemName: "photo")
-                    .font(.system(size: 40))
-                    .foregroundColor(.gray)
-                Text("No prompt photo set")
-                    .font(.system(size: 16))
-                    .foregroundColor(.gray)
-            }
-        }
-        .frame(width: SurveyCard.innerWidthPoints, height: 200)
-    }
-}
+
