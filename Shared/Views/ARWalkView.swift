@@ -21,7 +21,7 @@ struct ARWalkView: View {
     private var db = MockDatabaseService.shared
     @State private var viewModel = CitizenARViewModel()
     @State private var aspirationManager = WalkableAspirationManager()
-    @State private var locationManager = LocationManager()
+    private var locationManager = LocationManager.shared
 
     // One AR scene shared by the tracking view model, the survey boards, and the
     // dropped aspiration messages.
@@ -29,6 +29,8 @@ struct ARWalkView: View {
 
     /// When set, the bottom half of the screen fills with this emoji.
     @State private var celebrationEmoji: String?
+    /// Shows the first-run tutorial card when the screen loads.
+    @State private var showTutorial = true
 
     var body: some View {
         ZStack {
@@ -79,6 +81,15 @@ struct ARWalkView: View {
                     .transition(.opacity)
                     .zIndex(15)
             }
+
+            // First-run tutorial, dismissed by tapping "Find Lele".
+            if showTutorial {
+                TutorialPopup {
+                    withAnimation { showTutorial = false }
+                }
+                .transition(.opacity)
+                .zIndex(30)
+            }
         }
         .onAppear {
             locationManager.requestPermission()
@@ -86,8 +97,9 @@ struct ARWalkView: View {
         }
         .onDisappear {
             viewModel.stopTracking()
+            // Pause the AR session to save resources
+            arContainer.view?.session.pause()
         }
-        .navigationTitle("Walk")
         .navigationBarTitleDisplayMode(.inline)
     }
 
@@ -122,22 +134,22 @@ struct ARWalkView: View {
                 if let answer = db.responses[cp.id] {
                     Label("Answered: \(answer)", systemImage: "checkmark.circle.fill")
                         .font(.body.bold())
-                        .foregroundColor(.green)
+                        .foregroundStyle(.green)
                 } else if cp.hasMCQ {
                     Label("Tap an option on the floating card, then hit Submit", systemImage: "hand.tap")
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                 } else {
                     Label("Tap along the slider on the floating card, then hit Submit", systemImage: "hand.tap")
                         .font(.subheadline)
-                        .foregroundColor(.secondary)
+                        .foregroundStyle(.secondary)
                 }
             } else if cp.interactionType == .photobooth {
                 Label("Photobooth interaction coming soon", systemImage: "camera")
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
             } else if cp.interactionType == .emojiSlider {
                 Label("Emoji slider needs a question configured", systemImage: "face.smiling")
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
             } else {
                 Text(cp.taskDescription)
                     .font(.body)

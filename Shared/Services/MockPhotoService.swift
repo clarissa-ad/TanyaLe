@@ -3,11 +3,13 @@ import SwiftUI
 import Observation
 
 /// A mock service to hold photos in-memory for the AR Photobooth feature.
+/// @Observable tracks the plain stored property; views that read `photos`
+/// (directly or via fetchPhotos) re-render when it changes.
 @MainActor
 @Observable
 class MockPhotoService {
     static let shared = MockPhotoService()
-    
+
     // Maps a Checkpoint's UUID to an array of UIImages taken at that checkpoint.
     var photos: [UUID: [UIImage]] = [:]
     

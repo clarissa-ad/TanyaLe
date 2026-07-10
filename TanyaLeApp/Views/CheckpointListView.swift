@@ -1,65 +1,54 @@
 import SwiftUI
 
 struct CheckpointListView: View {
-    private var db = MockDatabaseService.shared
-    
+    /// When set, only this journey's checkpoints are listed, and deleting a
+    /// checkpoint also detaches it from the journey. `nil` lists everything
+    /// (sandbox/prototype flows).
+    var journey: Journey?
+
+    var db = MockDatabaseService.shared
+    var journeyService = JourneyService.shared
+
+    /// Reads the journey fresh from the service so checkpoints added after
+    /// this view was created still show up.
+    private var checkpoints: [Checkpoint] {
+        guard let journey,
+              let fresh = journeyService.getJourney(by: journey.id) else {
+            return db.checkpoints
+        }
+        return db.checkpoints.filter { fresh.checkpointIDs.contains($0.id) }
+    }
+
     var body: some View {
         List {
-            if db.checkpoints.isEmpty {
+            if checkpoints.isEmpty {
                 Text("No checkpoints created yet.")
                     .foregroundStyle(.gray)
             } else {
-                ForEach(db.checkpoints) { checkpoint in
+                ForEach(checkpoints) { checkpoint in
                     NavigationLink(destination: CheckpointEditView(checkpoint: checkpoint)) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(checkpoint.title)
-                                .font(.headline)
-                            Text(checkpoint.taskDescription)
-                                .font(.subheadline)
-                                .foregroundStyle(.gray)
-                                .lineLimit(1)
-                            
-                            if checkpoint.interactionType != .none {
-                                Text(checkpoint.interactionType.rawValue)
-                                    .font(.caption)
-                                    .padding(.horizontal, 6)
-                                    .padding(.vertical, 2)
-                                    .background(Color.blue.opacity(0.1))
-                                    .foregroundStyle(.blue)
-                                    .cornerRadius(4)
-                            }
-                        }
+                        CheckpointRowView(checkpoint: checkpoint)
                     }
                 }
                 .onDelete(perform: deleteCheckpoint)
             }
         }
         .navigationTitle("Manage Checkpoints")
-        .navigationBarItems(trailing: HStack {
-            EditButton()
-            Button(action: addCheckpoint) {
-                Image(systemName: "plus")
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                EditButton()
             }
-        })
+        }
     }
-    
-    private func addCheckpoint() {
-        let newCheckpoint = Checkpoint(
-            title: "New Checkpoint",
-            taskDescription: "",
-            latitude: 0,
-            longitude: 0,
-            relativeX: 0,
-            relativeY: 0,
-            relativeZ: 0
-        )
-        db.saveCheckpoint(newCheckpoint)
-    }
-    
+
     private func deleteCheckpoint(at offsets: IndexSet) {
         offsets.forEach { index in
-            let cp = db.checkpoints[index]
+            // Index into the *filtered* list, not the full DB array.
+            let cp = checkpoints[index]
             db.deleteCheckpoint(cp.id)
+            if let journey {
+                journeyService.removeCheckpoint(cp.id, from: journey.id)
+            }
         }
     }
 }
