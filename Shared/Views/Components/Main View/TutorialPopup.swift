@@ -118,7 +118,7 @@ private struct FeatureRow: View {
 
                 Text(detail)
                     .font(.body)
-                    .foregroundStyle(Color(red: 0.21, green: 0.21, blue: 0.21)) // #363636
+                    .foregroundStyle(.primary) // black in light mode, white in dark mode
                     .fixedSize(horizontal: false, vertical: true)
             }
             .frame(maxWidth: .infinity, alignment: .leading)

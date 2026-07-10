@@ -21,19 +21,13 @@
 		DB9289F92FFF5E310054B34A /* WalkableAspirationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C22FFF5E310054B34A /* WalkableAspirationManager.swift */; };
 		DB9289FA2FFF5E310054B34A /* CitizenARViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C02FFF5E310054B34A /* CitizenARViewModel.swift */; };
 		DB928A022FFF5E310054B34A /* appclipicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = DB9289C82FFF5E310054B34A /* appclipicon_tanyale.icon */; };
-		DB928A032FFF5E310054B34A /* tanyale_map_illustrationx2.svg in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CD2FFF5E310054B34A /* tanyale_map_illustrationx2.svg */; };
 		DB928A042FFF5E310054B34A /* Lele_Checkpoint.usdz in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CC2FFF5E310054B34A /* Lele_Checkpoint.usdz */; };
 		DB928A052FFF5E310054B34A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CB2FFF5E310054B34A /* Assets.xcassets */; };
-		DB928A062FFF5E310054B34A /* tanyale_map_illustrationx3.svg in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CE2FFF5E310054B34A /* tanyale_map_illustrationx3.svg */; };
 		DB928A072FFF5E310054B34A /* appicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CA2FFF5E310054B34A /* appicon_tanyale.icon */; };
-		DB928A082FFF5E310054B34A /* appicon.png in Resources */ = {isa = PBXBuildFile; fileRef = DB9289C92FFF5E310054B34A /* appicon.png */; };
 		DB928A092FFF5E310054B34A /* appclipicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = DB9289C82FFF5E310054B34A /* appclipicon_tanyale.icon */; };
-		DB928A0A2FFF5E310054B34A /* tanyale_map_illustrationx2.svg in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CD2FFF5E310054B34A /* tanyale_map_illustrationx2.svg */; };
 		DB928A0B2FFF5E310054B34A /* Lele_Checkpoint.usdz in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CC2FFF5E310054B34A /* Lele_Checkpoint.usdz */; };
 		DB928A0C2FFF5E310054B34A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CB2FFF5E310054B34A /* Assets.xcassets */; };
-		DB928A0D2FFF5E310054B34A /* tanyale_map_illustrationx3.svg in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CE2FFF5E310054B34A /* tanyale_map_illustrationx3.svg */; };
 		DB928A0E2FFF5E310054B34A /* appicon_tanyale.icon in Resources */ = {isa = PBXBuildFile; fileRef = DB9289CA2FFF5E310054B34A /* appicon_tanyale.icon */; };
-		DB928A0F2FFF5E310054B34A /* appicon.png in Resources */ = {isa = PBXBuildFile; fileRef = DB9289C92FFF5E310054B34A /* appicon.png */; };
 		DB928A102FFF5E310054B34A /* MockDatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D02FFF5E310054B34A /* MockDatabaseService.swift */; };
 		DB928A122FFF5E310054B34A /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289C12FFF5E310054B34A /* LocationManager.swift */; };
 		DB928A132FFF5E310054B34A /* BrandTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB9289D52FFF5E310054B34A /* BrandTheme.swift */; };
@@ -101,12 +95,9 @@
 		DB9289C52FFF5E310054B34A /* Checkpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Checkpoint.swift; sourceTree = "<group>"; };
 		DB9289C62FFF5E310054B34A /* WalkableAspiration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalkableAspiration.swift; sourceTree = "<group>"; };
 		DB9289C82FFF5E310054B34A /* appclipicon_tanyale.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = appclipicon_tanyale.icon; sourceTree = "<group>"; };
-		DB9289C92FFF5E310054B34A /* appicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appicon.png; sourceTree = "<group>"; };
 		DB9289CA2FFF5E310054B34A /* appicon_tanyale.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = appicon_tanyale.icon; sourceTree = "<group>"; };
 		DB9289CB2FFF5E310054B34A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DB9289CC2FFF5E310054B34A /* Lele_Checkpoint.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = Lele_Checkpoint.usdz; sourceTree = "<group>"; };
-		DB9289CD2FFF5E310054B34A /* tanyale_map_illustrationx2.svg */ = {isa = PBXFileReference; lastKnownFileType = text; path = tanyale_map_illustrationx2.svg; sourceTree = "<group>"; };
-		DB9289CE2FFF5E310054B34A /* tanyale_map_illustrationx3.svg */ = {isa = PBXFileReference; lastKnownFileType = text; path = tanyale_map_illustrationx3.svg; sourceTree = "<group>"; };
 		DB9289D02FFF5E310054B34A /* MockDatabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockDatabaseService.swift; sourceTree = "<group>"; };
 		DB9289D12FFF5E310054B34A /* MockPhotoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockPhotoService.swift; sourceTree = "<group>"; };
 		DB9289D52FFF5E310054B34A /* BrandTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandTheme.swift; sourceTree = "<group>"; };
@@ -223,12 +214,9 @@
 			isa = PBXGroup;
 			children = (
 				DB9289C82FFF5E310054B34A /* appclipicon_tanyale.icon */,
-				DB9289C92FFF5E310054B34A /* appicon.png */,
 				DB9289CA2FFF5E310054B34A /* appicon_tanyale.icon */,
 				DB9289CB2FFF5E310054B34A /* Assets.xcassets */,
 				DB9289CC2FFF5E310054B34A /* Lele_Checkpoint.usdz */,
-				DB9289CD2FFF5E310054B34A /* tanyale_map_illustrationx2.svg */,
-				DB9289CE2FFF5E310054B34A /* tanyale_map_illustrationx3.svg */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -434,12 +422,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB928A022FFF5E310054B34A /* appclipicon_tanyale.icon in Resources */,
-				DB928A032FFF5E310054B34A /* tanyale_map_illustrationx2.svg in Resources */,
 				DB928A042FFF5E310054B34A /* Lele_Checkpoint.usdz in Resources */,
 				DB928A052FFF5E310054B34A /* Assets.xcassets in Resources */,
-				DB928A062FFF5E310054B34A /* tanyale_map_illustrationx3.svg in Resources */,
 				DB928A072FFF5E310054B34A /* appicon_tanyale.icon in Resources */,
-				DB928A082FFF5E310054B34A /* appicon.png in Resources */,
 				98374BE52FF759EB005D18E1 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -449,12 +434,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB928A092FFF5E310054B34A /* appclipicon_tanyale.icon in Resources */,
-				DB928A0A2FFF5E310054B34A /* tanyale_map_illustrationx2.svg in Resources */,
 				DB928A0B2FFF5E310054B34A /* Lele_Checkpoint.usdz in Resources */,
 				DB928A0C2FFF5E310054B34A /* Assets.xcassets in Resources */,
-				DB928A0D2FFF5E310054B34A /* tanyale_map_illustrationx3.svg in Resources */,
 				DB928A0E2FFF5E310054B34A /* appicon_tanyale.icon in Resources */,
-				DB928A0F2FFF5E310054B34A /* appicon.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

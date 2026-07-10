@@ -58,3 +58,5 @@ struct Checkpoint: Identifiable, Codable, Equatable {
         lhs.id == rhs.id
     }
 }
+
+// TODO: Refactoring to be inheritance, would be better
