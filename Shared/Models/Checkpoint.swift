@@ -28,6 +28,9 @@ struct Checkpoint: Identifiable, Codable, Equatable {
     // The citizen slides between the two emoji to answer the question.
     var emojiLeft: String = "😡"
     var emojiRight: String = "😍"
+    
+    // Photobooth specific
+    var promptPhotoID: String?
 
     /// Whether this checkpoint has a complete multiple choice question to display.
     var hasMCQ: Bool {
@@ -49,6 +52,23 @@ struct Checkpoint: Identifiable, Codable, Equatable {
     var relativeY: Float
     var relativeZ: Float
     
+    enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case taskDescription = "task_description"
+        case interactionType = "interaction_type"
+        case question
+        case surveyOptions = "survey_options"
+        case emojiLeft = "emoji_left"
+        case emojiRight = "emoji_right"
+        case latitude
+        case longitude
+        case relativeX = "relative_x"
+        case relativeY = "relative_y"
+        case relativeZ = "relative_z"
+        case promptPhotoID = "prompt_photo_id"
+    }
+
     var coordinate: CLLocationCoordinate2D {
         CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }

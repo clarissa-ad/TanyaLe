@@ -15,6 +15,10 @@ struct RelativeUserARView: View {
     // Photobooth state
     @State private var showingImagePicker = false
     @State private var showingGallery = false
+    
+    // Photo Preview States
+    @State private var capturedPhotoForPreview: UIImage?
+    @State private var showingPhotoPreview = false
     @State private var selectedImage: UIImage?
     @State private var activeCheckpoint: Checkpoint?
     
@@ -30,6 +34,9 @@ struct RelativeUserARView: View {
         var arrowEntity: Entity?
         // Entities that should keep facing the camera (question boards, labels).
         var faceCameraEntities: [Entity] = []
+        /// Keeps track of anchors by Checkpoint ID so we can dynamically add items to them
+        var checkpointAnchors: [UUID: AnchorEntity] = [:]
+        
         var updateSubscription: Cancellable?
         // Interactive survey cards, so taps can be routed to them.
         var boardControllers: [any ARSurveyBoard] = []
@@ -128,30 +135,18 @@ struct RelativeUserARView: View {
                                     .foregroundStyle(.secondary)
                             }
                         } else if cp.interactionType == .photobooth {
-                            HStack {
-                                Button(action: {
-                                    activeCheckpoint = cp
-                                    showingImagePicker = true
-                                }) {
-                                    Label("Snap Photo", systemImage: "camera")
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background(Color.blue)
-                                        .foregroundStyle(.white)
-                                        .cornerRadius(10)
-                                }
-                                
-                                Button(action: {
-                                    activeCheckpoint = cp
-                                    showingGallery = true
-                                }) {
-                                    Label("Gallery", systemImage: "photo.on.rectangle")
-                                        .frame(maxWidth: .infinity)
-                                        .padding()
-                                        .background(Color.purple)
-                                        .foregroundStyle(.white)
-                                        .cornerRadius(10)
-                                }
+                            // The 2D "Snap Photo" button has been replaced by the 3D board interaction.
+                            // Keeping the Gallery button in the HUD as requested for testing.
+                            Button(action: {
+                                activeCheckpoint = cp
+                                showingGallery = true
+                            }) {
+                                Label("Gallery", systemImage: "photo.on.rectangle")
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.purple)
+                                    .foregroundStyle(.white)
+                                    .cornerRadius(10)
                             }
                         } else if cp.interactionType == .emojiSlider {
                             Label("Emoji slider needs a question configured", systemImage: "face.smiling")
@@ -183,15 +178,69 @@ struct RelativeUserARView: View {
             }
         }
         .sheet(isPresented: $showingImagePicker) {
-            ImagePicker(selectedImage: $selectedImage) {
-                if let image = selectedImage, let cp = activeCheckpoint {
-                    MockPhotoService.shared.savePhoto(image: image, forCheckpoint: cp.id)
+            if let cp = activeCheckpoint {
+                PhotoboothCaptureView(checkpoint: cp) { image in
+                    // Instead of saving instantly, hold it for preview
+                    capturedPhotoForPreview = image
+                    // Small delay to allow the sheet to dismiss before presenting fullScreenCover
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        showingPhotoPreview = true
+                    }
                 }
+            }
+        }
+        .fullScreenCover(isPresented: $showingPhotoPreview) {
+            if let image = capturedPhotoForPreview, let cp = activeCheckpoint {
+                PhotoPreviewView(
+                    capturedImage: image,
+                    checkpoint: cp,
+                    onRetake: {
+                        capturedPhotoForPreview = nil
+                        showingPhotoPreview = false
+                        // Re-open camera after brief delay
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            showingImagePicker = true
+                        }
+                    },
+                    onExploreMore: {
+                         // Finalize the capture
+                        MockPhotoService.shared.savePhoto(image: image, forCheckpoint: cp.id)
+                        
+                        // Dynamically add the new photo into the 3D scene!
+                        if let anchor = arContainer.checkpointAnchors[cp.id] {
+                            // Find out how many photos already exist to position it correctly
+                            let photosCount = MockPhotoService.shared.fetchPhotos(forCheckpoint: cp.id).count
+                            
+                            Task { @MainActor in
+                                if let entity = CheckpointBoardLoader.createPhotoEntity(from: image) {
+                                    // Place the floating photos beside the board (starting to the right)
+                                    let spacing: Float = 0.5
+                                    let xOffset: Float = 0.45 + Float(photosCount - 1) * spacing
+                                    entity.position = [xOffset, 0.45 + Float(photosCount % 2) * 0.05, 0]
+                                    anchor.addChild(entity)
+                                    arContainer.faceCameraEntities.append(entity)
+                                }
+                            }
+                        }
+                        
+                        capturedPhotoForPreview = nil
+                        showingPhotoPreview = false
+                    }
+                )
             }
         }
         .sheet(isPresented: $showingGallery) {
             if let cp = activeCheckpoint {
                 PhotoGalleryView(checkpoint: cp)
+            }
+        }
+        .onChange(of: showingImagePicker) { _, isShowing in
+            if isShowing {
+                arContainer.view?.session.pause()
+            } else {
+                if let config = arContainer.view?.session.configuration {
+                    arContainer.view?.session.run(config)
+                }
             }
         }
         .onAppear {
@@ -200,6 +249,7 @@ struct RelativeUserARView: View {
             // distance while the user stands still inside the circle.
             locationManager.improveAccuracy()
         }
+
         .onDisappear {
             viewModel.stopTracking()
             viewModel.cancelStartGate(arContainer: arContainer)
@@ -353,7 +403,15 @@ struct RelativeUserARView: View {
         CheckpointBoardLoader.load(
             into: arContainer,
             checkpoints: db.checkpoints,
-            onEmojiCelebration: showEmojiCelebration
+            onEmojiCelebration: showEmojiCelebration,
+            onPhotoboothTap: { cp in
+                activeCheckpoint = cp
+                showingImagePicker = true
+            },
+            onGalleryTap: { cp in
+                activeCheckpoint = cp
+                showingGallery = true
+            }
         )
     }
 }

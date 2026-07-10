@@ -294,6 +294,8 @@ struct CheckpointFormSheet: View {
     @State private var surveyOptions: [String] = []
     @State private var emojiLeft = ""
     @State private var emojiRight = ""
+    @State private var promptPhotoID: String? = nil
+    @State private var showingImagePicker = false
     
     var journeyService = JourneyService.shared
     var checkpointService = MockDatabaseService.shared
@@ -308,7 +310,9 @@ struct CheckpointFormSheet: View {
                     question: $question,
                     surveyOptions: $surveyOptions,
                     emojiLeft: $emojiLeft,
-                    emojiRight: $emojiRight
+                    emojiRight: $emojiRight,
+                    promptPhotoID: $promptPhotoID,
+                    showingImagePicker: $showingImagePicker
                 )
             }
             .dismissKeyboardOnTap()
@@ -341,6 +345,7 @@ struct CheckpointFormSheet: View {
             surveyOptions: surveyOptions.isEmpty ? [] : surveyOptions,
             emojiLeft: emojiLeft.isEmpty ? "😡" : emojiLeft,
             emojiRight: emojiRight.isEmpty ? "😍" : emojiRight,
+            promptPhotoID: promptPhotoID,
             latitude: 0, // GPS will be calculated relative to journey start
             longitude: 0,
             relativeX: position.x,

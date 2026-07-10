@@ -5,28 +5,6 @@ import Combine
 import CoreLocation
 import UIKit
 
-// MARK: - AR Session Container
-
-/// Mutable reference bridge shared between the SwiftUI view and its
-/// UIViewRepresentable. Must be a class so mutations are visible across renders.
-class ARContainer {
-    var view: ARView?
-    /// World-space anchor holding the reticle group
-    var worldAnchor: AnchorEntity?
-    /// Entity group that visually represents the reticle in AR space
-    var reticleGroup: Entity?
-    /// Per-frame scene subscription — cancelled on teardown
-    var updateSubscription: Combine.Cancellable?
-    /// World-space hit position; nil when NOT on a confirmed surface
-    var reticlePosition: SIMD3<Float>?
-    /// True when the reticle is resting on a real detected surface
-    var isOnSurface: Bool = false
-    /// Called on main thread when surface tracking state changes
-    var onTrackingChanged: ((Bool) -> Void)?
-    /// Called on main thread when user taps the AR view
-    var onTap: (() -> Void)?
-}
-
 // MARK: - Main View
 
 struct RelativeMakerARView: View {
@@ -47,15 +25,36 @@ struct RelativeMakerARView: View {
     @State private var tempInteractionType: Checkpoint.InteractionType = .none
     @State private var tempQuestion: String                            = ""
     @State private var tempSurveyOptions: [String]                     = []
-    @State private var tempEmojiLeft: String                           = ""
-    @State private var tempEmojiRight: String                          = ""
+    @State private var tempEmojiLeft: String                           = "👎"
+    @State private var tempEmojiRight: String                          = "👍"
+    @State private var tempPromptPhotoID: String?                      = nil
+    @State private var tempShowingImagePicker: Bool                    = false
 
     var journeyService = JourneyService.shared
     var db = MockDatabaseService.shared
 
-    // Shared mutable bridge — must be @State so the SAME object survives
-    // every re-render of this struct (SwiftUI creates a new struct value on
-    // each body call; @State keeps the underlying storage alive).
+    // Shared mutable bridge between SwiftUI and the UIViewRepresentable.
+    // IMPORTANT: must be @State so the SAME ARContainer object persists across
+    // all re-renders (SwiftUI creates a new struct value on each body call;
+    // @State keeps the underlying storage alive).
+    class ARContainer {
+        var view: ARView?
+        /// Camera-space anchor — always attached to the camera, immune to setWorldOrigin
+        var cameraAnchor: AnchorEntity?
+        /// Child entity of cameraAnchor that holds the ring visuals, positioned in camera space
+        var reticleGroup: Entity?
+        var updateSubscription: Combine.Cancellable?
+        /// The anchor holding the reticle group
+        var worldAnchor: AnchorEntity?
+        /// World-space hit position — nil when NOT on a real surface (used by buttons)
+        var reticlePosition: SIMD3<Float>?
+        /// True when the reticle is resting on a detected surface
+        var isOnSurface: Bool = false
+        /// Called on the main thread whenever surface tracking state changes
+        var onTrackingChanged: ((Bool) -> Void)?
+        /// Called on the main thread when user taps the screen
+        var onTap: (() -> Void)?
+    }
     @State private var arContainer = ARContainer()
 
     // MARK: Body
@@ -87,13 +86,13 @@ struct RelativeMakerARView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button("Done") {
-                    dismiss()
-                }
+                Button("Done") { dismiss() }
             }
             ToolbarItem(placement: .primaryAction) {
                 NavigationLink(destination: CheckpointListView(journey: journey)) {
                     Image(systemName: "list.bullet")
+                        .font(.title2)
+                        .foregroundStyle(.blue)
                 }
             }
         }
@@ -104,22 +103,23 @@ struct RelativeMakerARView: View {
 
     private var originPanel: some View {
         VStack(spacing: 15) {
-            Text("Point the reticle at the journey's starting location, then tap below.")
+            Text("Stand at the App Clip location. Aim the reticle at it, then tap below.")
                 .multilineTextAlignment(.center)
                 .padding()
                 .background(Color.black.opacity(0.7))
                 .foregroundStyle(.white)
                 .cornerRadius(10)
 
-            Button(action: setAROrigin) {
+            Button(action: setOrigin) {
                 Text("Set Origin Here")
                     .fontWeight(.bold)
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color.blue)
+                    .background(isTracking ? Color.blue : Color.gray.opacity(0.5))
                     .foregroundStyle(.white)
                     .cornerRadius(15)
             }
+            .disabled(!isTracking)
         }
         .padding(20)
         .padding(.bottom, 20)
@@ -140,7 +140,7 @@ struct RelativeMakerARView: View {
             .foregroundStyle(count > 0 ? Color.green : Color.white)
             .cornerRadius(20)
 
-            // Always-visible surface tracking status
+            // Surface tracking status
             Label(
                 isTracking ? "Surface detected — aim and drop" : "Scanning… tap screen to reset",
                 systemImage: isTracking ? "scope" : "hand.tap"
@@ -167,13 +167,12 @@ struct RelativeMakerARView: View {
             }
             .disabled(!isTracking)
 
-            // Finish button — only shows once at least one checkpoint is placed
-            if viewModel.checkpoints.count > 0 {
+            // Finish button — shown once at least one checkpoint is placed
+            if count > 0 {
                 Button(action: { dismiss() }) {
                     HStack {
                         Image(systemName: "checkmark.circle.fill")
-                        Text("Finish Journey")
-                            .fontWeight(.bold)
+                        Text("Finish Journey").fontWeight(.bold)
                     }
                     .padding()
                     .frame(maxWidth: .infinity)
@@ -199,7 +198,9 @@ struct RelativeMakerARView: View {
                     question: $tempQuestion,
                     surveyOptions: $tempSurveyOptions,
                     emojiLeft: $tempEmojiLeft,
-                    emojiRight: $tempEmojiRight
+                    emojiRight: $tempEmojiRight,
+                    promptPhotoID: $tempPromptPhotoID,
+                    showingImagePicker: $tempShowingImagePicker
                 )
             }
             .navigationTitle("New Checkpoint")
@@ -223,20 +224,19 @@ struct RelativeMakerARView: View {
         arContainer.isOnSurface = false
     }
 
-    private func setAROrigin() {
+    private func setOrigin() {
         guard let arView = arContainer.view else { return }
 
-        // Prefer the reticle's surface hit; fall back to the camera position
+        // Prefer the confirmed surface hit; fall back to camera position
         let pos: SIMD3<Float>
         if let reticlePos = arContainer.reticlePosition {
             pos = reticlePos
         } else if let camTransform = arView.session.currentFrame?.camera.transform {
-            // Fallback: use current camera position (e.g. user pointing at sky)
             pos = SIMD3<Float>(camTransform.columns.3.x,
                                camTransform.columns.3.y,
                                camTransform.columns.3.z)
         } else {
-            return // No AR frame yet — truly can't proceed
+            return
         }
 
         var t = matrix_identity_float4x4
@@ -244,8 +244,7 @@ struct RelativeMakerARView: View {
         arView.session.setWorldOrigin(relativeTransform: t)
         isOriginSet = true
 
-        // Rebuild the anchor in the new coordinate system so our world-space
-        // transforms (hitWorldPos) match 1:1 with the reticle's local space.
+        // Rebuild the anchor in the new coordinate system
         arContainer.worldAnchor?.removeFromParent()
         let newAnchor = AnchorEntity(world: .zero)
         if let group = arContainer.reticleGroup {
@@ -260,7 +259,7 @@ struct RelativeMakerARView: View {
         journey.arOriginZ = pos.z
         journeyService.updateJourney(journey)
 
-        // Also set the legacy DB origin for backward compatibility
+        // Legacy DB origin for backward compatibility
         db.surveyOrigin = CLLocationCoordinate2D(
             latitude: journey.startLatitude,
             longitude: journey.startLongitude
@@ -270,7 +269,7 @@ struct RelativeMakerARView: View {
     private func saveCheckpoint(at position: SIMD3<Float>) {
         guard let arView = arContainer.view else { return }
 
-        // Spawn the Lele checkpoint model visually.
+        // Spawn the Lele checkpoint model visually
         let anchor = AnchorEntity(world: position)
         arView.scene.addAnchor(anchor)
         Task { @MainActor in
@@ -286,7 +285,7 @@ struct RelativeMakerARView: View {
             anchor.addChild(marker)
         }
 
-        // Save to DB — the view model associates it with the journey too.
+        // Save to DB — associates the checkpoint with the journey too
         _ = viewModel.addCheckpointAt(
             transform: position,
             title: tempTitle,
@@ -295,30 +294,33 @@ struct RelativeMakerARView: View {
             question: tempQuestion.trimmingCharacters(in: .whitespaces),
             surveyOptions: tempSurveyOptions.filter { !$0.isEmpty },
             emojiLeft: tempEmojiLeft,
-            emojiRight: tempEmojiRight
+            emojiRight: tempEmojiRight,
+            promptPhotoID: tempPromptPhotoID
         )
 
-        tempTitle           = ""
-        tempDesc            = ""
-        tempInteractionType = .none
-        tempQuestion        = ""
-        tempSurveyOptions   = []
-        tempEmojiLeft       = ""
-        tempEmojiRight      = ""
-        showingAddSheet     = false
+        tempTitle              = ""
+        tempDesc               = ""
+        tempInteractionType    = .none
+        tempQuestion           = ""
+        tempSurveyOptions      = []
+        tempEmojiLeft          = "👎"
+        tempEmojiRight         = "👍"
+        tempPromptPhotoID      = nil
+        tempShowingImagePicker = false
+        showingAddSheet        = false
     }
 }
 
 // MARK: - ARView UIViewRepresentable
 
 struct RelativeMakerARViewContainer: UIViewRepresentable {
-    let arContainer: ARContainer
+    let arContainer: RelativeMakerARView.ARContainer
 
     func makeCoordinator() -> Coordinator { Coordinator(arContainer: arContainer) }
 
     class Coordinator: NSObject {
-        let arContainer: ARContainer
-        init(arContainer: ARContainer) {
+        let arContainer: RelativeMakerARView.ARContainer
+        init(arContainer: RelativeMakerARView.ARContainer) {
             self.arContainer = arContainer
         }
         /// UIKit tap gesture — fires onTap callback on main thread
@@ -346,37 +348,43 @@ struct RelativeMakerARViewContainer: UIViewRepresentable {
         coaching.frame   = arView.bounds
         arView.addSubview(coaching)
 
-        // ── UIKit tap gesture ──────────────────────────────────────────────────
+        // ── UIKit tap gesture (reliable; SwiftUI onTapGesture fails on UIViewRepresentable) ──
         let tap = UITapGestureRecognizer(target: context.coordinator,
                                          action: #selector(Coordinator.handleTap(_:)))
-        tap.cancelsTouchesInView = false
+        tap.cancelsTouchesInView = false   // don't block SwiftUI button taps
         arView.addGestureRecognizer(tap)
 
         // ── 3D Reticle: world-space anchor ────────────────────────────────────
+        // We use a world anchor, but we manually calculate and overwrite its
+        // transform every single frame. This prevents it from being "left behind"
+        // when setWorldOrigin is called.
         let worldAnchor = AnchorEntity(world: .zero)
         arView.scene.addAnchor(worldAnchor)
 
+        // Group entity: we position this in camera space every frame
         let reticleGroup = Entity()
 
-        // ── Broken Ring & Dot Reticle ──────────────────────────────────────────
+        // ── Proper UI Reticle (Broken Ring & Dot) ─────────────────────────────
         let reticlePlane = Entity()
         var reticleMat = UnlitMaterial()
-
+        
+        // Generate texture from code and apply it
         if let reticleCGImage = UIImage.generateReticle()?.cgImage,
            let tex = try? TextureResource.generate(from: reticleCGImage, options: .init(semantic: .color)) {
             reticleMat.color = .init(tint: .white, texture: .init(tex))
+            // Enable transparency so the black/clear parts of the image are invisible
             reticleMat.blending = .transparent(opacity: .init(floatLiteral: 1.0))
         } else {
-            reticleMat.color = .init(tint: .white)
+            reticleMat.color = .init(tint: .white) // fallback if texture fails
         }
-
+        
         reticlePlane.components.set(ModelComponent(
             mesh: MeshResource.generatePlane(width: 0.22, depth: 0.22),
             materials: [reticleMat]
         ))
 
         reticleGroup.addChild(reticlePlane)
-        reticleGroup.isEnabled = false
+        reticleGroup.isEnabled = false   // hidden until first surface/fallback position set
         worldAnchor.addChild(reticleGroup)
 
         arContainer.worldAnchor  = worldAnchor
@@ -397,6 +405,7 @@ struct RelativeMakerARViewContainer: UIViewRepresentable {
                                              camTransform.columns.3.y,
                                              camTransform.columns.3.z)
 
+            // ── Raycast: prefer confirmed plane, fall back to estimated ───────
             var hitWorldPos:    SIMD3<Float>? = nil
             var hitWorldNormal: SIMD3<Float>? = nil
 
@@ -415,10 +424,9 @@ struct RelativeMakerARViewContainer: UIViewRepresentable {
                 }
             }
 
-            let camForward = normalize(-SIMD3<Float>(camTransform.columns.2.x,
-                                                      camTransform.columns.2.y,
-                                                      camTransform.columns.2.z))
-
+            // ── Calculate World-Space Transform ───────────────────────────────
+            let camForward = normalize(-SIMD3<Float>(camTransform.columns.2.x, camTransform.columns.2.y, camTransform.columns.2.z))
+            
             let targetPos:    SIMD3<Float>
             let targetNormal: SIMD3<Float>
             let dist:         Float
@@ -430,23 +438,32 @@ struct RelativeMakerARViewContainer: UIViewRepresentable {
                 dist         = length(wp - camPos)
                 onSurface    = true
             } else {
+                // Fallback: 1.5 m straight ahead, flat on the horizontal plane
                 targetPos    = camPos + camForward * 1.5
                 targetNormal = SIMD3<Float>(0, 1, 0)
                 dist         = 1.5
                 onSurface    = false
             }
 
+            // ── Orientation: Flat on surface, facing the camera ───────────────
+            // We want the reticle's Y axis to align with the surface normal.
+            // We want its Z axis (forward) to point away from the camera.
             let forward = normalize(targetPos - camPos)
+            // Compute right vector (orthogonal to normal and forward)
             var right = cross(targetNormal, forward)
-            if length(right) < 0.001 { right = SIMD3<Float>(1, 0, 0) }
+            if length(right) < 0.001 { right = SIMD3<Float>(1, 0, 0) } // fallback if looking straight down
             right = normalize(right)
+            // Compute true forward (orthogonal to right and normal)
             let trueForward = normalize(cross(right, targetNormal))
-
+            
+            // Construct rotation matrix (columns: X, Y, Z)
             let rotMatrix = simd_float3x3(right, targetNormal, trueForward)
             let q = simd_quatf(rotMatrix)
 
+            // ── Scale: constant apparent size ─────────────────────────────────
             let scale = max(0.5, min(2.5, dist / 1.5))
 
+            // Apply directly in world space
             group.transform = Transform(
                 scale:       SIMD3<Float>(repeating: scale),
                 rotation:    q,
@@ -454,8 +471,10 @@ struct RelativeMakerARViewContainer: UIViewRepresentable {
             )
             if !group.isEnabled { group.isEnabled = true }
 
+            // World-space position is only valid for button use when on a surface
             container.reticlePosition = onSurface ? hitWorldPos : nil
 
+            // Notify SwiftUI of tracking state changes
             if onSurface != container.isOnSurface {
                 container.isOnSurface = onSurface
                 DispatchQueue.main.async { container.onTrackingChanged?(onSurface) }
@@ -490,34 +509,36 @@ extension UIImage {
     /// Generates a perfectly crisp broken-ring reticle with a center dot
     static func generateReticle() -> UIImage? {
         let size = CGSize(width: 512, height: 512)
+        // scale 1.0 because we are mapping this to a texture
         UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
-
+        
+        // Transparent background
         context.clear(CGRect(origin: .zero, size: size))
-
+        
+        // Setup line style
         context.setStrokeColor(UIColor.white.cgColor)
         context.setLineWidth(30)
         context.setLineCap(.round)
-
+        
         let center = CGPoint(x: 256, y: 256)
         let radius: CGFloat = 200
-
-        // Right arc (from -45° to 45°)
+        
+        // Right arc (from -45 deg to 45 deg)
         context.beginPath()
         context.addArc(center: center, radius: radius, startAngle: -.pi * 0.25, endAngle: .pi * 0.25, clockwise: false)
         context.strokePath()
-
-        // Left arc (from 135° to 225°)
+        
+        // Left arc (from 135 deg to 225 deg)
         context.beginPath()
         context.addArc(center: center, radius: radius, startAngle: .pi * 0.75, endAngle: .pi * 1.25, clockwise: false)
         context.strokePath()
-
+        
         // Center dot
         context.setFillColor(UIColor.white.cgColor)
         let dotRadius: CGFloat = 24
-        context.fillEllipse(in: CGRect(x: center.x - dotRadius, y: center.y - dotRadius,
-                                        width: dotRadius * 2, height: dotRadius * 2))
-
+        context.fillEllipse(in: CGRect(x: center.x - dotRadius, y: center.y - dotRadius, width: dotRadius * 2, height: dotRadius * 2))
+        
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return image

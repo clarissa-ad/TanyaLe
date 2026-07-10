@@ -40,4 +40,16 @@ class MockPhotoService {
         
         print("MockPhotoService: Deleted photo for checkpoint \(checkpointId). Remaining: \(cpPhotos.count)")
     }
+    
+    // MARK: - Prompt Photos
+    var promptPhotos: [String: UIImage] = [:]
+    
+    func savePromptPhoto(image: UIImage, id: String) {
+        promptPhotos[id] = image
+        print("MockPhotoService: Saved prompt photo with id \(id)")
+    }
+    
+    func fetchPromptPhoto(id: String) -> UIImage? {
+        return promptPhotos[id]
+    }
 }
