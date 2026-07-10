@@ -29,38 +29,46 @@ class MockAssetService {
             id: "kandang_ayam",
             name: "Kandang Ayam",
             thumbnailImageName: "bird.fill",
-            description: "Kandang ayam warga di area RT. Digunakan untuk memelihara ayam secara bersama."
-        ),
-        Asset3D(
-            id: "pos_ronda",
-            name: "Pos Ronda",
-            thumbnailImageName: "building.2.fill",
-            description: "Pos jaga malam warga, tempat ronda bergiliran setiap malam."
-        ),
-        Asset3D(
-            id: "taman",
-            name: "Taman",
-            thumbnailImageName: "leaf.fill",
-            description: "Taman kecil di tengah lingkungan sebagai ruang terbuka hijau warga."
+            description: """
+            Kandang ayam komunal merupakan fasilitas yang dapat dimanfaatkan warga untuk beternak ayam secara bersama-sama. Dengan kapasitas sekitar 20–30 ekor ayam, kandang ini dapat menjadi sumber telur maupun daging bagi masyarakat sekaligus membuka peluang usaha skala kecil. Material yang digunakan berupa rangka besi galvanis dan kawat berkualitas sehingga lebih tahan terhadap cuaca dan mudah dibersihkan.
+
+            Estimasi biaya pembangunan berkisar antara Rp4.500.000–Rp7.000.000, tergantung ukuran dan material yang dipilih. Kelebihan kandang ini adalah dapat meningkatkan ketahanan pangan, menghasilkan nilai ekonomi, serta mempererat gotong royong antarwarga. Namun, kandang memerlukan perawatan rutin, pembersihan berkala, dan lokasi yang memiliki sirkulasi udara baik agar tidak menimbulkan bau maupun mengganggu lingkungan sekitar.
+            """
         ),
         Asset3D(
             id: "tempat_sampah",
             name: "Tempat Sampah",
             thumbnailImageName: "trash.fill",
-            description: "Tempat pembuangan sampah sementara sebelum diangkut petugas kebersihan."
-        ),
-        Asset3D(
-            id: "gapura",
-            name: "Gapura",
-            thumbnailImageName: "building.columns.fill",
-            description: "Gapura sebagai penanda pintu masuk kompleks/RT."
-        ),
-        Asset3D(
-            id: "lapangan",
-            name: "Lapangan",
-            thumbnailImageName: "sportscourt.fill",
-            description: "Lapangan serbaguna untuk kegiatan olahraga dan acara warga."
+            description: """
+            Tempat sampah komunal berfungsi sebagai titik pengumpulan sampah rumah tangga sebelum diangkut oleh petugas kebersihan. Fasilitas ini membantu menjaga lingkungan tetap bersih, mengurangi risiko sampah berserakan, serta mendukung kebiasaan membuang sampah pada tempatnya. Desain yang direkomendasikan menggunakan material besi atau fiberglass yang tahan terhadap cuaca dan mudah dalam proses perawatan.
+
+            Estimasi biaya pengadaan berkisar antara Rp1.500.000–Rp3.000.000 per unit, bergantung pada kapasitas dan jenis material. Keunggulan fasilitas ini adalah meningkatkan kebersihan lingkungan, mengurangi potensi banjir akibat saluran tersumbat, dan mendukung program pengelolaan sampah RT. Di sisi lain, tempat sampah memerlukan jadwal pengangkutan yang konsisten serta partisipasi warga dalam memilah dan membuang sampah dengan benar agar manfaatnya dapat dirasakan secara optimal.
+            """
         )
+//        Asset3D(
+//            id: "pos_ronda",
+//            name: "Pos Ronda",
+//            thumbnailImageName: "building.2.fill",
+//            description: "Pos jaga malam warga, tempat ronda bergiliran setiap malam."
+//        ),
+//        Asset3D(
+//            id: "taman",
+//            name: "Taman",
+//            thumbnailImageName: "leaf.fill",
+//            description: "Taman kecil di tengah lingkungan sebagai ruang terbuka hijau warga."
+//        ),
+//        Asset3D(
+//            id: "gapura",
+//            name: "Gapura",
+//            thumbnailImageName: "building.columns.fill",
+//            description: "Gapura sebagai penanda pintu masuk kompleks/RT."
+//        ),
+//        Asset3D(
+//            id: "lapangan",
+//            name: "Lapangan",
+//            thumbnailImageName: "sportscourt.fill",
+//            description: "Lapangan serbaguna untuk kegiatan olahraga dan acara warga."
+//        )
     ]
 
     private init() {}

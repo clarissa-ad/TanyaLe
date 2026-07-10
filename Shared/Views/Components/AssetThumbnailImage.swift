@@ -27,7 +27,7 @@ struct AssetThumbnailImage: View {
     // ubah thumnail di sini
     HStack(spacing: 20) {
         AssetThumbnailImage(asset: Asset3D(id: "kandang_ayam", name: "Kandang Ayam", thumbnailImageName: "bird.fill", description: ""))
-        AssetThumbnailImage(asset: Asset3D(id: "unknown_id", name: "Unknown", thumbnailImageName: "leaf.fill", description: ""))
+        AssetThumbnailImage(asset: Asset3D(id: "tempat_sampah", name: "Tempat Sampah", thumbnailImageName: "trash.fill", description: ""))
     }
     .frame(height: 100)
     .padding()
