@@ -19,14 +19,14 @@ import Combine
 /// as the AR session produces a frame.
 struct ARWalkView: View {
     private var db = MockDatabaseService.shared
+    private var locationManager = LocationManager.shared
     @State private var viewModel = CitizenARViewModel()
     @State private var aspirationManager = WalkableAspirationManager()
-    private var locationManager = LocationManager.shared
-
+    
     // One AR scene shared by the tracking view model, the survey boards, and the
     // dropped aspiration messages.
     private let arContainer = RelativeUserARView.ARContainer()
-
+    
     /// When set, the bottom half of the screen fills with this emoji.
     @State private var celebrationEmoji: String?
     /// Shows the first-run tutorial card when the screen loads.
@@ -37,12 +37,23 @@ struct ARWalkView: View {
     @State private var showingAssetDetail = false
     @State private var presentedAssetId: String?
 
+    
+    /// How close (in meters) the citizen must be for the checkpoint card to show.
+    private let interactionRadius: Float = 1.0
+    
+    /// The checkpoint the citizen is currently close enough to interact with,
+    /// or `nil` while they should still be following the navigator arrow.
+    private var arrivedCheckpoint: Checkpoint? {
+        guard let dist = viewModel.nearestDistance, dist < interactionRadius else { return nil }
+        return viewModel.nearestCheckpoint
+    }
+    
     var body: some View {
         ZStack {
             // Background is a live AR camera (not an image).
             RelativeARViewContainer(arContainer: arContainer)
                 .edgesIgnoringSafeArea(.all)
-
+            
             // Top controls: aspiration button (left), minimap (right).
             VStack {
                 HStack(alignment: .top) {
@@ -52,9 +63,9 @@ struct ARWalkView: View {
                     ) { text in
                         dropMessage(text)
                     }
-
+                    
                     Spacer()
-
+                    
                     ARMinimapView(
                         checkpoints: db.checkpoints,
                         userLocation: viewModel.arUserLocation,
@@ -62,23 +73,24 @@ struct ARWalkView: View {
                     )
                 }
                 .padding()
-
+                
                 Spacer()
             }
             .zIndex(10)
-
+            
             // Bottom-center: the 2D navigator arrow, or the checkpoint card once
             // the user is close enough to interact.
             VStack {
                 Spacer()
-
-                if let dist = viewModel.nearestDistance, dist < 2.0, let cp = viewModel.nearestCheckpoint {
-                    checkpointCard(for: cp)
+                
+                if let cp = arrivedCheckpoint {
+                    arriveatCheckpoint(for: cp)
                 } else if viewModel.nearestCheckpoint != nil {
                     navigatorArrow
                 }
             }
-
+            .animation(.spring(response: 0.35, dampingFraction: 0.8), value: arrivedCheckpoint?.id)
+            
             // Emoji celebration after submitting an emoji slider.
             if let celebrationEmoji {
                 EmojiCelebrationView(emoji: celebrationEmoji)
@@ -86,7 +98,7 @@ struct ARWalkView: View {
                     .transition(.opacity)
                     .zIndex(15)
             }
-
+            
             // First-run tutorial, dismissed by tapping "Find Lele".
             if showTutorial {
                 TutorialPopup {
@@ -198,8 +210,8 @@ struct ARWalkView: View {
         .animation(.spring(), value: viewModel.nearestDistance)
     }
 
+    
     // MARK: - AR setup
-
     /// Waits for the AR session to be ready, then calibrates the world origin,
     /// drops the checkpoints, and starts proximity tracking. Replaces the manual
     /// "Scan App Clip" button since this screen runs after that step.
@@ -215,6 +227,8 @@ struct ARWalkView: View {
                         checkpoints: db.checkpoints,
                         onEmojiCelebration: showEmojiCelebration,
                         onShowAssetDetail: showAssetDetail
+                        onPhotoboothTap: { _ in },
+                        onGalleryTap: { _ in }
                     )
                     viewModel.startTracking(arContainer: arContainer)
                     return
@@ -223,20 +237,46 @@ struct ARWalkView: View {
             }
         }
     }
+    
+}
 
-    /// Drops a floating aspiration message where the user is standing, into the
-    /// same AR scene as the checkpoints, and persists it.
+
+
+extension ARWalkView {
+    // MARK: - Subviews
+    
+    /// A 2D arrow (replacing the old 3D cone entity) rotated to point at the
+    /// nearest checkpoint from the camera's point of view.
+    private var navigatorArrow: some View {
+        Image("arrow_navigator")
+            .resizable()
+            .scaledToFit()
+            .frame(width: 120)
+            .rotationEffect(.radians(viewModel.arrowHeading ?? 0))
+            .padding(.bottom, 60)
+            .animation(.easeInOut(duration: 0.2), value: viewModel.arrowHeading)
+            .allowsHitTesting(false)
+    }
+    
+    // Arriving at a certain checkpoint: the bottom card whose title, body, and
+    // icon react to whether the interaction has been answered yet.
+    private func arriveatCheckpoint(for cp: Checkpoint) -> some View {
+        CheckpointReachedCard(checkpoint: cp, answer: db.responses[cp.id])
+            .transition(.move(edge: .bottom).combined(with: .opacity))
+    }
+    
+    // Dropping aspiration on exact location where user is standing
     private func dropMessage(_ text: String) {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty,
               let arView = arContainer.view,
               let frame = arView.session.currentFrame else { return }
-
+        
         // Camera transform = where the phone is; feet are ~1.4m below it.
         let cam = frame.camera.transform
         let camPos = SIMD3<Float>(cam.columns.3.x, cam.columns.3.y, cam.columns.3.z)
         let standing = SIMD3<Float>(camPos.x, camPos.y - 1.4, camPos.z)
-
+        
         let coordinate = locationManager.userLocation?.coordinate
         aspirationManager.add(
             WalkableAspiration(
@@ -248,10 +288,10 @@ struct ARWalkView: View {
                 relativeZ: standing.z
             )
         )
-
+        
         let anchor = AnchorEntity(world: standing)
         arView.scene.addAnchor(anchor)
-
+        
         Task { @MainActor in
             guard let controller = await MessageBoardController.make(message: trimmed) else { return }
             controller.rootEntity.position = [0, 1.2, 0]
@@ -260,9 +300,9 @@ struct ARWalkView: View {
             arContainer.boardControllers.append(controller)
         }
     }
-
-    /// Fills the bottom half of the screen with the chosen emoji for a few
-    /// seconds after an emoji slider submission.
+    
+    
+    // Fills the bottom half of the screen with emoji
     private func showEmojiCelebration(_ emoji: String) {
         withAnimation {
             celebrationEmoji = emoji

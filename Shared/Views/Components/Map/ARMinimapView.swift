@@ -22,42 +22,49 @@ struct ARMinimapView: View {
     let userLocation: CLLocationCoordinate2D?
     /// Where to snap the map when it first appears (e.g. the survey origin).
     let origin: CLLocationCoordinate2D?
-
+    
+    var locationManager = LocationManager.shared
+    var db = MockDatabaseService.shared
+    @State var selectedCheckpoint: Checkpoint?
+    
     enum MapState {
         case hidden, expanded
     }
-
+    
     /// Fixed minimap zoom level (max zoom).
     private let minimapSpan = MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001)
-
+    
+    
     @State private var mapState: MapState = .hidden
     @State private var mapPosition = MapCameraPosition.region(MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666),
         span: MKCoordinateSpan(latitudeDelta: 0.001, longitudeDelta: 0.001)
     ))
-
+    
+    
+    
     var body: some View {
         VStack(alignment: .trailing) {
             if mapState != .hidden {
                 Map(position: $mapPosition) {
-                    ForEach(checkpoints) { cp in
-                        Annotation("", coordinate: cp.coordinate) {
-                            Circle()
-                                .fill(Color.green)
-                                .frame(width: 15, height: 15)
-                                .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                        }
-                    }
-
-                    // Custom AR blue dot for indoor tracking — a real map
-                    // annotation, so it stays put when the map is panned.
-                    if let userLoc = userLocation {
-                        Annotation("", coordinate: userLoc) {
-                            Circle()
-                                .fill(Color.blue)
-                                .frame(width: 15, height: 15)
-                                .overlay(Circle().stroke(Color.white, lineWidth: 2))
-                                .shadow(radius: 2)
+                    ForEach(db.checkpoints) { checkpoint in
+                        Annotation("", coordinate: checkpoint.coordinate) {
+                            Button(action: {
+                                selectedCheckpoint = checkpoint
+                            }) {
+                                VStack {
+                                    Image(systemName: "mappin.circle.fill")
+                                        .resizable()
+                                        .frame(width: 30, height: 30)
+                                        .foregroundStyle(.green)
+                                    Text(checkpoint.title)
+                                        .font(.caption)
+                                        .bold()
+                                        .padding(4)
+                                        .background(Color.white.opacity(0.8))
+                                        .cornerRadius(4)
+                                }
+                            }
                         }
                     }
                 }
@@ -71,7 +78,7 @@ struct ARMinimapView: View {
                     }
                 }
             }
-
+            
             // Floating Toggle Buttons
             HStack(spacing: 15) {
                 if mapState != .hidden {
@@ -91,7 +98,7 @@ struct ARMinimapView: View {
                             .foregroundStyle(.blue)
                     }
                 }
-
+                
                 Button(action: {
                     withAnimation(.spring()) {
                         mapState = (mapState == .hidden) ? .expanded : .hidden
@@ -104,6 +111,17 @@ struct ARMinimapView: View {
                         .clipShape(Circle())
                 }
             }
+        }
+    }
+}
+
+extension ARMinimapView {
+    @ViewBuilder
+    private func checkpointCard(for cp:Checkpoint) -> some View {
+        Text("Checkpoint Details")
+        
+        if cp.hasMCQ || cp.hasEmojiSlider {
+            Text(cp.question)
         }
     }
 }

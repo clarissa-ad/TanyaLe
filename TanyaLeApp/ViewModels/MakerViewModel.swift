@@ -23,8 +23,8 @@ class MakerViewModel {
         return all.filter { journey.checkpointIDs.contains($0.id) }
     }
 
-    func addCheckpointAt(transform: SIMD3<Float>, title: String, description: String, interactionType: Checkpoint.InteractionType, question: String, surveyOptions: [String], emojiLeft: String, emojiRight: String, selectedAssetId: String? = nil, assetRotationY: Float = 0, overrideLocation: CLLocationCoordinate2D? = nil) -> Checkpoint {
-        
+    @discardableResult
+    func addCheckpointAt(transform: SIMD3<Float>, title: String, description: String, interactionType: Checkpoint.InteractionType, question: String, surveyOptions: [String], emojiLeft: String, emojiRight: String, promptPhotoID: String? = nil, selectedAssetId: String? = nil, assetRotationY: Float = 0, overrideLocation: CLLocationCoordinate2D? = nil) -> Checkpoint {
         let origin = overrideLocation ?? MockDatabaseService.shared.surveyOrigin ?? CLLocationCoordinate2D(latitude: -6.200000, longitude: 106.816666)
         
         // 1 degree of latitude/longitude is very roughly 111,111 meters
@@ -45,6 +45,7 @@ class MakerViewModel {
             emojiRight: emojiRight.isEmpty ? "😍" : String(emojiRight.prefix(1)),
             selectedAssetId: selectedAssetId,
             assetRotationY: assetRotationY,
+            promptPhotoID: promptPhotoID,
             latitude: finalLat,
             longitude: finalLon,
             relativeX: transform.x,

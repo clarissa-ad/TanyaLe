@@ -27,17 +27,54 @@ class MockDatabaseService {
     
     private init() {
         checkpoints = [
+            // .none — a plain pin with no interaction configured yet.
+            Checkpoint(
+                title: "Plain Pin Checkpoint",
+                taskDescription: "Just a dropped pin, no interaction assigned.",
+                interactionType: .none,
+                latitude: -6.200000,
+                longitude: 106.816666,
+                relativeX: -1.0,
+                relativeY: -1.0,
+                relativeZ: 0
+            ),
+            // .mcq — multiple choice question.
             Checkpoint(
                 title: "Trash Can Checkpoint",
-                taskDescription: "Does this look good?",
+                taskDescription: "Tap an option on the floating card, then hit Submit",
                 interactionType: .mcq,
                 question: "How is the trash can situation here?",
                 surveyOptions: ["Yes, looks good", "Needs replacement", "Overflowing"],
                 latitude: -6.200000,
                 longitude: 106.816666,
-                relativeX: 0,
+                relativeX: 1.0,
                 relativeY: 0,
-                relativeZ: -3.0
+                relativeZ: 0.9
+            ),
+            // .photobooth — citizen takes a photo.
+            Checkpoint(
+                title: "Photobooth Checkpoint",
+                taskDescription: "Snap a photo of this spot.",
+                interactionType: .photobooth,
+                latitude: -6.200000,
+                longitude: 106.816666,
+                relativeX: -0.5,
+                relativeY: 0,
+                relativeZ: 1.2
+            ),
+            // .emojiSlider — citizen slides between two emoji to answer.
+            Checkpoint(
+                title: "Emoji Slider Checkpoint",
+                taskDescription: "How do you feel about this area?",
+                interactionType: .emojiSlider,
+                question: "How clean does this area feel?",
+                emojiLeft: "😡",
+                emojiRight: "😍",
+                latitude: -6.200000,
+                longitude: 106.816666,
+                relativeX: 1.5,
+                relativeY: 0,
+                relativeZ: 1
             )
         ]
     }

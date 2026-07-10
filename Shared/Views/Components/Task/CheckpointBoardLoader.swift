@@ -33,6 +33,8 @@ enum CheckpointBoardLoader {
         checkpoints: [Checkpoint],
         onEmojiCelebration: @escaping (String) -> Void,
         onShowAssetDetail: @escaping (String) -> Void = { _ in }
+        onPhotoboothTap: @escaping (Checkpoint) -> Void,
+        onGalleryTap: @escaping (Checkpoint) -> Void
     ) {
         guard let arView = arContainer.view else { return }
 
@@ -41,7 +43,7 @@ enum CheckpointBoardLoader {
             let anchor = AnchorEntity(world: position)
             arView.scene.addAnchor(anchor)
 
-            let isSurvey = cp.hasMCQ || cp.hasEmojiSlider
+            let isSurvey = cp.hasMCQ || cp.hasEmojiSlider || cp.interactionType == .photobooth
 
             // Deliberately NOT `cp.hasLikeDislike` — that also requires a
             // non-empty question, which matters for the vote UI but has
@@ -154,6 +156,12 @@ enum CheckpointBoardLoader {
                     let controller: (any ARSurveyBoard)?
                     if cp.hasMCQ {
                         controller = await MCQBoardController.make(for: cp, onSubmit: saveAnswer)
+                    } else if cp.interactionType == .photobooth {
+                        controller = await PhotoboothBoardController.make(for: cp, onTapCamera: {
+                            onPhotoboothTap(cp)
+                        }, onTapGallery: {
+                            onGalleryTap(cp)
+                        })
                     } else {
                         controller = await EmojiSliderBoardController.make(for: cp) { answer, chosenEmoji in
                             saveAnswer(answer)
@@ -162,10 +170,37 @@ enum CheckpointBoardLoader {
                     }
 
                     if let controller {
-                        controller.rootEntity.position = [0, 1.0, 0]
+                        if cp.interactionType == .photobooth {
+                            // Lower the photobooth board so it's not too high
+                            controller.rootEntity.position = [0, 0.45, 0]
+                        } else {
+                            controller.rootEntity.position = [0, 1.0, 0]
+                        }
                         anchor.addChild(controller.rootEntity)
                         arContainer.faceCameraEntities.append(controller.rootEntity)
                         arContainer.boardControllers.append(controller)
+                    }
+                }
+            }
+            
+            // ── Load 3D Gallery Photos ──
+            if cp.interactionType == .photobooth {
+                let allPhotos = MockPhotoService.shared.fetchPhotos(forCheckpoint: cp.id)
+                
+                // You can adjust the max amount of image previews here:
+                let maxPreviews = 5
+                let photos = Array(allPhotos.prefix(maxPreviews))
+                
+                for (index, image) in photos.enumerated() {
+                    Task { @MainActor in
+                        if let entity = createPhotoEntity(from: image) {
+                            // Place the floating photos beside the board (starting to the right)
+                            let spacing: Float = 0.5
+                            let xOffset: Float = 0.45 + Float(index) * spacing
+                            entity.position = [xOffset, 0.45 + Float(index % 2) * 0.05, 0]
+                            anchor.addChild(entity)
+                            arContainer.faceCameraEntities.append(entity)
+                        }
                     }
                 }
             }
@@ -187,5 +222,62 @@ enum CheckpointBoardLoader {
         marker.scale = SIMD3<Float>(repeating: scale)
         // After scaling, shift up so the lowest point sits at the anchor (y = 0).
         marker.position.y = -bounds.min.y * scale
+    }
+    
+    @MainActor
+    static func createPhotoEntity(from image: UIImage) -> Entity? {
+        // Fix orientation (so it doesn't appear rotated 90 degrees)
+        let normalizedImage = normalizeOrientation(of: image)
+        
+        // Prepare materials
+        var mat = UnlitMaterial()
+        
+        // Attempt to generate texture from image
+        if let cgImage = normalizedImage.cgImage,
+           let tex = try? TextureResource.generate(from: cgImage, options: .init(semantic: .color)) {
+            mat.color = .init(tint: .white, texture: .init(tex))
+        } else if let ciImage = normalizedImage.ciImage {
+            // Fallback for CIImage backed UIImages
+            let context = CIContext()
+            if let cgImage = context.createCGImage(ciImage, from: ciImage.extent),
+               let tex = try? TextureResource.generate(from: cgImage, options: .init(semantic: .color)) {
+                mat.color = .init(tint: .white, texture: .init(tex))
+            } else {
+                mat.color = .init(tint: .blue) // Debug fallback
+            }
+        } else {
+            mat.color = .init(tint: .red) // Debug fallback
+        }
+        
+        let aspect = Float(normalizedImage.size.width / max(1, normalizedImage.size.height))
+        let w: Float = aspect > 1 ? 0.4 : 0.4 * aspect
+        let h: Float = aspect > 1 ? 0.4 / aspect : 0.4
+        
+        // A plane generated with width/height stands vertically facing +Z.
+        // It perfectly works with our yaw-only billboard rotation.
+        let mesh = MeshResource.generatePlane(width: w, height: h)
+        let model = ModelEntity(mesh: mesh, materials: [mat])
+        
+        // Add a slight white border backing by placing a slightly larger plane behind it
+        let borderMesh = MeshResource.generatePlane(width: w + 0.02, height: h + 0.02)
+        let borderMat = UnlitMaterial(color: .white)
+        let borderModel = ModelEntity(mesh: borderMesh, materials: [borderMat])
+        borderModel.position = [0, 0, -0.001]
+        
+        let holder = Entity()
+        holder.addChild(model)
+        holder.addChild(borderModel)
+        
+        return holder
+    }
+    
+    /// Bakes the UIImage's orientation into its pixel data so RealityKit doesn't render it sideways
+    private static func normalizeOrientation(of image: UIImage) -> UIImage {
+        if image.imageOrientation == .up { return image }
+        UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale)
+        image.draw(in: CGRect(origin: .zero, size: image.size))
+        let normalized = UIGraphicsGetImageFromCurrentImageContext() ?? image
+        UIGraphicsEndImageContext()
+        return normalized
     }
 }

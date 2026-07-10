@@ -29,6 +29,9 @@ struct Checkpoint: Identifiable, Codable, Equatable {
     // The citizen slides between the two emoji to answer the question.
     var emojiLeft: String = "😡"
     var emojiRight: String = "😍"
+    
+    // Photobooth specific
+    var promptPhotoID: String?
 
     // Like/Dislike configuration (used when interactionType == .likedislike).
     // Stores a reference to an Asset3D by id rather than a copy of its data,
@@ -68,6 +71,23 @@ struct Checkpoint: Identifiable, Codable, Equatable {
     var relativeY: Float
     var relativeZ: Float
     
+    enum CodingKeys: String, CodingKey {
+        case id
+        case title
+        case taskDescription = "task_description"
+        case interactionType = "interaction_type"
+        case question
+        case surveyOptions = "survey_options"
+        case emojiLeft = "emoji_left"
+        case emojiRight = "emoji_right"
+        case latitude
+        case longitude
+        case relativeX = "relative_x"
+        case relativeY = "relative_y"
+        case relativeZ = "relative_z"
+        case promptPhotoID = "prompt_photo_id"
+    }
+
     var coordinate: CLLocationCoordinate2D {
         CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
@@ -77,3 +97,5 @@ struct Checkpoint: Identifiable, Codable, Equatable {
         lhs.id == rhs.id
     }
 }
+
+// TODO: Refactoring to be inheritance, would be better
