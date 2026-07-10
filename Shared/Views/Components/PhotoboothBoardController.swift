@@ -68,12 +68,10 @@ final class PhotoboothBoardController: ARSurveyBoard {
         cursor -= Float(questionPiece.sizePoints.height + SurveyCard.sectionSpacingPoints) * s
         
         // 2. Image (if present)
-        if let imgPiece = imagePiece {
-            let imgEntity = SurveyCard.pieceEntity(imgPiece)
-            imgEntity.position = [0, cursor - Float(imgPiece.sizePoints.height) * s / 2, 0.002]
-            rootEntity.addChild(imgEntity)
-            cursor -= Float(imgPiece.sizePoints.height + SurveyCard.sectionSpacingPoints) * s
-        }
+        let imgEntity = SurveyCard.pieceEntity(imagePiece)
+        imgEntity.position = [0, cursor - Float(imagePiece.sizePoints.height) * s / 2, 0.002]
+        rootEntity.addChild(imgEntity)
+        cursor -= Float(imagePiece.sizePoints.height + SurveyCard.sectionSpacingPoints) * s
         
         // 3. Buttons
         let btnsEntity = SurveyCard.pieceEntity(buttonsPiece)
@@ -174,5 +172,23 @@ private struct ButtonsRowView: View {
             .clipShape(RoundedRectangle(cornerRadius: 16))
         }
         .frame(width: SurveyCard.innerWidthPoints)
+    }
+}
+
+private struct PromptImageFallbackView: View {
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color(white: 0.95))
+            VStack(spacing: 8) {
+                Image(systemName: "photo")
+                    .font(.system(size: 40))
+                    .foregroundColor(.gray)
+                Text("No prompt photo set")
+                    .font(.system(size: 16))
+                    .foregroundColor(.gray)
+            }
+        }
+        .frame(width: SurveyCard.innerWidthPoints, height: 200)
     }
 }
