@@ -15,10 +15,9 @@ struct JourneySetupView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var journeyName: String = ""
     @State private var journeyDescription: String = ""
-    /// The journey just created; non-nil presents the set-start-point sheet.
-    /// Driving the sheet with `item:` (not `isPresented:` + optional) hands
-    /// the journey straight to the sheet content, so it can never race to a
-    /// nil "Loading..." state.
+    /// The journey just created; non-nil pushes the set-start-point page.
+    /// Driving the push with `item:` hands the journey straight to the
+    /// destination, so it can never race to a nil "Loading..." state.
     @State private var newJourney: Journey?
 
     // Shared app-wide GPS source — already warm if any earlier screen used it.
@@ -57,10 +56,10 @@ struct JourneySetupView: View {
             // set-start-point step.
             locationManager.requestPermission()
         }
-        .sheet(item: $newJourney) { journey in
+        .navigationDestination(item: $newJourney) { journey in
             SetStartPointView(journey: journey, onFlowFinished: {
-                // Close the whole creation flow: drop the sheet chain and pop
-                // this pushed page, landing the maker back on the landing page.
+                // Close the whole creation flow: pop the start-point page and
+                // this page, landing the maker back on the landing page.
                 newJourney = nil
                 dismiss()
             })

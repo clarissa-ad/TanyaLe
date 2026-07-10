@@ -128,6 +128,7 @@
 		AAF2C3FE30009DB3009F2199 /* CheckpointEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAF2C3DC30009DB3009F2199 /* CheckpointEditView.swift */; };
 		AAF2C3FF30009DB3009F2199 /* TanyaLeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAF2C3D430009DB3009F2199 /* TanyaLeApp.swift */; };
 		AAF2C40030009DB3009F2199 /* JourneyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAF2C3E330009DB3009F2199 /* JourneyService.swift */; };
+		DBA0CD9D3000F6D400BD166C /* StartPointConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA0CD9C3000F6D400BD166C /* StartPointConfirmationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -227,6 +228,7 @@
 		AAF2C3E830009DB3009F2199 /* RelativeMakerARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeMakerARView.swift; sourceTree = "<group>"; };
 		AAF2C3E930009DB3009F2199 /* SetStartPointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetStartPointView.swift; sourceTree = "<group>"; };
 		AAF2C3EA30009DB3009F2199 /* UserMinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMinimapView.swift; sourceTree = "<group>"; };
+		DBA0CD9C3000F6D400BD166C /* StartPointConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartPointConfirmationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -464,6 +466,7 @@
 				AAF2C3E830009DB3009F2199 /* RelativeMakerARView.swift */,
 				AAF2C3E930009DB3009F2199 /* SetStartPointView.swift */,
 				AAF2C3EA30009DB3009F2199 /* UserMinimapView.swift */,
+				DBA0CD9C3000F6D400BD166C /* StartPointConfirmationView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -643,6 +646,7 @@
 				AAF2C38830009DAA009F2199 /* PhotoGalleryView.swift in Sources */,
 				AAF2C38930009DAA009F2199 /* BrandTheme.swift in Sources */,
 				AAF2C38A30009DAA009F2199 /* Entity+GroundPlacement.swift in Sources */,
+				DBA0CD9D3000F6D400BD166C /* StartPointConfirmationView.swift in Sources */,
 				AAF2C38B30009DAA009F2199 /* PhotoboothCaptureView.swift in Sources */,
 				AAF2C38C30009DAA009F2199 /* ARMinimapView.swift in Sources */,
 				AAF2C38D30009DAA009F2199 /* PrimaryActionButton.swift in Sources */,

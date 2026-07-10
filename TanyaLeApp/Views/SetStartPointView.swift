@@ -19,8 +19,8 @@ struct SetStartPointView: View {
     /// Forwarded to the AR placement flow; ends the whole creation flow.
     var onFlowFinished: () -> Void = {}
 
-    @State private var showARPlacement = false
-    @State private var hasSetStartPoint = false
+    /// Pushes the "Start point set!" confirmation page (step 3).
+    @State private var showConfirmation = false
     /// Follows the user's position; falls back to Jakarta until the first fix.
     @State private var mapPosition: MapCameraPosition = .userLocation(
         fallback: .region(MKCoordinateRegion(
@@ -49,8 +49,8 @@ struct SetStartPointView: View {
             // Best accuracy while pinpointing the start location.
             locationManager.improveAccuracy()
         }
-        .fullScreenCover(isPresented: $showARPlacement) {
-            JourneyARPlacementView(journey: journey, onFlowFinished: onFlowFinished)
+        .navigationDestination(isPresented: $showConfirmation) {
+            StartPointConfirmationView(journey: journey, onFlowFinished: onFlowFinished)
         }
     }
 
@@ -130,41 +130,19 @@ struct SetStartPointView: View {
 
             Button(action: setStartPoint) {
                 HStack {
-                    Image(systemName: hasSetStartPoint ? "checkmark.circle.fill" : "mappin.circle.fill")
-                    Text(hasSetStartPoint ? "Start Point Set!" : "Set Start Point Here")
+                    Image(systemName: "mappin.circle.fill")
+                    Text("Set Start Point Here")
                 }
                 .font(.headline)
                 .foregroundStyle(.white)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 18)
                 .background(
-                    hasSetStartPoint
-                        ? Color.green
-                        : Color.brandPurple.opacity(locationManager.userLocation == nil ? 0.4 : 1),
+                    Color.brandPurple.opacity(locationManager.userLocation == nil ? 0.4 : 1),
                     in: Capsule()
                 )
             }
             .disabled(locationManager.userLocation == nil)
-
-            if hasSetStartPoint {
-                Button {
-                    showARPlacement = true
-                } label: {
-                    HStack {
-                        Text("Continue to Place Checkpoints")
-                        Image(systemName: "arrow.right")
-                    }
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 18)
-                    .background(Color.white, in: Capsule())
-                    .foregroundStyle(LinearGradient.brandPurpleButton())
-                    .overlay(
-                        Capsule()
-                            .stroke(LinearGradient.brandPurpleButton(), lineWidth: 2)
-                    )
-                }
-            }
         }
         .padding(24)
         .padding(.bottom, 12)
@@ -174,7 +152,6 @@ struct SetStartPointView: View {
             in: UnevenRoundedRectangle(topLeadingRadius: 32, topTrailingRadius: 32)
         )
         .ignoresSafeArea(edges: .bottom)
-        .animation(.spring(duration: 0.35), value: hasSetStartPoint)
     }
 
     private var waitingText: String {
@@ -196,9 +173,9 @@ struct SetStartPointView: View {
         // AR origin will be set in the AR view when placing checkpoints
         journeyService.updateJourney(journey)
 
-        withAnimation {
-            hasSetStartPoint = true
-        }
+        // Sequential flow: saving the point moves straight to the
+        // confirmation page (step 3).
+        showConfirmation = true
     }
 }
 

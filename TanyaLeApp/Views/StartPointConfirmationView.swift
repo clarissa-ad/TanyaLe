@@ -91,6 +91,8 @@ struct StartPointConfirmationView: View {
                         .background(Color.white, in: Circle())
                         .shadow(color: .black.opacity(0.08), radius: 4, y: 2)
                 }
+                // Keep the chevron black instead of the app's accent tint.
+                .buttonStyle(.plain)
                 .accessibilityLabel("Back")
 
                 Spacer()
