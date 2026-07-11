@@ -132,6 +132,12 @@
 		98EA9D303001438E0067F8EA /* JourneyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA9D103001438E0067F8EA /* JourneyService.swift */; };
 		98EA9D313001438E0067F8EA /* JourneyDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA9D0D3001438E0067F8EA /* JourneyDetailView.swift */; };
 		AA5E76462FFEC265009F664A /* (null) in Sources */ = {isa = PBXBuildFile; };
+		AAF95C383001632000E94082 /* ARArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAF95C373001631800E94082 /* ARArrowView.swift */; };
+		AAF95C393001632000E94082 /* ARArrowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAF95C373001631800E94082 /* ARArrowView.swift */; };
+		AAF95C3E300163A800E94082 /* ARArrowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAF95C3D300163A100E94082 /* ARArrowViewModel.swift */; };
+		AAF95C3F300163A800E94082 /* ARArrowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAF95C3D300163A100E94082 /* ARArrowViewModel.swift */; };
+		AAF95C413002A5CC00E94082 /* Arrow.usdz in Resources */ = {isa = PBXBuildFile; fileRef = AAF95C403002A5CC00E94082 /* Arrow.usdz */; };
+		AAF95C423002A5CC00E94082 /* Arrow.usdz in Resources */ = {isa = PBXBuildFile; fileRef = AAF95C403002A5CC00E94082 /* Arrow.usdz */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -236,6 +242,9 @@
 		98EA9D153001438E0067F8EA /* RelativeMakerARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeMakerARView.swift; sourceTree = "<group>"; };
 		98EA9D163001438E0067F8EA /* SetStartPointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetStartPointView.swift; sourceTree = "<group>"; };
 		98EA9D173001438E0067F8EA /* UserMinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMinimapView.swift; sourceTree = "<group>"; };
+		AAF95C373001631800E94082 /* ARArrowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARArrowView.swift; sourceTree = "<group>"; };
+		AAF95C3D300163A100E94082 /* ARArrowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARArrowViewModel.swift; sourceTree = "<group>"; };
+		AAF95C403002A5CC00E94082 /* Arrow.usdz */ = {isa = PBXFileReference; lastKnownFileType = file; path = Arrow.usdz; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -280,6 +289,7 @@
 		98EA9C5B300140510067F8EA /* Manager */ = {
 			isa = PBXGroup;
 			children = (
+				AAF95C3D300163A100E94082 /* ARArrowViewModel.swift */,
 				98EA9C57300140510067F8EA /* CitizenARViewModel.swift */,
 				98EA9C58300140510067F8EA /* LocationManager.swift */,
 				98EA9C59300140510067F8EA /* WalkableAspirationManager.swift */,
@@ -315,6 +325,7 @@
 				98EA9C64300140510067F8EA /* appclipicon_tanyale.icon */,
 				98EA9C65300140510067F8EA /* appicon_tanyale.icon */,
 				98EA9C66300140510067F8EA /* Assets.xcassets */,
+				AAF95C403002A5CC00E94082 /* Arrow.usdz */,
 				98EA9C67300140510067F8EA /* Lele_Checkpoint.usdz */,
 			);
 			path = Resources;
@@ -342,6 +353,7 @@
 		98EA9C77300140510067F8EA /* Main View */ = {
 			isa = PBXGroup;
 			children = (
+				AAF95C373001631800E94082 /* ARArrowView.swift */,
 				98EA9C70300140510067F8EA /* ARWalkView.swift */,
 				98EA9C71300140510067F8EA /* CheckpointReachedCard.swift */,
 				98EA9C72300140510067F8EA /* ConfirmationPopup.swift */,
@@ -586,6 +598,7 @@
 				98EA9CF5300140510067F8EA /* appclipicon_tanyale.icon in Resources */,
 				98EA9CF6300140510067F8EA /* asset3d_kandang-ayam.usdz in Resources */,
 				98EA9CF7300140510067F8EA /* asset3d_trashbin.usdz in Resources */,
+				AAF95C423002A5CC00E94082 /* Arrow.usdz in Resources */,
 				98EA9CF8300140510067F8EA /* appicon_tanyale.icon in Resources */,
 				98EA9CF9300140510067F8EA /* Lele_Checkpoint.usdz in Resources */,
 			);
@@ -598,6 +611,7 @@
 				98EA9C27300140380067F8EA /* Assets.xcassets in Resources */,
 				98EA9C96300140510067F8EA /* Assets.xcassets in Resources */,
 				98EA9C97300140510067F8EA /* appclipicon_tanyale.icon in Resources */,
+				AAF95C413002A5CC00E94082 /* Arrow.usdz in Resources */,
 				98EA9C98300140510067F8EA /* asset3d_kandang-ayam.usdz in Resources */,
 				98EA9C99300140510067F8EA /* asset3d_trashbin.usdz in Resources */,
 				98EA9C9A300140510067F8EA /* appicon_tanyale.icon in Resources */,
@@ -661,6 +675,7 @@
 				98EA9CDF300140510067F8EA /* RelativeARViewContainer.swift in Sources */,
 				98EA9CE0300140510067F8EA /* CitizenARViewModel.swift in Sources */,
 				98EA9CE1300140510067F8EA /* BrandTheme.swift in Sources */,
+				AAF95C393001632000E94082 /* ARArrowView.swift in Sources */,
 				98EA9CE2300140510067F8EA /* MockAssetService.swift in Sources */,
 				98EA9CE3300140510067F8EA /* MCQBoardEntity.swift in Sources */,
 				98EA9CE4300140510067F8EA /* MockPhotoService.swift in Sources */,
@@ -670,6 +685,7 @@
 				98EA9CE8300140510067F8EA /* WalkableAspirationSceneController.swift in Sources */,
 				98EA9CE9300140510067F8EA /* ImagePicker.swift in Sources */,
 				98EA9CEA300140510067F8EA /* ARSurveyBoard.swift in Sources */,
+				AAF95C3F300163A800E94082 /* ARArrowViewModel.swift in Sources */,
 				98EA9CEB300140510067F8EA /* PhotoboothBoardController.swift in Sources */,
 				98EA9CEC300140510067F8EA /* AssetPlacementController.swift in Sources */,
 				98EA9CED300140510067F8EA /* WalkableAspiration.swift in Sources */,
@@ -709,6 +725,7 @@
 				98EA9CB0300140510067F8EA /* LocationManager.swift in Sources */,
 				98EA9CB1300140510067F8EA /* WelcomeView.swift in Sources */,
 				98EA9CB2300140510067F8EA /* PhotoGalleryView.swift in Sources */,
+				AAF95C383001632000E94082 /* ARArrowView.swift in Sources */,
 				98EA9CB3300140510067F8EA /* RelativeARViewContainer.swift in Sources */,
 				98EA9CB4300140510067F8EA /* CitizenARViewModel.swift in Sources */,
 				98EA9CB5300140510067F8EA /* BrandTheme.swift in Sources */,
@@ -726,6 +743,7 @@
 				98EA9CC1300140510067F8EA /* WalkableAspiration.swift in Sources */,
 				98EA9CC2300140510067F8EA /* AssetDetailView.swift in Sources */,
 				98EA9CC3300140510067F8EA /* RelativeUserARView.swift in Sources */,
+				AAF95C3E300163A800E94082 /* ARArrowViewModel.swift in Sources */,
 				98EA9CC4300140510067F8EA /* CustomCameraView_Backup.swift in Sources */,
 				98EA9CC5300140510067F8EA /* TextFieldBottomSheet.swift in Sources */,
 				98EA9CC6300140510067F8EA /* Checkpoint.swift in Sources */,
@@ -944,7 +962,7 @@
 				CODE_SIGN_ENTITLEMENTS = TanyaleAppClip/TanyaleAppClip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 8QT63UDSK5;
+				DEVELOPMENT_TEAM = VX33BG7ZDD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "TanyaLe App Clip";
@@ -962,7 +980,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ian.TanyaLe.Clip;
+				PRODUCT_BUNDLE_IDENTIFIER = com.al.TanyaLe.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
@@ -982,7 +1000,7 @@
 				CODE_SIGN_ENTITLEMENTS = TanyaleAppClip/TanyaleAppClip.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = MABNSMHA8L;
+				DEVELOPMENT_TEAM = VX33BG7ZDD;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "TanyaLe App Clip";
@@ -1000,7 +1018,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.ian.TanyaLe.Clip;
+				PRODUCT_BUNDLE_IDENTIFIER = com.al.TanyaLe.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;

@@ -408,24 +408,27 @@ struct RelativeUserARView: View {
         viewModel.setOrigin(arView: arView)
 
         // 2. Create the 3D Directional Arrow
-        let cameraAnchor = AnchorEntity(.camera)
-        let wrapper = Entity()
-        wrapper.position = [0, -0.1, -0.2]
-
-        let mat = SimpleMaterial(color: .yellow, isMetallic: true)
-        let cone = ModelEntity(mesh: MeshResource.generateCone(height: 0.05, radius: 0.02), materials: [mat])
-        cone.transform.rotation = simd_quatf(angle: -.pi / 2, axis: [1, 0, 0])
-        cone.position = [0, 0, -0.025]
-
-        let cylinder = ModelEntity(mesh: MeshResource.generateCylinder(height: 0.05, radius: 0.005), materials: [mat])
-        cylinder.transform.rotation = simd_quatf(angle: -.pi / 2, axis: [1, 0, 0])
-        cylinder.position = [0, 0, 0.025]
-
-        wrapper.addChild(cone)
-        wrapper.addChild(cylinder)
-        cameraAnchor.addChild(wrapper)
-        arView.scene.addAnchor(cameraAnchor)
-        arContainer.arrowEntity = wrapper
+//        let cameraAnchor = AnchorEntity(.camera)
+//        let wrapper = Entity()
+//        wrapper.position = [0, -0.1, -0.2]
+//
+//        let mat = SimpleMaterial(color: .yellow, isMetallic: true)
+//        let cone = ModelEntity(mesh: MeshResource.generateCone(height: 0.05, radius: 0.02), materials: [mat])
+//        cone.transform.rotation = simd_quatf(angle: -.pi / 2, axis: [1, 0, 0])
+//        cone.position = [0, 0, -0.025]
+//
+//        let cylinder = ModelEntity(mesh: MeshResource.generateCylinder(height: 0.05, radius: 0.005), materials: [mat])
+//        cylinder.transform.rotation = simd_quatf(angle: -.pi / 2, axis: [1, 0, 0])
+//        cylinder.position = [0, 0, 0.025]
+//
+//        wrapper.addChild(cone)
+//        wrapper.addChild(cylinder)
+//        cameraAnchor.addChild(wrapper)
+//        arView.scene.addAnchor(cameraAnchor)
+        
+        // Load Arrow.usdz, camera-anchored; tracking aims it at the nearest
+        // unanswered checkpoint.
+        ARArrowLoader.attach(to: arContainer)
 
         // 3. Load Checkpoints and start Tracking!
         loadCheckpoints()
