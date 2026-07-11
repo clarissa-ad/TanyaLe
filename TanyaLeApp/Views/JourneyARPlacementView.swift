@@ -40,102 +40,89 @@ struct JourneyARPlacementView: View {
             RelativeMakerARViewContainer(arContainer: arContainer)
                 .edgesIgnoringSafeArea(.all)
 
-            // Top bar: instructions on the left, Edit Checkpoints on the right
+            // Minimal HUD: back (top left), finish ✓ (top right), plus a
+            // bottom-centre ⊕ to place and a smaller edit circle beside it.
             VStack {
                 HStack(alignment: .top) {
+                    // Back to the "Start point set!" page.
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundStyle(.black)
+                            .frame(width: 44, height: 44)
+                            .background(.ultraThinMaterial, in: Circle())
+                    }
+                    .accessibilityLabel("Back")
+
+                    Spacer()
+
                     if !hasSetAROrigin {
                         Text("Setting AR World Origin...")
                             .font(.headline)
                             .padding()
                             .background(.ultraThinMaterial)
                             .cornerRadius(10)
+
+                        Spacer()
                     }
-                    //                    else {
-                    //                        VStack(alignment: .leading, spacing: 4) {
-                    //                            Text("Aim & Tap to Place")
-                    //                                .font(.headline)
-                    //                            Text("\(checkpointService.checkpoints.filter { journey.checkpointIDs.contains($0.id) }.count) checkpoints")
-                    //                                .font(.caption)
-                    //                        }
-                    //                        .padding()
-                    //                        .background(.ultraThinMaterial)
-                    //                        .cornerRadius(10)
-                    //                    }
-                    
-                    Spacer()
-                    
-                    // Edit checkpoints (top right)
-                    if hasSetAROrigin {
-                        Button {
-                            showCheckpointList = true
-                        } label: {
-                            HStack {
-                                Image(systemName: "square.and.pencil")
-                                    .font(.title2)
-                                Text("Edit")
-                                    .font(.caption)
-                            }
-                            .padding(10)
-                            .background(.ultraThinMaterial)
-                            .cornerRadius(12)
-                        }
+
+                    // Finish: review everything before publishing.
+                    Button {
+                        finishPlacement()
+                    } label: {
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 17, weight: .bold))
+                            .foregroundStyle(.white)
+                            .frame(width: 44, height: 44)
+                            .background(Color.brandPurple.opacity(0.6), in: Circle())
+                            .background(.ultraThinMaterial, in: Circle())
                     }
+                    .accessibilityLabel("Finish placing checkpoints")
                 }
-                .padding(.horizontal)
-                .padding(.top, 60)
-                
+                .padding(.horizontal, 20)
+                .padding(.top, 8)
+
                 Spacer()
-                
-                // Bottom Controls
+
+                // Bottom controls
                 if hasSetAROrigin {
                     ZStack {
-                        // Tap to place button (centered)
+                        // Place checkpoint (centered)
                         Button {
                             placeCheckpoint()
                         } label: {
-                            VStack {
-                                Image(systemName: "plus.circle.fill")
-                                    .font(.system(size: 50))
-                                Text("Place Checkpoint")
-                                    .font(.caption)
-                            }
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(
-                                LinearGradient(
-                                    colors: [.brandPurple,.brandPurpleDark],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
-                            .cornerRadius(12)
+                            Image(systemName: "plus")
+                                .font(.system(size: 36, weight: .medium))
+                                .foregroundStyle(.black)
+                                .frame(width: 64, height: 64)
+                                .background(.ultraThinMaterial, in: Circle())
                         }
-                        
-                        // Done button (trailing)
+                        .accessibilityLabel("Place checkpoint")
+
+                        // Edit checkpoints (smaller, to the right of ⊕)
                         HStack {
                             Spacer()
-                            
+
                             Button {
-                                finishPlacement()
+                                showCheckpointList = true
                             } label: {
-                                VStack {
-                                    Image(systemName: "checkmark.circle")
-                                        .font(.title2)
-                                    //                                    Text("Done")
-                                    //                                        .font(.caption)
-                                }
-                                .padding()
-                                .background(.ultraThinMaterial)
-                                .cornerRadius(12)
+                                Image(systemName: "list.bullet")
+                                    .font(.system(size: 17, weight: .semibold))
+                                    .foregroundStyle(.black)
+                                    .frame(width: 48, height: 48)
+                                    .background(.ultraThinMaterial, in: Circle())
                             }
+                            .accessibilityLabel("Edit checkpoints")
+                            .padding(.trailing, 32)
                         }
                     }
-                    .padding()
-                    .padding(.bottom, 30)
+                    .padding(.bottom, 24)
                 }
             }
         }
-        .navigationBarHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
         .onAppear {
             setupARSession()
             // Tap-to-reset: hides the reticle until the next surface hit
@@ -158,9 +145,10 @@ struct JourneyARPlacementView: View {
         .sheet(isPresented: $showCheckpointList) {
             JourneyCheckpointListView(journey: journey)
         }
-        .sheet(isPresented: $showPreview) {
-            // Read the journey fresh from the service — checkpoints added via
-            // the form sheet update the service copy, not our local @State.
+        .navigationDestination(isPresented: $showPreview) {
+            // Pushed page (step 4). Read the journey fresh from the service —
+            // checkpoints added via the form sheet update the service copy,
+            // not our local @State.
             JourneyPreviewView(journey: journeyService.getJourney(by: journey.id) ?? journey) {
                 // Published or drafted: let the presenter unwind the flow.
                 onFlowFinished()
@@ -334,6 +322,9 @@ struct CheckpointFormSheet: View {
                     Button("Save") {
                         saveCheckpoint()
                     }
+                    .buttonStyle(.borderedProminent)
+                    .buttonBorderShape(.capsule)
+                    .tint(Color.brandPurple)
                     .disabled(title.isEmpty)
                 }
             }
