@@ -236,15 +236,7 @@ struct JourneyPreviewView: View {
     // MARK: - Area map
 
     private var areaMapSheet: some View {
-        Map(initialPosition: .region(MKCoordinateRegion(
-            center: journey.startCoordinate,
-            span: MKCoordinateSpan(latitudeDelta: 0.003, longitudeDelta: 0.003)
-        ))) {
-            Marker(journey.name, coordinate: journey.startCoordinate)
-                .tint(Color.brandPurple)
-        }
-        .presentationDetents([.medium, .large])
-        .presentationDragIndicator(.visible)
+        JourneyAreaMapSheet(journey: journey)
     }
 
     // MARK: - Actions
@@ -258,6 +250,24 @@ struct JourneyPreviewView: View {
     /// closes the creation flow; it stays listed under My Journeys → Drafts.
     private func saveAsDraft() {
         onDone()
+    }
+}
+
+/// Half-height map sheet showing a journey's start point ("Area").
+/// Shared by the preview page and the journey info screen.
+struct JourneyAreaMapSheet: View {
+    let journey: Journey
+
+    var body: some View {
+        Map(initialPosition: .region(MKCoordinateRegion(
+            center: journey.startCoordinate,
+            span: MKCoordinateSpan(latitudeDelta: 0.003, longitudeDelta: 0.003)
+        ))) {
+            Marker(journey.name, coordinate: journey.startCoordinate)
+                .tint(Color.brandPurple)
+        }
+        .presentationDetents([.medium, .large])
+        .presentationDragIndicator(.visible)
     }
 }
 

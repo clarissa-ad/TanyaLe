@@ -15,6 +15,8 @@ struct JourneyDetailView: View {
     @State private var showQRCode = false
     @State private var showEditCheckpoints = false
     @State private var showARPlacement = false
+    /// Shows the start point on a map (the "Area" row's button).
+    @State private var showAreaMap = false
     
     var journeyService = JourneyService.shared
     var checkpointService = MockDatabaseService.shared
@@ -55,21 +57,21 @@ struct JourneyDetailView: View {
                         Text(journey.description)
                     }
                 }
-            }
-            
-            // Start Point Section
-            Section(header: Text("Start Point")) {
                 if journey.hasStartPoint {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Label("Location Set", systemImage: "mappin.circle.fill")
-                            .foregroundStyle(.green)
-                        
-                        Text("Lat: \(journey.startLatitude, specifier: "%.6f")")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        Text("Lng: \(journey.startLongitude, specifier: "%.6f")")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                    HStack {
+                        Text("Area")
+                        Spacer()
+                        Button {
+                            showAreaMap = true
+                        } label: {
+                            Image(systemName: "map")
+                                .font(.system(size: 18, weight: .semibold))
+                                .foregroundStyle(.blue)
+                                .frame(width: 44, height: 44)
+                                .background(Color.blue.opacity(0.1), in: Circle())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel("View start point on map")
                     }
                 } else {
                     Label("Not set yet", systemImage: "mappin.slash")
@@ -127,6 +129,9 @@ struct JourneyDetailView: View {
         .navigationBarTitleDisplayMode(.large)
         .sheet(isPresented: $showQRCode) {
             QRCodeView(journey: journey)
+        }
+        .sheet(isPresented: $showAreaMap) {
+            JourneyAreaMapSheet(journey: journey)
         }
         .sheet(isPresented: $showEditCheckpoints) {
             // Scoped to this journey; the navigation stack makes the
