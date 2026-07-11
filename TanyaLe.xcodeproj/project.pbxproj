@@ -128,6 +128,7 @@
 		AAF2C3FE30009DB3009F2199 /* CheckpointEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAF2C3DC30009DB3009F2199 /* CheckpointEditView.swift */; };
 		AAF2C3FF30009DB3009F2199 /* TanyaLeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAF2C3D430009DB3009F2199 /* TanyaLeApp.swift */; };
 		AAF2C40030009DB3009F2199 /* JourneyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAF2C3E330009DB3009F2199 /* JourneyService.swift */; };
+		DB53C4A230023AB40036785B /* SurveyPublishedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB53C4A130023AB30036785B /* SurveyPublishedView.swift */; };
 		DBA0CD9D3000F6D400BD166C /* StartPointConfirmationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA0CD9C3000F6D400BD166C /* StartPointConfirmationView.swift */; };
 /* End PBXBuildFile section */
 
@@ -228,6 +229,7 @@
 		AAF2C3E830009DB3009F2199 /* RelativeMakerARView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelativeMakerARView.swift; sourceTree = "<group>"; };
 		AAF2C3E930009DB3009F2199 /* SetStartPointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetStartPointView.swift; sourceTree = "<group>"; };
 		AAF2C3EA30009DB3009F2199 /* UserMinimapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMinimapView.swift; sourceTree = "<group>"; };
+		DB53C4A130023AB30036785B /* SurveyPublishedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyPublishedView.swift; sourceTree = "<group>"; };
 		DBA0CD9C3000F6D400BD166C /* StartPointConfirmationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartPointConfirmationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -467,6 +469,7 @@
 				AAF2C3E930009DB3009F2199 /* SetStartPointView.swift */,
 				AAF2C3EA30009DB3009F2199 /* UserMinimapView.swift */,
 				DBA0CD9C3000F6D400BD166C /* StartPointConfirmationView.swift */,
+				DB53C4A130023AB30036785B /* SurveyPublishedView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -651,6 +654,7 @@
 				AAF2C38C30009DAA009F2199 /* ARMinimapView.swift in Sources */,
 				AAF2C38D30009DAA009F2199 /* PrimaryActionButton.swift in Sources */,
 				AAF2C38E30009DAA009F2199 /* TextFieldBottomSheet.swift in Sources */,
+				DB53C4A230023AB40036785B /* SurveyPublishedView.swift in Sources */,
 				AAF2C38F30009DAA009F2199 /* WalkableAspirationButton.swift in Sources */,
 				AAF2C39030009DAA009F2199 /* AssetDetailView.swift in Sources */,
 				AAF2C39130009DAA009F2199 /* Asset3D.swift in Sources */,

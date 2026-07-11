@@ -60,16 +60,9 @@ struct JourneyPreviewView: View {
             areaMapSheet
         }
         .navigationDestination(item: $publishedJourney) { published in
-            // Journey info: details, published status, checkpoints, QR.
-            JourneyDetailView(journey: published)
-                .navigationBarBackButtonHidden()
-                .toolbar {
-                    ToolbarItem(placement: .confirmationAction) {
-                        Button("Done") {
-                            onDone()
-                        }
-                    }
-                }
+            // "Survey Published!" — the QR code, ready to share. Its home
+            // button pops the whole creation flow back to the landing page.
+            SurveyPublishedView(journey: published, onHome: onDone)
         }
     }
 
