@@ -122,7 +122,7 @@ struct JourneyARPlacementView: View {
                 }
             }
         }
-        .navigationBarHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
         .onAppear {
             setupARSession()
             // Tap-to-reset: hides the reticle until the next surface hit
@@ -145,9 +145,10 @@ struct JourneyARPlacementView: View {
         .sheet(isPresented: $showCheckpointList) {
             JourneyCheckpointListView(journey: journey)
         }
-        .sheet(isPresented: $showPreview) {
-            // Read the journey fresh from the service — checkpoints added via
-            // the form sheet update the service copy, not our local @State.
+        .navigationDestination(isPresented: $showPreview) {
+            // Pushed page (step 4). Read the journey fresh from the service —
+            // checkpoints added via the form sheet update the service copy,
+            // not our local @State.
             JourneyPreviewView(journey: journeyService.getJourney(by: journey.id) ?? journey) {
                 // Published or drafted: let the presenter unwind the flow.
                 onFlowFinished()

@@ -46,11 +46,13 @@ struct JourneySetupView: View {
                 Spacer(minLength: 12)
 
                 // Mascot peeks out from behind the details card.
-                Image("lele_mascot")
+                Image("welcome")
                     .resizable()
                     .scaledToFit()
                     .frame(maxHeight: 280)
                     .frame(maxWidth: .infinity)
+                    .scaleEffect(1.25)
+                    .offset(x: 50, y: 50)
 
                 detailsCard
             }

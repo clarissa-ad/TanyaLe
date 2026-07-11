@@ -143,10 +143,13 @@ struct JourneyDetailView: View {
             }
         }) {
             // Resumed from the detail screen: finishing just closes this
-            // cover and returns here (not to the landing page).
-            JourneyARPlacementView(journey: journey, onFlowFinished: {
-                showARPlacement = false
-            })
+            // cover and returns here (not to the landing page). The stack is
+            // needed because the AR page pushes the preview page internally.
+            NavigationStack {
+                JourneyARPlacementView(journey: journey, onFlowFinished: {
+                    showARPlacement = false
+                })
+            }
         }
     }
     
