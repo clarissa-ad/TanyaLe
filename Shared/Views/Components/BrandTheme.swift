@@ -9,8 +9,9 @@ extension Color {
     static let brandPurple = Color(red: 0.678, green: 0.0, blue: 1.0)
     /// #680099
     static let brandPurpleDark = Color(red: 0.408, green: 0.0, blue: 0.6)
-    /// #3D008C — full-screen background of the journey creation flow.
-    static let brandDeepPurple = Color(red: 0.24, green: 0.0, blue: 0.55)
+    /// #6100B2 — full-screen background of the journey creation flow.
+    static let brandDeepPurple = Color(red: 0.380, green: 0.0, blue: 0.698)
+    // #
 }
 
 extension LinearGradient {
