@@ -30,7 +30,13 @@ struct JourneyARPlacementView: View {
     @State private var newCheckpointPosition: SIMD3<Float>?
     @State private var showCheckpointList = false
     @State private var showPreview = false
-    
+    /// True while a Like/Dislike asset is previewed live in the scene, waiting
+    /// for Pak RT to drag-rotate it and confirm or cancel.
+    @State private var isConfirmingPlacement = false
+    /// The just-saved checkpoint whose asset is being rotated. Already stored
+    /// at rotation 0 — confirm writes back its `assetRotationY`.
+    @State private var pendingCheckpoint: Checkpoint?
+
     var journeyService = JourneyService.shared
     var checkpointService = MockDatabaseService.shared
     
@@ -40,89 +46,104 @@ struct JourneyARPlacementView: View {
             RelativeMakerARViewContainer(arContainer: arContainer)
                 .edgesIgnoringSafeArea(.all)
 
-            // Minimal HUD: back (top left), finish ✓ (top right), plus a
-            // bottom-centre ⊕ to place and a smaller edit circle beside it.
+            // Top bar: instructions on the left, Edit Checkpoints on the right
             VStack {
                 HStack(alignment: .top) {
-                    // Back to the "Start point set!" page.
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 17, weight: .semibold))
-                            .foregroundStyle(.black)
-                            .frame(width: 44, height: 44)
-                            .background(.ultraThinMaterial, in: Circle())
-                    }
-                    .accessibilityLabel("Back")
-
-                    Spacer()
-
                     if !hasSetAROrigin {
                         Text("Setting AR World Origin...")
                             .font(.headline)
                             .padding()
                             .background(.ultraThinMaterial)
                             .cornerRadius(10)
-
-                        Spacer()
                     }
-
-                    // Finish: review everything before publishing.
-                    Button {
-                        finishPlacement()
-                    } label: {
-                        Image(systemName: "checkmark")
-                            .font(.system(size: 17, weight: .bold))
-                            .foregroundStyle(.white)
-                            .frame(width: 44, height: 44)
-                            .background(Color.brandPurple.opacity(0.6), in: Circle())
-                            .background(.ultraThinMaterial, in: Circle())
+                    //                    else {
+                    //                        VStack(alignment: .leading, spacing: 4) {
+                    //                            Text("Aim & Tap to Place")
+                    //                                .font(.headline)
+                    //                            Text("\(checkpointService.checkpoints.filter { journey.checkpointIDs.contains($0.id) }.count) checkpoints")
+                    //                                .font(.caption)
+                    //                        }
+                    //                        .padding()
+                    //                        .background(.ultraThinMaterial)
+                    //                        .cornerRadius(10)
+                    //                    }
+                    
+                    Spacer()
+                    
+                    // Edit checkpoints (top right)
+                    if hasSetAROrigin && !isConfirmingPlacement {
+                        Button {
+                            showCheckpointList = true
+                        } label: {
+                            HStack {
+                                Image(systemName: "square.and.pencil")
+                                    .font(.title2)
+                                Text("Edit")
+                                    .font(.caption)
+                            }
+                            .padding(10)
+                            .background(.ultraThinMaterial)
+                            .cornerRadius(12)
+                        }
                     }
-                    .accessibilityLabel("Finish placing checkpoints")
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 8)
-
+                .padding(.horizontal)
+                .padding(.top, 60)
+                
                 Spacer()
-
-                // Bottom controls
-                if hasSetAROrigin {
+                
+                // Bottom Controls
+                if isConfirmingPlacement {
+                    placementConfirmPanel
+                } else if hasSetAROrigin {
                     ZStack {
-                        // Place checkpoint (centered)
+                        // Tap to place button (centered)
                         Button {
                             placeCheckpoint()
                         } label: {
-                            Image(systemName: "plus")
-                                .font(.system(size: 36, weight: .medium))
-                                .foregroundStyle(.black)
-                                .frame(width: 64, height: 64)
-                                .background(.ultraThinMaterial, in: Circle())
+                            VStack {
+                                Image(systemName: "plus.circle.fill")
+                                    .font(.system(size: 50))
+                                Text("Place Checkpoint 3")
+                                    .font(.caption)
+                            }
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(
+                                LinearGradient(
+                                    colors: [.brandPurple,.brandPurpleDark],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                )
+                            )
+                            .cornerRadius(12)
                         }
-                        .accessibilityLabel("Place checkpoint")
-
-                        // Edit checkpoints (smaller, to the right of ⊕)
+                        
+                        // Done button (trailing)
                         HStack {
                             Spacer()
-
+                            
                             Button {
-                                showCheckpointList = true
+                                finishPlacement()
                             } label: {
-                                Image(systemName: "list.bullet")
-                                    .font(.system(size: 17, weight: .semibold))
-                                    .foregroundStyle(.black)
-                                    .frame(width: 48, height: 48)
-                                    .background(.ultraThinMaterial, in: Circle())
+                                VStack {
+                                    Image(systemName: "checkmark.circle")
+                                        .font(.title2)
+                                    //                                    Text("Done")
+                                    //                                        .font(.caption)
+                                }
+                                .padding()
+                                .background(.ultraThinMaterial)
+                                .cornerRadius(12)
                             }
-                            .accessibilityLabel("Edit checkpoints")
-                            .padding(.trailing, 32)
                         }
                     }
-                    .padding(.bottom, 24)
+                    .padding()
+                    .padding(.bottom, 30)
                 }
             }
         }
-        .toolbar(.hidden, for: .navigationBar)
+        .navigationBarHidden(true)
         .onAppear {
             setupARSession()
             // Tap-to-reset: hides the reticle until the next surface hit
@@ -137,18 +158,17 @@ struct JourneyARPlacementView: View {
                     position: position,
                     journey: journey,
                     onSave: { checkpoint in
-                        addCheckpointToScene(checkpoint)
+                        beginPlacementOrRender(checkpoint)
                     }
                 )
             }
         }
-        .sheet(isPresented: $showCheckpointList) {
+        .sheet(isPresented: $showCheckpointList, onDismiss: refreshCheckpoints) {
             JourneyCheckpointListView(journey: journey)
         }
-        .navigationDestination(isPresented: $showPreview) {
-            // Pushed page (step 4). Read the journey fresh from the service —
-            // checkpoints added via the form sheet update the service copy,
-            // not our local @State.
+        .sheet(isPresented: $showPreview) {
+            // Read the journey fresh from the service — checkpoints added via
+            // the form sheet update the service copy, not our local @State.
             JourneyPreviewView(journey: journeyService.getJourney(by: journey.id) ?? journey) {
                 // Published or drafted: let the presenter unwind the flow.
                 onFlowFinished()
@@ -198,13 +218,25 @@ struct JourneyARPlacementView: View {
     }
     
     private func loadExistingCheckpoints() {
+        // Read the journey fresh from the service — the local @State copy's
+        // checkpointIDs go stale (checkpoints are associated on the service,
+        // not our value-type snapshot).
+        let fresh = journeyService.getJourney(by: journey.id) ?? journey
         let existingCheckpoints = checkpointService.checkpoints.filter {
-            journey.checkpointIDs.contains($0.id)
+            fresh.checkpointIDs.contains($0.id)
         }
-        
-        for checkpoint in existingCheckpoints {
-            addCheckpointToScene(checkpoint)
-        }
+
+        renderCheckpoints(existingCheckpoints)
+    }
+
+    /// Rebuilds the whole AR scene from the current stored checkpoints. Called
+    /// after the edit sheet closes so edits/deletes show up — e.g. swapping a
+    /// Like/Dislike asset from tempat sampah to kandang ayam — instead of
+    /// leaving the stale marker from the first render.
+    private func refreshCheckpoints() {
+        guard hasSetAROrigin else { return }
+        CheckpointBoardLoader.clear(from: arContainer)
+        loadExistingCheckpoints()
     }
     
     // MARK: - Checkpoint Placement
@@ -238,25 +270,24 @@ struct JourneyARPlacementView: View {
         }
     }
     
-    private func addCheckpointToScene(_ checkpoint: Checkpoint) {
-        guard let arView = arContainer.view else { return }
-        
-        // Create purple cube marker
-        let mesh = MeshResource.generateBox(size: 0.2)
-        let material = SimpleMaterial(color: .purple, isMetallic: false)
-        let entity = ModelEntity(mesh: mesh, materials: [material])
-        
-        // Position at checkpoint location
-        entity.position = SIMD3<Float>(
-            checkpoint.relativeX,
-            checkpoint.relativeY,
-            checkpoint.relativeZ
+    /// Renders checkpoints into the AR scene exactly like the citizen view —
+    /// the real placed 3D asset with an interactive Like/Dislike vote card,
+    /// MCQ / emoji-slider / photobooth boards for surveys, or the Lele marker
+    /// with a floating title otherwise. Uses the shared `CheckpointBoardLoader`
+    /// so Pak RT previews precisely what a citizen will see, faced-to-camera
+    /// and tappable. Callbacks are no-ops and `recordResponses: false` keeps
+    /// the preview from writing votes/answers into the store.
+    private func renderCheckpoints(_ checkpoints: [Checkpoint]) {
+        CheckpointBoardLoader.load(
+            into: arContainer,
+            checkpoints: checkpoints,
+            onEmojiCelebration: { _ in },
+            onShowAssetDetail: { _ in },
+            onPhotoboothTap: { _ in },
+            onGalleryTap: { _ in },
+            recordResponses: false,
+            submitEnabled: false
         )
-        
-        // Add to scene
-        let anchor = AnchorEntity(world: entity.position)
-        anchor.addChild(entity)
-        arView.scene.addAnchor(anchor)
     }
     
     private func finishPlacement() {
@@ -264,6 +295,115 @@ struct JourneyARPlacementView: View {
         // associated as they're saved); writing our local snapshot back here
         // would erase them. Just open the pre-publish review.
         showPreview = true
+    }
+
+    // MARK: - Like/Dislike asset rotation
+
+    /// After a checkpoint is saved: for a Like/Dislike checkpoint with a
+    /// placeable asset, start the drag-to-rotate preview; otherwise render it
+    /// straight away.
+    private func beginPlacementOrRender(_ checkpoint: Checkpoint) {
+        if checkpoint.interactionType == .likedislike,
+           let assetId = checkpoint.selectedAssetId,
+           AssetPlacementConfig.config(forAssetId: assetId) != nil,
+           let arView = arContainer.view {
+            beginAssetPlacementPreview(checkpoint: checkpoint, assetId: assetId, in: arView)
+        } else {
+            renderCheckpoints([checkpoint])
+        }
+    }
+
+    /// Drops the asset alone into the scene and switches on the confirm/cancel
+    /// panel. Pak RT drags to spin it — the rotation itself is handled by the
+    /// shared `AssetPlacementController` via the container's pan gesture; this
+    /// view only orchestrates the preview lifecycle. Nothing is finalized until
+    /// `confirmPlacement()`.
+    private func beginAssetPlacementPreview(checkpoint: Checkpoint, assetId: String, in arView: ARView) {
+        let position = SIMD3<Float>(checkpoint.relativeX, checkpoint.relativeY, checkpoint.relativeZ)
+        let anchor = AnchorEntity(world: position)
+        arView.scene.addAnchor(anchor)
+        arContainer.pendingPlacementAnchor = anchor
+        pendingCheckpoint = checkpoint
+
+        Task { @MainActor in
+            do {
+                arContainer.activePlacement = try await AssetPlacementController.make(assetId: assetId, anchor: anchor)
+                isConfirmingPlacement = true
+            } catch {
+                // Model failed to load — don't strand the flow. Drop the empty
+                // anchor and just render the checkpoint at its default rotation.
+                print("AssetPlacementController failed to load \(assetId): \(error)")
+                endPlacementPreview()
+                renderCheckpoints([checkpoint])
+            }
+        }
+    }
+
+    /// Writes the dragged rotation onto the checkpoint and renders the final
+    /// asset + vote card in its place.
+    private func confirmPlacement() {
+        guard var checkpoint = pendingCheckpoint else { return }
+        checkpoint.assetRotationY = arContainer.activePlacement?.rotationY ?? 0
+        checkpointService.updateCheckpoint(checkpoint)
+        endPlacementPreview()
+        renderCheckpoints([checkpoint])
+    }
+
+    /// Keeps the checkpoint at its default rotation (it's already saved) and
+    /// renders it as-is.
+    private func cancelPlacement() {
+        let checkpoint = pendingCheckpoint
+        endPlacementPreview()
+        if let checkpoint { renderCheckpoints([checkpoint]) }
+    }
+
+    /// Tears down the live preview: removes the preview-only asset anchor and
+    /// clears the placement state.
+    private func endPlacementPreview() {
+        arContainer.pendingPlacementAnchor?.removeFromParent()
+        arContainer.pendingPlacementAnchor = nil
+        arContainer.activePlacement = nil
+        isConfirmingPlacement = false
+        pendingCheckpoint = nil
+    }
+
+    private var placementConfirmPanel: some View {
+        VStack(spacing: 12) {
+            Text("Geser untuk memutar aset")
+                .font(.footnote)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(.ultraThinMaterial)
+                .cornerRadius(20)
+
+            HStack(spacing: 16) {
+                Button(action: cancelPlacement) {
+                    Image(systemName: "xmark")
+                        .font(.title2)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(.ultraThinMaterial)
+                        .cornerRadius(12)
+                }
+
+                Button(action: confirmPlacement) {
+                    HStack {
+                        Image(systemName: "checkmark")
+                        Text("Confirm").fontWeight(.bold)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(
+                        LinearGradient(colors: [.brandPurple, .brandPurpleDark],
+                                       startPoint: .leading, endPoint: .trailing)
+                    )
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+                }
+            }
+        }
+        .padding()
+        .padding(.bottom, 30)
     }
 }
 
@@ -322,9 +462,6 @@ struct CheckpointFormSheet: View {
                     Button("Save") {
                         saveCheckpoint()
                     }
-                    .buttonStyle(.borderedProminent)
-                    .buttonBorderShape(.capsule)
-                    .tint(Color.brandPurple)
                     .disabled(title.isEmpty)
                 }
             }

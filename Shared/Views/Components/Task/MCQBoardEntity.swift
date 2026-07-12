@@ -108,22 +108,26 @@ final class MCQBoardController: ARSurveyBoard {
 
     private let checkpoint: Checkpoint
     private let onSubmit: (String) -> Void
+    /// When false the submit pill is greyed out and taps on it do nothing —
+    /// the maker preview shows the board without letting Pak RT submit.
+    private let submitEnabled: Bool
     private var optionEntities: [ModelEntity] = []
     private var optionMaterials: [(normal: UnlitMaterial, selected: UnlitMaterial)] = []
     private var submitEntity: ModelEntity?
     private var selectedIndex: Int?
     private var isSubmitted = false
 
-    private init(checkpoint: Checkpoint, onSubmit: @escaping (String) -> Void) {
+    private init(checkpoint: Checkpoint, onSubmit: @escaping (String) -> Void, submitEnabled: Bool) {
         self.checkpoint = checkpoint
         self.onSubmit = onSubmit
+        self.submitEnabled = submitEnabled
     }
 
     /// Creates the interactive card for a checkpoint, or nil when it has no
     /// MCQ data. Async because texture uploads to the GPU are async.
-    static func make(for checkpoint: Checkpoint, onSubmit: @escaping (String) -> Void) async -> MCQBoardController? {
+    static func make(for checkpoint: Checkpoint, submitEnabled: Bool = true, onSubmit: @escaping (String) -> Void) async -> MCQBoardController? {
         guard checkpoint.hasMCQ else { return nil }
-        let controller = MCQBoardController(checkpoint: checkpoint, onSubmit: onSubmit)
+        let controller = MCQBoardController(checkpoint: checkpoint, onSubmit: onSubmit, submitEnabled: submitEnabled)
         guard await controller.buildQuestionCard() else { return nil }
         return controller
     }
@@ -140,7 +144,7 @@ final class MCQBoardController: ARSurveyBoard {
             return true
         }
         if tappedEntity === submitEntity {
-            submit()
+            if submitEnabled { submit() }
             return true
         }
         return false
@@ -174,7 +178,7 @@ final class MCQBoardController: ARSurveyBoard {
             optionPieces.append((normal, selected))
         }
 
-        guard let submit = await SurveyCard.renderPiece(SubmitButtonView()) else { return false }
+        guard let submit = await SurveyCard.renderPiece(SubmitButtonView(enabled: submitEnabled)) else { return false }
 
         // Total card height in points.
         var contentHeight = question.sizePoints.height + SurveyCard.sectionSpacingPoints
@@ -231,6 +235,9 @@ final class EmojiSliderBoardController: ARSurveyBoard {
 
     private let checkpoint: Checkpoint
     private let onSubmit: (_ answer: String, _ chosenEmoji: String) -> Void
+    /// When false the submit pill is greyed out and taps on it do nothing —
+    /// the maker preview shows the board without letting Pak RT submit.
+    private let submitEnabled: Bool
     private var trackEntity: ModelEntity?
     private var knobEntity: ModelEntity?
     private var submitEntity: ModelEntity?
@@ -240,18 +247,19 @@ final class EmojiSliderBoardController: ARSurveyBoard {
     private var isSubmitted = false
     private var isDragging = false
 
-    private init(checkpoint: Checkpoint, onSubmit: @escaping (_ answer: String, _ chosenEmoji: String) -> Void) {
+    private init(checkpoint: Checkpoint, onSubmit: @escaping (_ answer: String, _ chosenEmoji: String) -> Void, submitEnabled: Bool) {
         self.checkpoint = checkpoint
         self.onSubmit = onSubmit
+        self.submitEnabled = submitEnabled
     }
 
     /// Creates the interactive card for a checkpoint, or nil when it has no
     /// emoji slider data. Async because texture uploads to the GPU are async.
     /// On submit, the callback receives the recorded answer plus the emoji
     /// the knob ended closest to (under 50% = left, otherwise right).
-    static func make(for checkpoint: Checkpoint, onSubmit: @escaping (_ answer: String, _ chosenEmoji: String) -> Void) async -> EmojiSliderBoardController? {
+    static func make(for checkpoint: Checkpoint, submitEnabled: Bool = true, onSubmit: @escaping (_ answer: String, _ chosenEmoji: String) -> Void) async -> EmojiSliderBoardController? {
         guard checkpoint.hasEmojiSlider else { return nil }
-        let controller = EmojiSliderBoardController(checkpoint: checkpoint, onSubmit: onSubmit)
+        let controller = EmojiSliderBoardController(checkpoint: checkpoint, onSubmit: onSubmit, submitEnabled: submitEnabled)
         guard await controller.buildCard() else { return nil }
         return controller
     }
@@ -268,7 +276,7 @@ final class EmojiSliderBoardController: ARSurveyBoard {
             return true
         }
         if tappedEntity === submitEntity {
-            submit()
+            if submitEnabled { submit() }
             return true
         }
         return false
@@ -335,7 +343,7 @@ final class EmojiSliderBoardController: ARSurveyBoard {
               let leftEmoji = await SurveyCard.renderPiece(EmojiLabelView(emoji: checkpoint.emojiLeft)),
               let rightEmoji = await SurveyCard.renderPiece(EmojiLabelView(emoji: checkpoint.emojiRight)),
               let knob = await SurveyCard.renderPiece(SliderKnobView()),
-              let submit = await SurveyCard.renderPiece(SubmitButtonView()) else { return false }
+              let submit = await SurveyCard.renderPiece(SubmitButtonView(enabled: submitEnabled)) else { return false }
 
         let rowHeightPoints = max(knob.sizePoints.height, max(leftEmoji.sizePoints.height, rightEmoji.sizePoints.height))
 
@@ -685,13 +693,17 @@ private struct OptionRowView: View {
 }
 
 private struct SubmitButtonView: View {
+    /// When false the pill renders greyed-out — used by the maker preview so
+    /// Pak RT can see the board but can't actually submit an answer.
+    var enabled: Bool = true
+
     var body: some View {
         Text("Submit")
             .font(.system(size: 16, weight: .semibold))
-            .foregroundStyle(.white)
+            .foregroundStyle(enabled ? Color.white : Color(white: 0.55))
             .padding(.horizontal, 32)
             .padding(.vertical, 12)
-            .background(Capsule().fill(tanyaPurple))
+            .background(Capsule().fill(enabled ? tanyaPurple : Color(white: 0.82)))
             .padding(4)
             .background(Color.white)
     }

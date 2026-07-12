@@ -8,6 +8,23 @@
 import RealityKit
 import UIKit
 
+/// Minimal AR-scene surface that `CheckpointBoardLoader` needs, so the same
+/// board-building logic can run from any host — the citizen walk views and
+/// the maker's placement view — instead of being tied to one screen's
+/// concrete container. Both `RelativeUserARView.ARContainer` and the maker
+/// `ARContainer` conform.
+protocol BoardHostContainer: AnyObject {
+    var view: ARView? { get }
+    /// Entities yawed toward the camera every frame (boards, labels).
+    var faceCameraEntities: [Entity] { get set }
+    /// Interactive survey cards, so taps/drags can be routed to them.
+    var boardControllers: [any ARSurveyBoard] { get set }
+    /// One anchor per rendered checkpoint, keyed by id — so a host can find
+    /// and remove a checkpoint's scene content (e.g. to re-render after an
+    /// edit) or attach to it later (e.g. photobooth photos).
+    var checkpointAnchors: [UUID: AnchorEntity] { get set }
+}
+
 /// Drops checkpoints into a shared AR scene: an interactive MCQ /
 /// emoji-slider board for survey checkpoints, the real placed `.usdz` for
 /// Like/Dislike checkpoints, or the Lele checkpoint marker (green box
@@ -29,12 +46,19 @@ enum CheckpointBoardLoader {
     ///     the read-only asset detail sheet.
     @MainActor
     static func load(
-        into arContainer: RelativeUserARView.ARContainer,
+        into arContainer: any BoardHostContainer,
         checkpoints: [Checkpoint],
         onEmojiCelebration: @escaping (String) -> Void,
         onShowAssetDetail: @escaping (String) -> Void = { _ in },
         onPhotoboothTap: @escaping (Checkpoint) -> Void,
-        onGalleryTap: @escaping (Checkpoint) -> Void
+        onGalleryTap: @escaping (Checkpoint) -> Void,
+        /// When false, board interactions don't write votes/answers to the
+        /// store — used by the maker's preview so Pak RT trying out a board
+        /// doesn't inflate real response counts.
+        recordResponses: Bool = true,
+        /// When false, survey boards' Submit button renders greyed out and
+        /// can't be pressed — the maker preview shows the board read-only.
+        submitEnabled: Bool = true
     ) {
         guard let arView = arContainer.view else { return }
 
@@ -42,6 +66,9 @@ enum CheckpointBoardLoader {
             let position = SIMD3<Float>(cp.relativeX, cp.relativeY, cp.relativeZ)
             let anchor = AnchorEntity(world: position)
             arView.scene.addAnchor(anchor)
+            // Track the anchor so the host can remove/rebuild this checkpoint
+            // later (e.g. the maker re-rendering after an asset edit).
+            arContainer.checkpointAnchors[cp.id] = anchor
 
             let isSurvey = cp.hasMCQ || cp.hasEmojiSlider || cp.interactionType == .photobooth
 
@@ -85,7 +112,9 @@ enum CheckpointBoardLoader {
                         for: cp,
                         assetDescription: assetDescription,
                         onVote: { isLike in
-                            MockDatabaseService.shared.recordVote(checkpointID: cp.id, isLike: isLike)
+                            if recordResponses {
+                                MockDatabaseService.shared.recordVote(checkpointID: cp.id, isLike: isLike)
+                            }
                             onEmojiCelebration(isLike ? "👍" : "👎")
                         },
                         onReadMore: {
@@ -109,7 +138,10 @@ enum CheckpointBoardLoader {
             // is attached to whichever marker ends up being used.
             Task { @MainActor in
                 let marker: Entity
-                if let model = try? await Entity(named: "Lele_Checkpoint") {
+                // Load lewat URL file eksplisit — `Entity(named:)` tidak andal
+                // me-resolve .usdz ini dan diam-diam jatuh ke box hijau.
+                if let url = Bundle.main.url(forResource: "Lele_Checkpoint", withExtension: "usdz"),
+                   let model = try? await Entity(contentsOf: url) {
                     marker = model
                     // The .usdz is authored ~2.4 m tall with its origin at the
                     // body centre; RealityKit treats 1 unit = 1 m, so scale it
@@ -151,11 +183,13 @@ enum CheckpointBoardLoader {
                 // beacon, and answers are given by tapping the card itself.
                 Task { @MainActor in
                     let saveAnswer: (String) -> Void = { answer in
-                        MockDatabaseService.shared.saveResponse(checkpointID: cp.id, answer: answer)
+                        if recordResponses {
+                            MockDatabaseService.shared.saveResponse(checkpointID: cp.id, answer: answer)
+                        }
                     }
                     let controller: (any ARSurveyBoard)?
                     if cp.hasMCQ {
-                        controller = await MCQBoardController.make(for: cp, onSubmit: saveAnswer)
+                        controller = await MCQBoardController.make(for: cp, submitEnabled: submitEnabled, onSubmit: saveAnswer)
                     } else if cp.interactionType == .photobooth {
                         controller = await PhotoboothBoardController.make(for: cp, onTapCamera: {
                             onPhotoboothTap(cp)
@@ -163,7 +197,7 @@ enum CheckpointBoardLoader {
                             onGalleryTap(cp)
                         })
                     } else {
-                        controller = await EmojiSliderBoardController.make(for: cp) { answer, chosenEmoji in
+                        controller = await EmojiSliderBoardController.make(for: cp, submitEnabled: submitEnabled) { answer, chosenEmoji in
                             saveAnswer(answer)
                             onEmojiCelebration(chosenEmoji)
                         }
@@ -207,6 +241,21 @@ enum CheckpointBoardLoader {
                 }
             }
         }
+    }
+
+    /// Removes every checkpoint this loader added to the scene and resets the
+    /// container's board tracking, so the host can re-render from scratch
+    /// (e.g. the maker after editing a checkpoint's asset). Safe to call on a
+    /// host whose only scene content is checkpoints — the reticle and other
+    /// non-checkpoint entities aren't tracked here, so they're left alone.
+    @MainActor
+    static func clear(from arContainer: any BoardHostContainer) {
+        for anchor in arContainer.checkpointAnchors.values {
+            anchor.removeFromParent()
+        }
+        arContainer.checkpointAnchors.removeAll()
+        arContainer.faceCameraEntities.removeAll()
+        arContainer.boardControllers.removeAll()
     }
 
     /// Scales a freshly-loaded marker entity to a sensible AR size and lifts it
