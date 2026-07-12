@@ -16,6 +16,8 @@ final class PhotoboothBoardController: ARSurveyBoard {
     private let onTapCamera: () -> Void
     private let onTapGallery: () -> Void
     
+    private var buttonsEntity: ModelEntity?
+    
     private var cameraHitEntity: Entity?
     private var galleryHitEntity: Entity?
     
@@ -53,9 +55,15 @@ final class PhotoboothBoardController: ARSurveyBoard {
         contentHeight += buttonsPiece.sizePoints.height
         let cardHeight = contentHeight + SurveyCard.paddingPoints * 2
         
+        // Wrap everything in a content entity so we can push the entire board forward
+        // to clear Lele's collision box (which can be up to 0.25m deep!)
+        let contentEntity = Entity()
+        contentEntity.position.z = 0.3
+        rootEntity.addChild(contentEntity)
+        
         // Background card
         let bgEntity = SurveyCard.backgroundEntity(cardHeightPoints: cardHeight)
-        rootEntity.addChild(bgEntity)
+        contentEntity.addChild(bgEntity)
         
         // Layout pieces vertically
         var cursor = Float(cardHeight) * s / 2 - Float(SurveyCard.paddingPoints) * s
@@ -63,46 +71,23 @@ final class PhotoboothBoardController: ARSurveyBoard {
         // 1. Question Text
         let qEntity = SurveyCard.pieceEntity(questionPiece)
         qEntity.position = [0, cursor - Float(questionPiece.sizePoints.height) * s / 2, 0.002]
-        rootEntity.addChild(qEntity)
+        contentEntity.addChild(qEntity)
         cursor -= Float(questionPiece.sizePoints.height + SurveyCard.sectionSpacingPoints) * s
         
         // 2. Image (if present)
         if let ip = promptImagePiece {
             let imgEntity = SurveyCard.pieceEntity(ip)
             imgEntity.position = [0, cursor - Float(ip.sizePoints.height) * s / 2, 0.002]
-            rootEntity.addChild(imgEntity)
+            contentEntity.addChild(imgEntity)
             cursor -= Float(ip.sizePoints.height + SurveyCard.sectionSpacingPoints) * s
         }
         
         // 3. Buttons
-        let btnsEntity = SurveyCard.pieceEntity(buttonsPiece)
+        let btnsEntity = SurveyCard.pieceEntity(buttonsPiece, tappable: true)
         let buttonsCenterY = cursor - Float(buttonsPiece.sizePoints.height) * s / 2
         btnsEntity.position = [0, buttonsCenterY, 0.002]
-        rootEntity.addChild(btnsEntity)
-        
-        // Collision boxes: strictly covering the bottom button row, split 50/50 horizontally
-        let buttonsHeightMeters = Float(buttonsPiece.sizePoints.height) * s
-        let buttonWidthMeters = SurveyCard.boardWidthMeters / 2.0
-        
-        let mainHit = Entity()
-        mainHit.components.set(CollisionComponent(shapes: [
-            .generateBox(width: buttonWidthMeters,
-                         height: buttonsHeightMeters,
-                         depth: 0.02)
-        ]))
-        mainHit.position = [-buttonWidthMeters / 2, buttonsCenterY, 0]
-        rootEntity.addChild(mainHit)
-        self.cameraHitEntity = mainHit
-        
-        let galleryHit = Entity()
-        galleryHit.components.set(CollisionComponent(shapes: [
-            .generateBox(width: buttonWidthMeters,
-                         height: buttonsHeightMeters,
-                         depth: 0.02)
-        ]))
-        galleryHit.position = [buttonWidthMeters / 2, buttonsCenterY, 0]
-        rootEntity.addChild(galleryHit)
-        self.galleryHitEntity = galleryHit
+        contentEntity.addChild(btnsEntity)
+        self.buttonsEntity = btnsEntity
         
         return true
     }
@@ -111,11 +96,15 @@ final class PhotoboothBoardController: ARSurveyBoard {
         let boardPosition = rootEntity.position(relativeTo: nil)
         guard simd_distance(boardPosition, cameraPosition) <= SurveyCard.maxInteractionDistance else { return false }
         
-        if entity === cameraHitEntity {
-            onTapCamera()
-            return true
-        } else if entity === galleryHitEntity {
-            onTapGallery()
+        if entity === buttonsEntity, let worldPos = worldPosition {
+            // Convert world tap position to the buttons entity's local space
+            let localPos = buttonsEntity!.convert(position: worldPos, from: nil)
+            // Left half (x < 0) is Camera, right half (x >= 0) is Gallery
+            if localPos.x < 0 {
+                onTapCamera()
+            } else {
+                onTapGallery()
+            }
             return true
         }
         return false
