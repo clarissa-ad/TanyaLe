@@ -67,6 +67,7 @@ struct NativeCameraPicker: UIViewControllerRepresentable {
             picker.sourceType = .camera
             picker.cameraDevice = .front
             picker.showsCameraControls = true // Native robust controls (Flash, Flip, Zoom, Shutter, Cancel)
+            picker.allowsEditing = true // Allows native crop/rotate after capture
         } else {
             // Fallback for Simulator
             picker.sourceType = .photoLibrary
@@ -86,7 +87,10 @@ struct NativeCameraPicker: UIViewControllerRepresentable {
         }
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-            if let image = info[.originalImage] as? UIImage {
+            // Use edited image if available (user cropped/rotated), else original
+            if let image = info[.editedImage] as? UIImage {
+                parent.onImageCaptured?(image)
+            } else if let image = info[.originalImage] as? UIImage {
                 parent.onImageCaptured?(image)
             }
         }

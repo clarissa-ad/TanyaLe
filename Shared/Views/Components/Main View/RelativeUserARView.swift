@@ -238,33 +238,19 @@ struct RelativeUserARView: View {
                         }
                     },
                     onExploreMore: {
-                        // Finalize the capture
                         MockPhotoService.shared.savePhoto(image: image, forCheckpoint: cp.id)
-
-                        // Dynamically add the new photo into the 3D scene!
-                        if let anchor = arContainer.checkpointAnchors[cp.id] {
-                            // Find out how many photos already exist to position it correctly
-                            let photosCount = MockPhotoService.shared.fetchPhotos(forCheckpoint: cp.id).count
-
-                            Task { @MainActor in
-                                if let entity = CheckpointBoardLoader.createPhotoEntity(from: image) {
-                                    // Place the floating photos beside the board (starting to the right)
-                                    let spacing: Float = 0.5
-                                    let xOffset: Float = 0.45 + Float(photosCount - 1) * spacing
-                                    entity.position = [xOffset, 0.45 + Float(photosCount % 2) * 0.05, 0]
-                                    anchor.addChild(entity)
-                                    arContainer.faceCameraEntities.append(entity)
-                                }
-                            }
-                        }
-
+                        CheckpointBoardLoader.refreshPhotos(for: cp, in: arContainer)
                         capturedPhotoForPreview = nil
                         showingPhotoPreview = false
                     }
                 )
             }
         }
-        .sheet(isPresented: $showingGallery) {
+        .sheet(isPresented: $showingGallery, onDismiss: {
+            if let cp = activeCheckpoint {
+                CheckpointBoardLoader.refreshPhotos(for: cp, in: arContainer)
+            }
+        }) {
             if let cp = activeCheckpoint {
                 PhotoGalleryView(checkpoint: cp)
             }

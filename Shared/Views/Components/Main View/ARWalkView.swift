@@ -37,7 +37,12 @@ struct ARWalkView: View {
     @State private var showingAssetDetail = false
     @State private var presentedAssetId: String?
 
-    
+    // Photobooth state
+    @State private var showingImagePicker = false
+    @State private var showingGallery = false
+    @State private var capturedPhotoForPreview: UIImage?
+    @State private var showingPhotoPreview = false
+    @State private var activeCheckpoint: Checkpoint?    
     /// How close (in meters) the citizen must be for the checkpoint card to
     /// show. Shared with the view model so the navigator arrow hides at the
     /// exact distance the card appears.
@@ -139,6 +144,46 @@ struct ARWalkView: View {
                 }
             }
         }
+        .sheet(isPresented: $showingImagePicker) {
+            if let cp = activeCheckpoint {
+                PhotoboothCaptureView(checkpoint: cp) { image in
+                    capturedPhotoForPreview = image
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        showingPhotoPreview = true
+                    }
+                }
+            }
+        }
+        .sheet(isPresented: $showingGallery, onDismiss: {
+            if let cp = activeCheckpoint {
+                CheckpointBoardLoader.refreshPhotos(for: cp, in: arContainer)
+            }
+        }) {
+            if let cp = activeCheckpoint {
+                PhotoGalleryView(checkpoint: cp)
+            }
+        }
+        .fullScreenCover(isPresented: $showingPhotoPreview) {
+            if let image = capturedPhotoForPreview, let cp = activeCheckpoint {
+                PhotoPreviewView(
+                    capturedImage: image,
+                    checkpoint: cp,
+                    onRetake: {
+                        capturedPhotoForPreview = nil
+                        showingPhotoPreview = false
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            showingImagePicker = true
+                        }
+                    },
+                    onExploreMore: {
+                        MockPhotoService.shared.savePhoto(image: image, forCheckpoint: cp.id)
+                        CheckpointBoardLoader.refreshPhotos(for: cp, in: arContainer)
+                        capturedPhotoForPreview = nil
+                        showingPhotoPreview = false
+                    }
+                )
+            }
+        }
     }
 
     // MARK: - Subviews
@@ -234,8 +279,14 @@ struct ARWalkView: View {
                         checkpoints: db.checkpoints,
                         onEmojiCelebration: showEmojiCelebration,
                         onShowAssetDetail: showAssetDetail,
-                        onPhotoboothTap: { _ in },
-                        onGalleryTap: { _ in }
+                        onPhotoboothTap: { cp in
+                            activeCheckpoint = cp
+                            showingImagePicker = true
+                        },
+                        onGalleryTap: { cp in
+                            activeCheckpoint = cp
+                            showingGallery = true
+                        }
                     )
                     viewModel.startTracking(arContainer: arContainer)
                     return

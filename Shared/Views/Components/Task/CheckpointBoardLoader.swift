@@ -205,8 +205,8 @@ enum CheckpointBoardLoader {
 
                     if let controller {
                         if cp.interactionType == .photobooth {
-                            // Lower the photobooth board so it's not too high
-                            controller.rootEntity.position = [0, 0.45, 0]
+                            // Raise the photobooth board to Y=1.0 (same as MCQ) so it clears Lele's collision bounds!
+                            controller.rootEntity.position = [0, 1.0, 0]
                         } else {
                             controller.rootEntity.position = [0, 1.0, 0]
                         }
@@ -221,24 +221,7 @@ enum CheckpointBoardLoader {
             
             // ── Load 3D Gallery Photos ──
             if cp.interactionType == .photobooth {
-                let allPhotos = MockPhotoService.shared.fetchPhotos(forCheckpoint: cp.id)
-                
-                // You can adjust the max amount of image previews here:
-                let maxPreviews = 5
-                let photos = Array(allPhotos.prefix(maxPreviews))
-                
-                for (index, image) in photos.enumerated() {
-                    Task { @MainActor in
-                        if let entity = createPhotoEntity(from: image) {
-                            // Place the floating photos beside the board (starting to the right)
-                            let spacing: Float = 0.5
-                            let xOffset: Float = 0.45 + Float(index) * spacing
-                            entity.position = [xOffset, 0.45 + Float(index % 2) * 0.05, 0]
-                            anchor.addChild(entity)
-                            arContainer.faceCameraEntities.append(entity)
-                        }
-                    }
-                }
+                refreshPhotos(for: cp, in: arContainer)
             }
         }
     }
@@ -256,6 +239,56 @@ enum CheckpointBoardLoader {
         arContainer.checkpointAnchors.removeAll()
         arContainer.faceCameraEntities.removeAll()
         arContainer.boardControllers.removeAll()
+    }
+    
+    /// Clears and re-renders the floating 3D photos for a given checkpoint.
+    /// Used when a citizen takes a new photo or deletes one from the gallery.
+    @MainActor
+    static func refreshPhotos(for cp: Checkpoint, in arContainer: any BoardHostContainer) {
+        guard let anchor = arContainer.checkpointAnchors[cp.id] else { return }
+        
+        // Remove existing photos (identified by name)
+        let existingPhotos = anchor.children.filter { $0.name == "photo_preview" }
+        for photo in existingPhotos {
+            photo.removeFromParent()
+            arContainer.faceCameraEntities.removeAll(where: { $0 === photo })
+        }
+        
+        let allPhotos = MockPhotoService.shared.fetchPhotos(forCheckpoint: cp.id)
+        let maxPreviews = 5
+        let photos = Array(allPhotos.prefix(maxPreviews))
+        
+        for (index, image) in photos.enumerated() {
+            Task { @MainActor in
+                if let entity = createPhotoEntity(from: image) {
+                    entity.name = "photo_preview" // Tag it so we can find it to delete later
+                    
+                    let offsets: [SIMD3<Float>] = [
+                        [ 0.45,  1.3, -0.05], // Top Right
+                        [-0.40,  0.7,  0.05], // Bottom Left
+                        [ 0.40,  0.9,  0.10], // Middle Right
+                        [-0.45,  1.1, -0.10], // Middle Left
+                        [ 0.35,  0.6, -0.02]  // Bottom Right
+                    ]
+                    let tilts: [Float] = [
+                         0.10,  // slightly right
+                        -0.05,  // slightly left
+                        -0.10,  // slightly left
+                         0.05,  // slightly right
+                         0.15   // more right
+                    ]
+                    
+                    let pos = index < offsets.count ? offsets[index] : [0, 1.0, 0]
+                    let tilt = index < tilts.count ? tilts[index] : 0
+                    
+                    entity.position = pos
+                    entity.orientation = simd_quatf(angle: tilt, axis: [0, 0, 1])
+                    
+                    anchor.addChild(entity)
+                    arContainer.faceCameraEntities.append(entity)
+                }
+            }
+        }
     }
 
     /// Scales a freshly-loaded marker entity to a sensible AR size and lifts it
@@ -322,11 +355,25 @@ enum CheckpointBoardLoader {
         return holder
     }
     
-    /// Bakes the UIImage's orientation into its pixel data so RealityKit doesn't render it sideways
-    private static func normalizeOrientation(of image: UIImage) -> UIImage {
-        if image.imageOrientation == .up { return image }
-        UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale)
-        image.draw(in: CGRect(origin: .zero, size: image.size))
+    /// Bakes the UIImage's orientation into its pixel data so RealityKit doesn't render it sideways,
+    /// and scales it down to a max dimension to prevent severe memory spikes/lag when generating AR textures.
+    private static func normalizeOrientation(of image: UIImage, maxDimension: CGFloat = 800) -> UIImage {
+        let size = image.size
+        var targetSize = size
+        
+        if size.width > maxDimension || size.height > maxDimension {
+            let ratio = max(size.width, size.height) / maxDimension
+            targetSize = CGSize(width: size.width / ratio, height: size.height / ratio)
+        }
+        
+        // If it's already the right orientation and small enough, return it.
+        if image.imageOrientation == .up && size.width <= maxDimension && size.height <= maxDimension {
+            return image
+        }
+        
+        // Use scale = 1.0 so we don't accidentally multiply the size by the device screen scale
+        UIGraphicsBeginImageContextWithOptions(targetSize, false, 1.0)
+        image.draw(in: CGRect(origin: .zero, size: targetSize))
         let normalized = UIGraphicsGetImageFromCurrentImageContext() ?? image
         UIGraphicsEndImageContext()
         return normalized

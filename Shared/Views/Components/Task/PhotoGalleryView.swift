@@ -26,12 +26,25 @@ struct PhotoGalleryView: View {
                 } else {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 16)], spacing: 16) {
                         ForEach(0..<photos.count, id: \.self) { index in
-                            Image(uiImage: photos[index])
-                                .resizable()
-                                .scaledToFill()
-                                .frame(minWidth: 0, maxWidth: .infinity, minHeight: 150, maxHeight: 150)
-                                .clipShape(RoundedRectangle(cornerRadius: 12))
-                                .shadow(radius: 4)
+                            let photo = photos[index]
+                            ZStack(alignment: .topTrailing) {
+                                Image(uiImage: photo)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(minWidth: 0, maxWidth: .infinity, minHeight: 150, maxHeight: 150)
+                                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                                    .shadow(radius: 4)
+                                
+                                Button {
+                                    photoService.deletePhoto(image: photo, forCheckpoint: checkpoint.id)
+                                } label: {
+                                    Image(systemName: "trash.circle.fill")
+                                        .font(.system(size: 24))
+                                        .foregroundColor(.red)
+                                        .background(Circle().fill(Color.white).frame(width: 20, height: 20))
+                                }
+                                .padding(8)
+                            }
                         }
                     }
                     .padding()
