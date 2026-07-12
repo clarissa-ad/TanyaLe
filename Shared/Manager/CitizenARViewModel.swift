@@ -11,6 +11,12 @@ class CitizenARViewModel {
     var isOriginSet = false
     var nearestDistance: Float?
     var nearestCheckpoint: Checkpoint?
+    /// Nearest checkpoint the user hasn't answered yet — the navigation
+    /// target. Arrival UI keys off this pair so walking up to an
+    /// already-answered checkpoint does NOT trigger the arrival card; the
+    /// arrow keeps pointing at the remaining work instead.
+    var nearestUnansweredDistance: Float?
+    var nearestUnansweredCheckpoint: Checkpoint?
     var arUserLocation: CLLocationCoordinate2D?
     /// Clockwise screen-space rotation (radians) for a 2D navigator arrow so it
     /// points at the nearest checkpoint. `nil` when there's nothing to point at.
@@ -33,6 +39,11 @@ class CitizenARViewModel {
         /// Gate passed; the AR world is being built.
         case ready
     }
+
+    /// How close (meters) counts as "arrived" at a checkpoint. Inside this
+    /// radius the checkpoint card takes over and the navigator arrow hides.
+    /// Shared with the views' interaction gating so both switch in sync.
+    static let arrivalRadius: Float = 1.0
 
     /// How close (meters) the user must be to the start point.
     static let startRadius: Double = 2.0
@@ -233,9 +244,14 @@ class CitizenARViewModel {
         
         var minDistance: Float = .infinity
         var closestCP: Checkpoint? = nil
-        
+
+        // Navigation target: the arrow only guides toward work left to do,
+        // so already-answered checkpoints are skipped.
+        var minUnansweredDistance: Float = .infinity
+        var closestUnansweredCP: Checkpoint? = nil
+
         let checkpoints = MockDatabaseService.shared.checkpoints
-        
+
         for cp in checkpoints {
             let cpPos = SIMD3<Float>(cp.relativeX, cp.relativeY, cp.relativeZ)
             let distance = simd_distance(camPos, cpPos)
@@ -243,29 +259,85 @@ class CitizenARViewModel {
                 minDistance = distance
                 closestCP = cp
             }
+            if !Self.isAnswered(cp), distance < minUnansweredDistance {
+                minUnansweredDistance = distance
+                closestUnansweredCP = cp
+            }
         }
-        
+
+        // Nearest checkpoint of any kind (HUD info in RelativeUserARView).
         if minDistance < 100 {
             nearestDistance = minDistance
             nearestCheckpoint = closestCP
-
-            if let cp = closestCP {
-                let cpPos = SIMD3<Float>(cp.relativeX, cp.relativeY, cp.relativeZ)
-
-                // Point the 3D arrow (RelativeUserARView) at the closest checkpoint.
-                if let arrow = arContainer.arrowEntity {
-                    arrow.look(at: cpPos, from: arrow.position(relativeTo: nil), relativeTo: nil)
-                    arrow.isEnabled = true
-                }
-
-                // Screen-space heading for the 2D arrow (ARWalkView).
-                arrowHeading = Self.screenHeading(from: camTransform, to: cpPos)
-            }
         } else {
             nearestDistance = nil
             nearestCheckpoint = nil
+        }
+
+        // Nearest checkpoint still waiting for an answer (arrival card +
+        // arrow target). Answered checkpoints never appear here, so arriving
+        // at one shows no card and the arrow stays on the remaining work.
+        if minUnansweredDistance < 100 {
+            nearestUnansweredDistance = minUnansweredDistance
+            nearestUnansweredCheckpoint = closestUnansweredCP
+        } else {
+            nearestUnansweredDistance = nil
+            nearestUnansweredCheckpoint = nil
+        }
+
+        // Aim both arrows at the nearest checkpoint still waiting for an
+        // answer. Hidden once every checkpoint is answered, and also while
+        // the user is standing at the checkpoint itself (inside
+        // arrivalRadius) — the checkpoint card is the guidance then.
+        if let target = closestUnansweredCP,
+           minUnansweredDistance < 100,
+           minUnansweredDistance >= Self.arrivalRadius {
+            let targetPos = SIMD3<Float>(target.relativeX, target.relativeY, target.relativeZ)
+
+            // The 3D Arrow.usdz floating in front of the camera. Aim at the
+            // target's horizontal direction only (yaw, no pitch) so the arrow
+            // stays flat instead of tilting up/down toward checkpoints above
+            // or below the phone.
+            if let arrow = arContainer.arrowEntity {
+                let arrowPos = arrow.position(relativeTo: nil)
+                let flatTarget = SIMD3<Float>(targetPos.x, arrowPos.y, targetPos.z)
+                // Skip the update when standing on top of the target —
+                // look(at:) has no stable answer for a zero-length direction.
+                if simd_distance(flatTarget, arrowPos) > 0.05 {
+                    arrow.look(at: flatTarget, from: arrowPos, relativeTo: nil)
+                }
+                arrow.isEnabled = true
+            }
+
+            // Screen-space heading for the 2D arrow fallback.
+            arrowHeading = Self.screenHeading(from: camTransform, to: targetPos)
+        } else {
             arrowHeading = nil
             arContainer.arrowEntity?.isEnabled = false
+        }
+    }
+
+    /// Whether the citizen has already completed this checkpoint's
+    /// interaction. Answered checkpoints stop pulling the navigator arrow so
+    /// it can guide the user to whatever is left.
+    private static func isAnswered(_ cp: Checkpoint) -> Bool {
+        let db = MockDatabaseService.shared
+        switch cp.interactionType {
+        case .mcq, .emojiSlider:
+            // Both store their single answer in `responses`.
+            return db.responses[cp.id] != nil
+        case .likedislike:
+            return db.likeDislikeVotes[cp.id] != nil
+        case .photobooth:
+            // MockPhotoService is @MainActor; tracking runs on the main-run-
+            // loop timer, so hopping onto the actor here is safe.
+            return MainActor.assumeIsolated {
+                !MockPhotoService.shared.fetchPhotos(forCheckpoint: cp.id).isEmpty
+            }
+        case .none:
+            // Plain pins have no interaction to complete — never make the
+            // arrow chase them.
+            return true
         }
     }
 
@@ -289,5 +361,12 @@ class CitizenARViewModel {
         let r = simd_normalize(right)
         let t = simd_normalize(toTarget)
         return Double(atan2(simd_dot(t, r), simd_dot(t, f)))
+    }
+}
+
+
+extension CitizenARViewModel {
+    private static func aarowHeading() {
+        
     }
 }

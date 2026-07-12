@@ -38,14 +38,19 @@ struct ARWalkView: View {
     @State private var presentedAssetId: String?
 
     
-    /// How close (in meters) the citizen must be for the checkpoint card to show.
-    private let interactionRadius: Float = 1.0
+    /// How close (in meters) the citizen must be for the checkpoint card to
+    /// show. Shared with the view model so the navigator arrow hides at the
+    /// exact distance the card appears.
+    private let interactionRadius = CitizenARViewModel.arrivalRadius
     
     /// The checkpoint the citizen is currently close enough to interact with,
     /// or `nil` while they should still be following the navigator arrow.
+    /// Keys off the nearest *unanswered* checkpoint: arriving at an
+    /// already-answered one shows no card — the arrow (pointing at the next
+    /// unanswered checkpoint) stays as the only guidance.
     private var arrivedCheckpoint: Checkpoint? {
-        guard let dist = viewModel.nearestDistance, dist < interactionRadius else { return nil }
-        return viewModel.nearestCheckpoint
+        guard let dist = viewModel.nearestUnansweredDistance, dist < interactionRadius else { return nil }
+        return viewModel.nearestUnansweredCheckpoint
     }
     
     var body: some View {
@@ -85,9 +90,11 @@ struct ARWalkView: View {
                 
                 if let cp = arrivedCheckpoint {
                     arriveatCheckpoint(for: cp)
-                } else if viewModel.nearestCheckpoint != nil {
-                    navigatorArrow
                 }
+                // While walking, guidance comes from the 3D Arrow.usdz in the
+                // AR scene — CitizenARViewModel.updateTracking() points it at
+                // the nearest unanswered checkpoint and hides it once every
+                // checkpoint has been answered.
             }
             .animation(.spring(response: 0.35, dampingFraction: 0.8), value: arrivedCheckpoint?.id)
             
@@ -111,6 +118,7 @@ struct ARWalkView: View {
         .onAppear {
             locationManager.requestPermission()
             calibrateWhenReady()
+            watchForTrackingDivergence()
         }
         .onDisappear {
             viewModel.stopTracking()
@@ -204,11 +212,23 @@ struct ARWalkView: View {
     /// "Scan App Clip" button since this screen runs after that step.
     private func calibrateWhenReady() {
         Task { @MainActor in
-            // Poll for up to ~5s until the session produces a frame.
-            for _ in 0..<50 {
-                if let arView = arContainer.view, arView.session.currentFrame != nil {
+            // Poll for up to ~20s until the session tracks normally. Waiting
+            // for .normal (instead of just the first frame) matters twice
+            // over: the floor raycast in setOrigin can actually succeed, and
+            // .gravityAndHeading has finished swinging the world into compass
+            // alignment before we drop world-anchored checkpoints into it.
+            // The long budget covers the camera-permission prompt on first
+            // launch.
+            for _ in 0..<200 {
+                if let arView = arContainer.view,
+                   let frame = arView.session.currentFrame,
+                   case .normal = frame.camera.trackingState {
                     guard !viewModel.isOriginSet else { return }
                     viewModel.setOrigin(arView: arView)
+                    // 3D navigator arrow: floats ahead of the camera and is
+                    // aimed by updateTracking() at the nearest unanswered
+                    // checkpoint.
+                    ARArrowLoader.attach(to: arContainer)
                     CheckpointBoardLoader.load(
                         into: arContainer,
                         checkpoints: db.checkpoints,
@@ -222,9 +242,52 @@ struct ARWalkView: View {
                 }
                 try? await Task.sleep(for: .milliseconds(100))
             }
+            print("ARWalkView: AR tracking never reached .normal — no checkpoints or arrow were loaded")
         }
     }
-    
+
+    /// Watches for the AR session diverging into NaN camera poses (the
+    /// "RETransformComponentSetLocalSRT contains NaN" console flood — world
+    /// tracking has fallen apart and nothing can render). When detected,
+    /// wipes the scene, restarts tracking from scratch, and re-runs
+    /// calibration so the world rebuilds instead of staying invisible.
+    private func watchForTrackingDivergence() {
+        Task { @MainActor in
+            while let arView = arContainer.view {
+                try? await Task.sleep(for: .seconds(1))
+                // Check the FULL pose matrix — the failure seen in the wild is
+                // NaN in the rotation columns while the translation stays
+                // valid, which silently blanks all rendering.
+                guard let camera = arView.session.currentFrame?.camera,
+                      Self.containsNaN(camera.transform) else { continue }
+
+                print("ARWalkView: camera pose contains NaN (rotation diverged) — resetting session and rebuilding the AR world.")
+                viewModel.stopTracking()
+                arView.scene.anchors.removeAll()
+                arContainer.faceCameraEntities = []
+                arContainer.boardControllers = []
+                arContainer.arrowEntity = nil
+                viewModel.isOriginSet = false
+
+                if let config = arView.session.configuration {
+                    arView.session.run(config, options: [.resetTracking, .removeExistingAnchors])
+                }
+                calibrateWhenReady()
+                watchForTrackingDivergence() // re-arm for the fresh session
+                return
+            }
+        }
+    }
+
+    private static func containsNaN(_ m: simd_float4x4) -> Bool {
+        for column in [m.columns.0, m.columns.1, m.columns.2, m.columns.3] {
+            if column.x.isNaN || column.y.isNaN || column.z.isNaN || column.w.isNaN {
+                return true
+            }
+        }
+        return false
+    }
+
 }
 
 
@@ -280,7 +343,10 @@ extension ARWalkView {
         arView.scene.addAnchor(anchor)
         
         Task { @MainActor in
-            guard let controller = await MessageBoardController.make(message: trimmed) else { return }
+            guard let controller = await MessageBoardController.make(message: trimmed) else {
+                print("ARWalkView: MessageBoardController.make returned nil — aspiration card not rendered")
+                return
+            }
             controller.rootEntity.position = [0, 1.2, 0]
             anchor.addChild(controller.rootEntity)
             arContainer.faceCameraEntities.append(controller.rootEntity)

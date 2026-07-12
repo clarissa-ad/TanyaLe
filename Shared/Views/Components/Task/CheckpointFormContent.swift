@@ -1,5 +1,6 @@
 import SwiftUI
 import UIKit
+import AVKit
 
 struct CheckpointFormContent: View {
     @Binding var title: String
@@ -18,134 +19,163 @@ struct CheckpointFormContent: View {
     @State private var showExtraOptions = false
     @State private var newOption: String = ""
     
+    // Added state to track when the video sheet is presented
+    @State private var showingDemoVideo = false
+    
     private var selectedAsset: Asset3D? {
         guard let selectedAssetId else { return nil }
         return MockAssetService.shared.asset(withId: selectedAssetId)
     }
     
     var body: some View {
-        Section(header: Text("Checkpoint Details")) {
-            TextField("Title", text: $title)
-        }
-        Section(header: Text("Checkpoint Description")) {
-            TextField("Description (optional)", text: $taskDescription)
-        }
-        
-        Section(
-            header: Text("Interaction"),
-            footer: Text("Choose what the citizen does when they reach this checkpoint. A plain checkpoint just needs to be visited.")
-        ) {
-            Picker("Type", selection: $interactionType) {
-                ForEach(Checkpoint.InteractionType.allCases) { type in
-                    Text(type.rawValue).tag(type)
-                }
+        Group {
+            Section(header: Text("Checkpoint Details")) {
+                TextField("Title", text: $title)
             }
-        }
-        
-        if interactionType == .mcq {
+            Section(header: Text("Checkpoint Description")) {
+                TextField("Description (optional)", text: $taskDescription)
+            }
+            
             Section(
-                header: Text("Multiple Choice Question"),
-                footer: Text("Options 1 and 2 are required. Tap \"Add More Answers\" to unlock two extra slots (6 max).")
+                header: Text("Interaction"),
+                footer: Text("Choose what the citizen does when they reach this checkpoint. A plain checkpoint just needs to be visited.")
             ) {
-                TextField("Question", text: $question)
-                
-                optionField(at: 0, placeholder: "Option 1 (required)")
-                optionField(at: 1, placeholder: "Option 2 (required)")
-                optionField(at: 2, placeholder: "Option 3 (optional)")
-                optionField(at: 3, placeholder: "Option 4 (optional)")
-                
-                if showExtraOptions {
-                    optionField(at: 4, placeholder: "Option 5 (optional)")
-                    optionField(at: 5, placeholder: "Option 6 (optional)")
-                } else {
-                    Button(action: {
-                        ensureCapacity(6)
-                        showExtraOptions = true
-                    }) {
-                        Label("Add More Answers", systemImage: "plus.circle")
+                Picker("Type", selection: $interactionType) {
+                    ForEach(Checkpoint.InteractionType.allCases) { type in
+                        Text(type.rawValue).tag(type)
                     }
                 }
             }
-            .onAppear { setupMCQSlots() }
-            .onChange(of: interactionType) { _, newType in
-                if newType == .mcq { setupMCQSlots() }
-            }
-        } else if interactionType == .photobooth {
-            Section(header: Text("Photobooth Prompt"), footer: Text("The text prompt and reference photo shown to citizens when taking a photo.")) {
-                TextField("Text Prompt (e.g. Take a selfie...)", text: $question)
-                
-                HStack {
-                    if let id = promptPhotoID, let image = MockPhotoService.shared.fetchPromptPhoto(id: id) {
-                        Image(uiImage: image)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 50, height: 50)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                    } else {
-                        Rectangle()
-                            .fill(Color.gray.opacity(0.3))
-                            .frame(width: 50, height: 50)
-                            .clipShape(RoundedRectangle(cornerRadius: 8))
-                            .overlay(Image(systemName: "photo").foregroundColor(.gray))
-                    }
-                    
+            if interactionType != .none {
+                Section{
+                    // 3. Added the completely styled pill button
                     Button(action: {
-                        showingImagePicker = true
+                        showingDemoVideo = true
                     }) {
-                        Text(promptPhotoID == nil ? "Upload Prompt Photo" : "Change Prompt Photo")
-                    }
-                }
-            }
-        } else if interactionType == .emojiSlider {
-            Section(
-                header: Text("Emoji Slider"),
-                footer: Text("The citizen slides between the two emoji to answer the question. Use the arrows to swap sides.")
-            ) {
-                TextField("Question", text: $question)
-                
-                HStack {
-                    EmojiTextField(placeholder: "Left", text: $emojiLeft)
-                    
-                    Button(action: {
-                        let temp = emojiLeft
-                        emojiLeft = emojiRight
-                        emojiRight = temp
-                    }) {
-                        Image(systemName: "arrow.left.arrow.right")
-                            .foregroundColor(.blue)
+                        Text("Watch Demo Video")
+                            .font(.system(size: 16, weight: .medium))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
                     }
                     .buttonStyle(.borderless)
-                    
-                    EmojiTextField(placeholder: "Right", text: $emojiRight)
-                }
-            }
-        }
-        else if interactionType == .likedislike {
-            Section(header: Text("Like & Dislike"), footer: Text("The citizen sees this 3D item in AR and votes whether they like it.")) {
-                Button {
-                    showingAssetPicker = true
-                } label: {
-                    HStack {
-                        if let selectedAsset {
-                            AssetThumbnailImage(asset: selectedAsset, iconSize: 20)
-                                .frame(width: 28, height: 28)
-                            Text(selectedAsset.name)
-                                .foregroundStyle(.primary)
-                        } else {
-                            Text("Select an Item")
-                                .foregroundStyle(.primary)
-                        }
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .foregroundStyle(.secondary)
-                            .font(.caption)
+                    .foregroundStyle(Color.brandPurple)
+                    .background(Color.clear)
+                    .overlay(
+                        Capsule()
+                            .stroke(Color.brandPurple, lineWidth: 1.5)
+                    )
+                    .listRowBackground(Color.clear)
+                    .sheet(isPresented: $showingDemoVideo) {
+                        DemoVideoPlayerView(isPresented: $showingDemoVideo, interactionType: interactionType)
                     }
                 }
-                
-                TextField("Custom Question", text: $question)
+            }
+            if interactionType == .mcq {
+                Section(
+                    header: Text("Multiple Choice Question"),
+                    footer: Text("Options 1 and 2 are required. Tap \"Add More Answers\" to unlock two extra slots (6 max).")
+                ) {
+                    TextField("Question", text: $question)
+                    
+                    optionField(at: 0, placeholder: "Option 1 (required)")
+                    optionField(at: 1, placeholder: "Option 2 (required)")
+                    optionField(at: 2, placeholder: "Option 3 (optional)")
+                    optionField(at: 3, placeholder: "Option 4 (optional)")
+                    
+                    if showExtraOptions {
+                        optionField(at: 4, placeholder: "Option 5 (optional)")
+                        optionField(at: 5, placeholder: "Option 6 (optional)")
+                    } else {
+                        Button(action: {
+                            ensureCapacity(6)
+                            showExtraOptions = true
+                        }) {
+                            Label("Add More Answers", systemImage: "plus.circle")
+                        }
+                    }
+                }
+                .onAppear { setupMCQSlots() }
+                .onChange(of: interactionType) { _, newType in
+                    if newType == .mcq { setupMCQSlots() }
+                }
+            } else if interactionType == .photobooth {
+                Section(header: Text("Photobooth Prompt"), footer: Text("The text prompt and reference photo shown to citizens when taking a photo.")) {
+                    TextField("Text Prompt (e.g. Take a selfie...)", text: $question)
+                    
+                    HStack {
+                        if let id = promptPhotoID, let image = MockPhotoService.shared.fetchPromptPhoto(id: id) {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 50, height: 50)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                        } else {
+                            Rectangle()
+                                .fill(Color.gray.opacity(0.3))
+                                .frame(width: 50, height: 50)
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
+                                .overlay(Image(systemName: "photo").foregroundColor(.gray))
+                        }
+                        
+                        Button(action: {
+                            showingImagePicker = true
+                        }) {
+                            Text(promptPhotoID == nil ? "Upload Prompt Photo" : "Change Prompt Photo")
+                        }
+                    }
+                }
+            } else if interactionType == .emojiSlider {
+                Section(
+                    header: Text("Emoji Slider"),
+                    footer: Text("The citizen slides between the two emoji to answer the question. Use the arrows to swap sides.")
+                ) {
+                    TextField("Question", text: $question)
+                    
+                    HStack {
+                        EmojiTextField(placeholder: "Left", text: $emojiLeft)
+                        
+                        Button(action: {
+                            let temp = emojiLeft
+                            emojiLeft = emojiRight
+                            emojiRight = temp
+                        }) {
+                            Image(systemName: "arrow.left.arrow.right")
+                                .foregroundColor(.blue)
+                        }
+                        .buttonStyle(.borderless)
+                        
+                        EmojiTextField(placeholder: "Right", text: $emojiRight)
+                    }
+                }
+            } else if interactionType == .likedislike {
+                Section(header: Text("Like & Dislike"), footer: Text("The citizen sees this 3D item in AR and votes whether they like it.")) {
+                    Button {
+                        showingAssetPicker = true
+                    } label: {
+                        HStack {
+                            if let selectedAsset {
+                                AssetThumbnailImage(asset: selectedAsset, iconSize: 20)
+                                    .frame(width: 28, height: 28)
+                                Text(selectedAsset.name)
+                                    .foregroundStyle(.primary)
+                            } else {
+                                Text("Select an Item")
+                                    .foregroundStyle(.primary)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundStyle(.secondary)
+                                .font(.caption)
+                        }
+                    }
+                    
+                    TextField("Custom Question", text: $question)
+                }
             }
         }
+        
     }
+    
     
     // MARK: - Helpers
     
@@ -170,14 +200,86 @@ struct CheckpointFormContent: View {
         }
     }
     
-    /// Pads the options array to 4 slots and restores the "show extra" state
-    /// if a checkpoint was loaded with more than 4 options already saved.
     private func setupMCQSlots() {
         if surveyOptions.count > 4 {
             showExtraOptions = true
             ensureCapacity(6)
         } else {
             ensureCapacity(4)
+        }
+    }
+}
+
+// MARK: - Video Player View
+// 5. This handles playing the correct MP4 file safely
+
+struct DemoVideoPlayerView: View {
+    // 1. Use a binding instead of the environment dismiss
+    @Binding var isPresented: Bool
+    let interactionType: Checkpoint.InteractionType
+    
+    @State private var player: AVPlayer?
+    @State private var videoNotFound = false
+    
+    var body: some View {
+        NavigationStack {
+            Group {
+                if let player {
+                    VideoPlayer(player: player)
+                        .onAppear { player.play() }
+                        .onDisappear { player.pause() }
+                } else if videoNotFound {
+                    VStack(spacing: 12) {
+                        Image(systemName: "video.slash")
+                            .font(.system(size: 40))
+                        Text("Demo video not found.")
+                            .font(.headline)
+                        Text("Missing file: \(videoFileName(for: interactionType)).mp4")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .foregroundStyle(.gray)
+                } else {
+                    ProgressView()
+                }
+            }
+            .navigationTitle("\(interactionType.rawValue) Demo")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(action: {
+                                isPresented = false
+                            }) {
+                                Image(systemName: "chevron.left")
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .frame(width: 36, height: 36)
+                                    .background(.ultraThinMaterial, in: Circle())
+                            }
+//                    .disabled(videoNotFound)
+                }
+            }
+            .onAppear { setupPlayer() }
+            // Prevents swipe-to-dismiss if video is missing
+//            .interactiveDismissDisabled(videoNotFound)
+        }
+    }
+    
+    private func setupPlayer() {
+        let fileName = videoFileName(for: interactionType)
+        if let url = Bundle.main.url(forResource: fileName, withExtension: "mp4") {
+            player = AVPlayer(url: url)
+        } else {
+            videoNotFound = true
+        }
+    }
+    
+    private func videoFileName(for type: Checkpoint.InteractionType) -> String {
+        switch type {
+        case .mcq: return "demo_mcq"
+        case .photobooth: return "demo_photobooth"
+        case .emojiSlider: return "demo_emoji"
+        case .likedislike: return "demo_likedislike"
+        default: return "demo_default"
         }
     }
 }

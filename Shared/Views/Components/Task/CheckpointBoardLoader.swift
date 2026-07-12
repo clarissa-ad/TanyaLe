@@ -179,6 +179,8 @@ enum CheckpointBoardLoader {
                         anchor.addChild(controller.rootEntity)
                         arContainer.faceCameraEntities.append(controller.rootEntity)
                         arContainer.boardControllers.append(controller)
+                    } else {
+                        print("CheckpointBoardLoader: board for '\(cp.title)' failed to build — renderPiece/texture returned nil")
                     }
                 }
             }

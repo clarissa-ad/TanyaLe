@@ -11,6 +11,17 @@ import RealityKit
 struct RelativeARViewContainer: UIViewRepresentable {
     let arContainer: RelativeUserARView.ARContainer
 
+    /// World alignment for the citizen walk session.
+    ///
+    /// `.gravityAndHeading` locks -Z to true north so coordinates match the
+    /// maker's session — but it leans on the compass, and indoors (desks,
+    /// laptops, speakers = magnetic interference) it can drive the tracking
+    /// solver to diverge into NaN camera poses. When that happens NOTHING
+    /// renders and the console floods with "contains NaN" messages.
+    /// `.gravity` keeps tracking stable for indoor testing; switch back to
+    /// `.gravityAndHeading` for real cross-session journeys outdoors.
+    static let worldAlignment: ARConfiguration.WorldAlignment = .gravity
+
     func makeCoordinator() -> Coordinator {
         Coordinator(arContainer: arContainer)
     }
@@ -91,8 +102,8 @@ struct RelativeARViewContainer: UIViewRepresentable {
         let config = ARWorldTrackingConfiguration()
         // Only detect horizontal planes if you don't need vertical (walls)
         config.planeDetection = [.horizontal]
-        config.worldAlignment = .gravityAndHeading
-        
+        config.worldAlignment = Self.worldAlignment
+
         // Reduce frame rate for better performance (default is 60fps)
         config.frameSemantics = []
         
@@ -119,7 +130,7 @@ struct RelativeARViewContainer: UIViewRepresentable {
         ) { _ in
             let config = ARWorldTrackingConfiguration()
             config.planeDetection = [.horizontal]
-            config.worldAlignment = .gravityAndHeading
+            config.worldAlignment = Self.worldAlignment
             config.frameSemantics = []
             arView.session.run(config, options: [])
         }
