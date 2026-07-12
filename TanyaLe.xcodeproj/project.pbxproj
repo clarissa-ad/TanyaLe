@@ -116,8 +116,6 @@
 		98EA9E363003FC1D0067F8EA /* MockAssetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA9DA13003FC1D0067F8EA /* MockAssetService.swift */; };
 		98EA9E373003FC1D0067F8EA /* Entity+GroundPlacement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA9DC43003FC1D0067F8EA /* Entity+GroundPlacement.swift */; };
 		98EA9E383003FC1D0067F8EA /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA9D8F3003FC1D0067F8EA /* LocationManager.swift */; };
-		98EA9E5B3003FC2A0067F8EA /* add_file.rb in Resources */ = {isa = PBXBuildFile; fileRef = 98EA9E393003FC2A0067F8EA /* add_file.rb */; };
-		98EA9E5C3003FC2A0067F8EA /* add_onboarding_files.rb in Resources */ = {isa = PBXBuildFile; fileRef = 98EA9E3A3003FC2A0067F8EA /* add_onboarding_files.rb */; };
 		98EA9E5D3003FC2A0067F8EA /* CheckpointEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA9E483003FC2A0067F8EA /* CheckpointEditView.swift */; };
 		98EA9E5E3003FC2A0067F8EA /* PastJourneysListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA9E533003FC2A0067F8EA /* PastJourneysListView.swift */; };
 		98EA9E5F3003FC2A0067F8EA /* OnboardingPageOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98EA9E413003FC2A0067F8EA /* OnboardingPageOne.swift */; };
@@ -230,8 +228,6 @@
 		98EA9DCA3003FC1D0067F8EA /* PhotoboothCaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoboothCaptureView.swift; sourceTree = "<group>"; };
 		98EA9DCB3003FC1D0067F8EA /* PhotoboothCaptureView_Backup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoboothCaptureView_Backup.swift; sourceTree = "<group>"; };
 		98EA9DCC3003FC1D0067F8EA /* PhotoPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoPreviewView.swift; sourceTree = "<group>"; };
-		98EA9E393003FC2A0067F8EA /* add_file.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = add_file.rb; sourceTree = "<group>"; };
-		98EA9E3A3003FC2A0067F8EA /* add_onboarding_files.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = add_onboarding_files.rb; sourceTree = "<group>"; };
 		98EA9E3B3003FC2A0067F8EA /* TanyaLeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TanyaLeApp.swift; sourceTree = "<group>"; };
 		98EA9E3E3003FC2A0067F8EA /* MakerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MakerViewModel.swift; sourceTree = "<group>"; };
 		98EA9E403003FC2A0067F8EA /* ARPlacementPrototypeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPlacementPrototypeView.swift; sourceTree = "<group>"; };
@@ -281,8 +277,6 @@
 		9873792E2FF61D8900739D44 = {
 			isa = PBXGroup;
 			children = (
-				98EA9E393003FC2A0067F8EA /* add_file.rb */,
-				98EA9E3A3003FC2A0067F8EA /* add_onboarding_files.rb */,
 				98EA9E5A3003FC2A0067F8EA /* TanyaLeApp */,
 				98EA9DCE3003FC1D0067F8EA /* Shared */,
 				98EA9D8A3003FC110067F8EA /* TanyaleAppClip */,
@@ -618,8 +612,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				98EA9E5B3003FC2A0067F8EA /* add_file.rb in Resources */,
-				98EA9E5C3003FC2A0067F8EA /* add_onboarding_files.rb in Resources */,
 				98EA9E043003FC1D0067F8EA /* Lele_Checkpoint.usdz in Resources */,
 				98EA9E053003FC1D0067F8EA /* asset3d_trashbin.usdz in Resources */,
 				98EA9E063003FC1D0067F8EA /* appicon_tanyale.icon in Resources */,

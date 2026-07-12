@@ -15,6 +15,8 @@ struct JourneyLandingView: View {
     /// that finishing the flow anywhere can pop the whole subtree back to
     /// this page with a single atomic state change.
     @State private var showCreateJourney = false
+    @AppStorage("hasSeenMakerOnboarding") private var hasSeenMakerOnboarding = false
+    @State private var showOnboarding = false
     
     var body: some View {
         ZStack {
@@ -94,6 +96,16 @@ struct JourneyLandingView: View {
         }
         .sheet(isPresented: $showPastJourneys) {
             PastJourneysListView()
+        }
+        .onAppear {
+            if !hasSeenMakerOnboarding {
+                showOnboarding = true
+            }
+        }
+        .fullScreenCover(isPresented: $showOnboarding, onDismiss: {
+            hasSeenMakerOnboarding = true
+        }) {
+            SandboxMakerOnboardingView()
         }
     }
 }
