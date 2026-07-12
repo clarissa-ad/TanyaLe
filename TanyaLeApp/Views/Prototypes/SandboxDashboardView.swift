@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct SandboxDashboardView: View {
+    @AppStorage("hasSeenMakerOnboarding") private var hasSeenMakerOnboarding = false
+    
     var body: some View {
         NavigationStack {
             List {
@@ -46,6 +48,22 @@ struct SandboxDashboardView: View {
                     }
                     Text("Test 3D Asset Likability UI (Coming Soon)")
                         .foregroundStyle(.secondary)
+                }
+                
+                Section(header: Text("Developer Tools")) {
+                    Button(action: {
+                        hasSeenMakerOnboarding = false
+                    }) {
+                        HStack {
+                            Label("Reset Maker Onboarding", systemImage: "arrow.counterclockwise")
+                                .foregroundColor(.red)
+                            Spacer()
+                            if !hasSeenMakerOnboarding {
+                                Image(systemName: "checkmark")
+                                    .foregroundColor(.green)
+                            }
+                        }
+                    }
                 }
             }
             .navigationTitle("Developer Sandbox")
