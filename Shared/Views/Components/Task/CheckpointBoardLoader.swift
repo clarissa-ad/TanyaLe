@@ -260,7 +260,7 @@ enum CheckpointBoardLoader {
         
         for (index, image) in photos.enumerated() {
             Task { @MainActor in
-                if let entity = createPhotoEntity(from: image) {
+                if let entity = await createPhotoEntity(from: image) {
                     entity.name = "photo_preview" // Tag it so we can find it to delete later
                     
                     let offsets: [SIMD3<Float>] = [
@@ -309,26 +309,28 @@ enum CheckpointBoardLoader {
     }
     
     @MainActor
-    static func createPhotoEntity(from image: UIImage) -> Entity? {
-        // Fix orientation (so it doesn't appear rotated 90 degrees)
-        let normalizedImage = normalizeOrientation(of: image)
-        
-        // Prepare materials
-        var mat = UnlitMaterial()
-        
-        // Attempt to generate texture from image
-        if let cgImage = normalizedImage.cgImage,
-           let tex = try? TextureResource.generate(from: cgImage, options: .init(semantic: .color)) {
-            mat.color = .init(tint: .white, texture: .init(tex))
-        } else if let ciImage = normalizedImage.ciImage {
-            // Fallback for CIImage backed UIImages
-            let context = CIContext()
-            if let cgImage = context.createCGImage(ciImage, from: ciImage.extent),
-               let tex = try? TextureResource.generate(from: cgImage, options: .init(semantic: .color)) {
-                mat.color = .init(tint: .white, texture: .init(tex))
-            } else {
-                mat.color = .init(tint: .blue) // Debug fallback
+    static func createPhotoEntity(from image: UIImage) async -> Entity? {
+        // Offload heavy image resizing and texture generation to a background thread
+        // to prevent freezing the Main Thread (UI).
+        let (normalizedImage, tex) = await Task.detached { () -> (UIImage, TextureResource?) in
+            let normalized = normalizeOrientation(of: image)
+            var texture: TextureResource? = nil
+            
+            if let cgImage = normalized.cgImage {
+                texture = try? TextureResource.generate(from: cgImage, options: .init(semantic: .color))
+            } else if let ciImage = normalized.ciImage {
+                let context = CIContext()
+                if let cgImage = context.createCGImage(ciImage, from: ciImage.extent) {
+                    texture = try? TextureResource.generate(from: cgImage, options: .init(semantic: .color))
+                }
             }
+            return (normalized, texture)
+        }.value
+        
+        // Prepare materials back on the Main Thread
+        var mat = UnlitMaterial()
+        if let tex = tex {
+            mat.color = .init(tint: .white, texture: .init(tex))
         } else {
             mat.color = .init(tint: .red) // Debug fallback
         }

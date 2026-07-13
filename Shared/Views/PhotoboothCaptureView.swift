@@ -88,10 +88,31 @@ struct NativeCameraPicker: UIViewControllerRepresentable {
         
         func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             // Use edited image if available (user cropped/rotated), else original
-            if let image = info[.editedImage] as? UIImage {
-                parent.onImageCaptured?(image)
-            } else if let image = info[.originalImage] as? UIImage {
-                parent.onImageCaptured?(image)
+            let capturedImage = (info[.editedImage] as? UIImage) ?? (info[.originalImage] as? UIImage)
+            
+            guard let image = capturedImage else {
+                parent.onDismiss?()
+                return
+            }
+            
+            // Downsample the massive 12MP camera image in the background to prevent Main Thread freeze
+            Task.detached {
+                let maxDimension: CGFloat = 1500
+                let ratio = image.size.height / max(image.size.width, 1)
+                
+                let targetSize: CGSize
+                if image.size.width > image.size.height {
+                    targetSize = CGSize(width: maxDimension, height: maxDimension * ratio)
+                } else {
+                    targetSize = CGSize(width: maxDimension / ratio, height: maxDimension)
+                }
+                
+                // preparingThumbnail is heavily optimized by CoreGraphics and drops memory from ~48MB to ~5MB
+                let optimizedImage = image.preparingThumbnail(of: targetSize) ?? image
+                
+                await MainActor.run {
+                    self.parent.onImageCaptured?(optimizedImage)
+                }
             }
         }
         

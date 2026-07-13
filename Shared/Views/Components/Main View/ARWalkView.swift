@@ -154,16 +154,33 @@ struct ARWalkView: View {
                 }
             }
         }
+        .onChange(of: showingImagePicker) { _, isShowing in
+            if isShowing {
+                arContainer.view?.session.pause()
+            } else if !showingPhotoPreview && !showingGallery {
+                resumeARSessionIfNeeded()
+            }
+        }
         .sheet(isPresented: $showingGallery, onDismiss: {
             if let cp = activeCheckpoint {
                 CheckpointBoardLoader.refreshPhotos(for: cp, in: arContainer)
+            }
+            if !showingImagePicker && !showingPhotoPreview {
+                resumeARSessionIfNeeded()
             }
         }) {
             if let cp = activeCheckpoint {
                 PhotoGalleryView(checkpoint: cp)
             }
         }
-        .fullScreenCover(isPresented: $showingPhotoPreview) {
+        .onChange(of: showingGallery) { _, isShowing in
+            if isShowing { arContainer.view?.session.pause() }
+        }
+        .fullScreenCover(isPresented: $showingPhotoPreview, onDismiss: {
+            if !showingImagePicker && !showingGallery {
+                resumeARSessionIfNeeded()
+            }
+        }) {
             if let image = capturedPhotoForPreview, let cp = activeCheckpoint {
                 PhotoPreviewView(
                     capturedImage: image,
@@ -183,6 +200,15 @@ struct ARWalkView: View {
                     }
                 )
             }
+        }
+        .onChange(of: showingPhotoPreview) { _, isShowing in
+            if isShowing { arContainer.view?.session.pause() }
+        }
+    }
+
+    private func resumeARSessionIfNeeded() {
+        if let config = arContainer.view?.session.configuration {
+            arContainer.view?.session.run(config)
         }
     }
 
@@ -306,6 +332,14 @@ struct ARWalkView: View {
         Task { @MainActor in
             while let arView = arContainer.view {
                 try? await Task.sleep(for: .seconds(1))
+                
+                // CRITICAL FIX: If the UIImagePickerController is active, it steals the camera.
+                // The ARSession loses tracking and might spit out NaNs.
+                // Do NOT reset the world tracking if the picker is open, just wait it out!
+                if showingImagePicker || showingPhotoPreview || showingGallery {
+                    continue
+                }
+                
                 // Check the FULL pose matrix — the failure seen in the wild is
                 // NaN in the rotation columns while the translation stays
                 // valid, which silently blanks all rendering.

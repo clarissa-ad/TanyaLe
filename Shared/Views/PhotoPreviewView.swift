@@ -106,33 +106,41 @@ struct PhotoPreviewView: View {
     }
     
     private func generateScatteredLayout() {
-        // As requested: just use the captured image to create the scattered background effect.
-        // If we had multiple captured images, we'd use them, but for now we duplicate the single one.
-        let sourceImages = [capturedImage, capturedImage, capturedImage, capturedImage, capturedImage]
-        
-        var newPhotos: [ScatteredPhoto] = []
         let screenW = UIScreen.main.bounds.width
         let screenH = UIScreen.main.bounds.height
+        let captured = capturedImage
         
-        for i in 0..<min(6, sourceImages.count) {
-            // Distribute them around the edges (avoiding the exact center)
-            let isLeft = (i % 2 == 0)
-            let minX: CGFloat = isLeft ? -screenW/2 : screenW/4
-            let maxX: CGFloat = isLeft ? -screenW/4 : screenW/2
-            let xOffset = CGFloat.random(in: minX...maxX)
-            let yOffset = CGFloat.random(in: -screenH/3 ... screenH/3)
-            let rot     = Double.random(in: -25...25)
-            let scale   = CGFloat.random(in: 0.8...1.1)
+        Task.detached {
+            // Resize image to a thumbnail in background to prevent memory bloat and UI freeze
+            let ratio = captured.size.height / max(captured.size.width, 1)
+            let targetSize = CGSize(width: 300, height: 300 * ratio)
+            let thumbnail = captured.preparingThumbnail(of: targetSize) ?? captured
             
-            newPhotos.append(ScatteredPhoto(
-                image: sourceImages[i % sourceImages.count],
-                xOffset: xOffset,
-                yOffset: yOffset,
-                rotation: rot,
-                scale: scale
-            ))
+            var newPhotos: [ScatteredPhoto] = []
+            
+            for i in 0..<5 {
+                // Distribute them around the edges (avoiding the exact center)
+                let isLeft = (i % 2 == 0)
+                let minX: CGFloat = isLeft ? -screenW/2 : screenW/4
+                let maxX: CGFloat = isLeft ? -screenW/4 : screenW/2
+                let xOffset = CGFloat.random(in: minX...maxX)
+                let yOffset = CGFloat.random(in: -screenH/3 ... screenH/3)
+                let rot     = Double.random(in: -25...25)
+                let scale   = CGFloat.random(in: 0.8...1.1)
+                
+                newPhotos.append(ScatteredPhoto(
+                    image: thumbnail,
+                    xOffset: xOffset,
+                    yOffset: yOffset,
+                    rotation: rot,
+                    scale: scale
+                ))
+            }
+            
+            await MainActor.run {
+                self.scatteredPhotos = newPhotos
+            }
         }
-        self.scatteredPhotos = newPhotos
     }
 }
 
