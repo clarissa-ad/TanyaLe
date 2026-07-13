@@ -2,11 +2,19 @@ import SwiftUI
 import UIKit
 
 struct PhotoPreviewView: View {
-    let capturedImage: UIImage
     let checkpoint: Checkpoint
     
     var onRetake: () -> Void
-    var onExploreMore: () -> Void
+    var onExploreMore: (UIImage) -> Void
+    
+    @State private var currentImage: UIImage
+    
+    init(capturedImage: UIImage, checkpoint: Checkpoint, onRetake: @escaping () -> Void, onExploreMore: @escaping (UIImage) -> Void) {
+        self.checkpoint = checkpoint
+        self.onRetake = onRetake
+        self.onExploreMore = onExploreMore
+        self._currentImage = State(initialValue: capturedImage)
+    }
     
     // Randomize layout once on init
     @State private var scatteredPhotos: [ScatteredPhoto] = []
@@ -60,13 +68,29 @@ struct PhotoPreviewView: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
                 
-                // The newly captured photo
-                Image(uiImage: capturedImage)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(height: 300)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-                    .clipped()
+                // The newly captured photo with a rotation button overlay
+                ZStack(alignment: .topTrailing) {
+                    Image(uiImage: currentImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 300)
+                        .clipShape(RoundedRectangle(cornerRadius: 16))
+                        .clipped()
+                    
+                    Button(action: {
+                        let generator = UIImpactFeedbackGenerator(style: .light)
+                        generator.impactOccurred()
+                        rotateImage()
+                    }) {
+                        Image(systemName: "rotate.right.fill")
+                            .font(.system(size: 20))
+                            .foregroundColor(.white)
+                            .padding(10)
+                            .background(Color.black.opacity(0.6))
+                            .clipShape(Circle())
+                    }
+                    .padding(12)
+                }
                 
                 // Action Buttons
                 HStack(spacing: 12) {
@@ -81,7 +105,9 @@ struct PhotoPreviewView: View {
                             .cornerRadius(20)
                     }
                     
-                    Button(action: onExploreMore) {
+                    Button(action: {
+                        onExploreMore(currentImage)
+                    }) {
                         Text("Explore more")
                             .font(.subheadline)
                             .fontWeight(.semibold)
@@ -105,10 +131,29 @@ struct PhotoPreviewView: View {
         }
     }
     
+    private func rotateImage() {
+        guard let cgImage = currentImage.cgImage else { return }
+        
+        let newOrientation: UIImage.Orientation
+        switch currentImage.imageOrientation {
+        case .up: newOrientation = .right
+        case .right: newOrientation = .down
+        case .down: newOrientation = .left
+        case .left: newOrientation = .up
+        case .upMirrored: newOrientation = .rightMirrored
+        case .rightMirrored: newOrientation = .downMirrored
+        case .downMirrored: newOrientation = .leftMirrored
+        case .leftMirrored: newOrientation = .upMirrored
+        @unknown default: newOrientation = .right
+        }
+        
+        currentImage = UIImage(cgImage: cgImage, scale: currentImage.scale, orientation: newOrientation)
+    }
+    
     private func generateScatteredLayout() {
         let screenW = UIScreen.main.bounds.width
         let screenH = UIScreen.main.bounds.height
-        let captured = capturedImage
+        let captured = currentImage
         
         Task.detached {
             // Resize image to a thumbnail in background to prevent memory bloat and UI freeze
@@ -163,6 +208,6 @@ struct PhotoPreviewView: View {
             relativeZ: 0
         ),
         onRetake: {},
-        onExploreMore: {}
+        onExploreMore: { _ in }
     )
 }

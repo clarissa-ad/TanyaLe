@@ -211,20 +211,32 @@ struct RelativeUserARView: View {
                     .animation(.spring(), value: viewModel.nearestDistance)
                 }
             }
-        }
-        .sheet(isPresented: $showingImagePicker) {
-            if let cp = activeCheckpoint {
-                PhotoboothCaptureView(checkpoint: cp) { image in
-                    // Instead of saving instantly, hold it for preview
-                    capturedPhotoForPreview = image
-                    // Small delay to allow the sheet to dismiss before presenting fullScreenCover
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        showingPhotoPreview = true
+            
+            // Photobooth transparent overlay
+            if showingImagePicker, let cp = activeCheckpoint {
+                PhotoboothCaptureView(
+                    checkpoint: cp,
+                    onImageCaptured: { image in
+                        capturedPhotoForPreview = image
+                        showingImagePicker = false
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            showingPhotoPreview = true
+                        }
+                    },
+                    onCancel: {
+                        showingImagePicker = false
                     }
-                }
+                )
+                .transition(.opacity)
+                .zIndex(40) // Ensure it sits on top of everything
             }
         }
-        .fullScreenCover(isPresented: $showingPhotoPreview) {
+
+        .fullScreenCover(isPresented: $showingPhotoPreview, onDismiss: {
+            if !showingImagePicker && !showingGallery {
+                resumeARSessionIfNeeded()
+            }
+        }) {
             if let image = capturedPhotoForPreview, let cp = activeCheckpoint {
                 PhotoPreviewView(
                     capturedImage: image,
@@ -237,8 +249,8 @@ struct RelativeUserARView: View {
                             showingImagePicker = true
                         }
                     },
-                    onExploreMore: {
-                        MockPhotoService.shared.savePhoto(image: image, forCheckpoint: cp.id)
+                    onExploreMore: { finalImage in
+                        MockPhotoService.shared.savePhoto(image: finalImage, forCheckpoint: cp.id)
                         CheckpointBoardLoader.refreshPhotos(for: cp, in: arContainer)
                         capturedPhotoForPreview = nil
                         showingPhotoPreview = false
@@ -246,14 +258,23 @@ struct RelativeUserARView: View {
                 )
             }
         }
+        .onChange(of: showingPhotoPreview) { _, isShowing in
+            if isShowing { arContainer.view?.session.pause() }
+        }
         .sheet(isPresented: $showingGallery, onDismiss: {
             if let cp = activeCheckpoint {
                 CheckpointBoardLoader.refreshPhotos(for: cp, in: arContainer)
+            }
+            if !showingPhotoPreview {
+                resumeARSessionIfNeeded()
             }
         }) {
             if let cp = activeCheckpoint {
                 PhotoGalleryView(checkpoint: cp)
             }
+        }
+        .onChange(of: showingGallery) { _, isShowing in
+            if isShowing { arContainer.view?.session.pause() }
         }
         .sheet(isPresented: $showingAssetDetail) {
             if let presentedAssetId {
@@ -268,15 +289,7 @@ struct RelativeUserARView: View {
                 }
             }
         }
-        .onChange(of: showingImagePicker) { _, isShowing in
-            if isShowing {
-                arContainer.view?.session.pause()
-            } else {
-                if let config = arContainer.view?.session.configuration {
-                    arContainer.view?.session.run(config)
-                }
-            }
-        }
+
         .onAppear {
             locationManager.requestPermission()
             // Steady, precise updates so the walk-to-start gate can measure
@@ -289,6 +302,12 @@ struct RelativeUserARView: View {
         }
         .navigationTitle("Citizen (Relative AR)")
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func resumeARSessionIfNeeded() {
+        if let config = arContainer.view?.session.configuration {
+            arContainer.view?.session.run(config)
+        }
     }
 
     // MARK: - Walk-to-start gate UI

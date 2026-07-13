@@ -119,6 +119,25 @@ struct ARWalkView: View {
                 .transition(.opacity)
                 .zIndex(30)
             }
+            
+            // Photobooth transparent overlay
+            if showingImagePicker, let cp = activeCheckpoint {
+                PhotoboothCaptureView(
+                    checkpoint: cp,
+                    onImageCaptured: { image in
+                        capturedPhotoForPreview = image
+                        showingImagePicker = false
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            showingPhotoPreview = true
+                        }
+                    },
+                    onCancel: {
+                        showingImagePicker = false
+                    }
+                )
+                .transition(.opacity)
+                .zIndex(40) // Ensure it sits on top of everything
+            }
         }
         .onAppear {
             locationManager.requestPermission()
@@ -144,28 +163,11 @@ struct ARWalkView: View {
                 }
             }
         }
-        .sheet(isPresented: $showingImagePicker) {
-            if let cp = activeCheckpoint {
-                PhotoboothCaptureView(checkpoint: cp) { image in
-                    capturedPhotoForPreview = image
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        showingPhotoPreview = true
-                    }
-                }
-            }
-        }
-        .onChange(of: showingImagePicker) { _, isShowing in
-            if isShowing {
-                arContainer.view?.session.pause()
-            } else if !showingPhotoPreview && !showingGallery {
-                resumeARSessionIfNeeded()
-            }
-        }
         .sheet(isPresented: $showingGallery, onDismiss: {
             if let cp = activeCheckpoint {
                 CheckpointBoardLoader.refreshPhotos(for: cp, in: arContainer)
             }
-            if !showingImagePicker && !showingPhotoPreview {
+            if !showingPhotoPreview {
                 resumeARSessionIfNeeded()
             }
         }) {
@@ -192,8 +194,8 @@ struct ARWalkView: View {
                             showingImagePicker = true
                         }
                     },
-                    onExploreMore: {
-                        MockPhotoService.shared.savePhoto(image: image, forCheckpoint: cp.id)
+                    onExploreMore: { finalImage in
+                        MockPhotoService.shared.savePhoto(image: finalImage, forCheckpoint: cp.id)
                         CheckpointBoardLoader.refreshPhotos(for: cp, in: arContainer)
                         capturedPhotoForPreview = nil
                         showingPhotoPreview = false
